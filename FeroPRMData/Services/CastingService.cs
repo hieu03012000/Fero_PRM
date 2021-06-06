@@ -42,7 +42,7 @@ namespace FeroPRMData.Services
             if (min == null) min = 0;
             if (max == null) max = await GetMaxSalary();
             if (name == null) name = "";
-            var castingList = Get(c => c.Salary > min && c.Salary < max && c.Name.Contains(name) && c.Status != 0 && c.Status != 6)
+            var castingList = Get(c => c.Salary >= min && c.Salary <= max && c.Name.Contains(name) && c.Status != 0 && c.Status != 4)
                 .ProjectTo<GetAllCastingViewModel>(_mapper.ConfigurationProvider);
             return castingList;
         }
@@ -103,7 +103,7 @@ namespace FeroPRMData.Services
                 .FirstOrDefault().Status != 2)
                 return -1;
             var entity = await Get(c => c.Id == castId).FirstOrDefaultAsync();
-            entity.Status = 4;
+            entity.Status = 3;
             await UpdateAsync(entity);
             return 0;
         }
@@ -119,7 +119,7 @@ namespace FeroPRMData.Services
                 .FirstOrDefault().Status == 2)
                 return -1;
             var entity = await Get(c => c.Id == castId).FirstOrDefaultAsync();
-            entity.Status = 5;
+            entity.Status = 4;
             await UpdateAsync(entity);
             return 0;
         }
