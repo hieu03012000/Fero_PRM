@@ -11,6 +11,7 @@ namespace FeroPRMData.Commons
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.ConfigModelModule();
+                mc.ConfigCastingModule();
                 mc.ConfigModelStyleModule();
                 mc.ConfigImageModule();
                 mc.ConfigApplyCastingModule();

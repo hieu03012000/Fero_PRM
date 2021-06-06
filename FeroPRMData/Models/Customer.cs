@@ -18,6 +18,7 @@ namespace FeroPRMData.Models
         public string TaxCode { get; set; }
         public string Phone { get; set; }
         public string Gmail { get; set; }
+        public string Fanpage { get; set; }
         public int? Status { get; set; }
 
         public virtual ICollection<Casting> Casting { get; set; }

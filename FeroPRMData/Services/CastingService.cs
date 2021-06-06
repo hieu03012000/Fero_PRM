@@ -56,7 +56,7 @@ namespace FeroPRMData.Services
 
         public async Task<CreateCastingCallViewModel> CreateCasting(CreateCastingCallViewModel model)
         {
-            if (model.Status != 1 || model.Status != 0) return null;
+            if (model.Status != 1 && model.Status != 0) return null;
             var entity = _mapper.Map<Casting>(model);
             await CreateAsyn(entity);
             return model;

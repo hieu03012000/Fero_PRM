@@ -26,8 +26,10 @@ namespace FeroPRMData.Services
         #region hdev
         private string GetCustomerId()
         {
-            var customerId = Get().OrderByDescending(m => m.Id).FirstOrDefault().Id;
-            int num = int.Parse(customerId.Substring(2));
+            var customer = Get().OrderByDescending(m => m.Id).FirstOrDefault();
+            int num;
+            if (customer == null) num = 0;
+            else num = int.Parse(customer.Id.Substring(2));
             return "CM" + string.Format("{0 :D4}", ++num);
         }
         public async Task<CreateCustomerAccountViewModel> CreateCustomerAccount(CreateCustomerAccountViewModel customer)

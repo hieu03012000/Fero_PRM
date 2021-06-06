@@ -10,7 +10,7 @@ namespace Fero.Data.AutoMapperModule
         {
             mc.CreateMap<Customer, CreateCustomerAccountViewModel>();
             mc.CreateMap<CreateCustomerAccountViewModel, Customer>()
-                .ForMember(des => des.Status, opt => opt.MapFrom(src => true));
+                .ForMember(des => des.Status, opt => opt.MapFrom(src => 1));
         }
     }
 }

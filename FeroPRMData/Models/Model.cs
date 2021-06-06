@@ -24,11 +24,11 @@ namespace FeroPRMData.Models
         public decimal? Bust { get; set; }
         public decimal? Waist { get; set; }
         public decimal? Hip { get; set; }
-        public string SocialNetworkLink { get; set; }
         public string Phone { get; set; }
         public string Avatar { get; set; }
         public string Gmail { get; set; }
         public int? Status { get; set; }
+        public string SocialNetworkLink { get; set; }
 
         public virtual ICollection<ApplyCasting> ApplyCasting { get; set; }
         public virtual ICollection<Image> Image { get; set; }
