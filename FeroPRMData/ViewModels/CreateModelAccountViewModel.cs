@@ -7,44 +7,24 @@ namespace Fero.Data.ViewModels
     {
         public CreateModelAccountViewModel()
         {
-            BodyPart = new HashSet<CreateAccountBodyPartViewModel>();
+            Image = new HashSet<CreateAccountImageViewModel>();
             ModelStyle = new HashSet<CreateAccountModelStyleViewModel>();
-            Product = new HashSet<CreateAccountProductViewModel>();
         }
         public string Name { get; set; }
-        public byte Gender { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public string Country { get; set; }
-        public string SubAddress { get; set; }
+        public string Address { get; set; }
+        public int? Gender { get; set; }
+        public decimal? Height { get; set; }
+        public decimal? Weight { get; set; }
+        public decimal? Bust { get; set; }
+        public decimal? Waist { get; set; }
+        public decimal? Hip { get; set; }
+        public string SocialNetworkLink { get; set; }
         public string Phone { get; set; }
-        public string Email { get; set; }
-        public string Gifted { get; set; }
-        public virtual ICollection<CreateAccountBodyPartViewModel> BodyPart { get; set; }
+        public string Avatar { get; set; }
+        public string Gmail { get; set; }
+
+        public virtual ICollection<CreateAccountImageViewModel> Image { get; set; }
         public virtual ICollection<CreateAccountModelStyleViewModel> ModelStyle { get; set; }
-        public virtual ICollection<CreateAccountProductViewModel> Product { get; set; }
-    }
-
-    public class CreateAccountBodyPartViewModel
-    {
-        public CreateAccountBodyPartViewModel()
-        {
-            BodyAttribute = new HashSet<CreateAccountBodyAttributeViewModel>();
-            CollectionImage = new HashSet<CreateAccountCollectionImageViewModel>();
-        }
-        public int? BodyPartTypeId { get; set; }
-        public virtual ICollection<CreateAccountBodyAttributeViewModel> BodyAttribute { get; set; }
-        public virtual ICollection<CreateAccountCollectionImageViewModel> CollectionImage { get; set; }
-    }
-
-    public class CreateAccountBodyAttributeViewModel
-    {
-        public decimal? Value { get; set; }
-        public int? BodyAttTypeId { get; set; }
-    }
-
-    public partial class CreateAccountProductViewModel
-    {
-        public string Link { get; set; }
     }
 
     public partial class CreateAccountModelStyleViewModel
@@ -52,23 +32,9 @@ namespace Fero.Data.ViewModels
         public int StyleId { get; set; }
     }
 
-    public partial class CreateAccountCollectionImageViewModel
-    {
-        public CreateAccountCollectionImageViewModel()
-        {
-            Image = new HashSet<CreateAccountImageViewModel>();
-        }
-
-        public string Name { get; set; }
-
-        public virtual ICollection<CreateAccountImageViewModel> Image { get; set; }
-    }
-
     public partial class CreateAccountImageViewModel
     {
-        public string Extension { get; set; }
-        public string FileName { get; set; }
-        public DateTime UploadDate { get; set; }
+        public string Link { get; set; }
 
     }
 }

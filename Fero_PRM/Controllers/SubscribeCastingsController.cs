@@ -1,9 +1,7 @@
 using Fero.Data.ViewModels;
-using FeroPRMData.Models;
 using FeroPRMData.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fero_PRM.Controllers

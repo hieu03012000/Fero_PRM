@@ -28,14 +28,16 @@ namespace FeroPRMData.Services
         }
         private string GetModelId()
         {
-            var modelId = Get().OrderByDescending(m => m.Id).FirstOrDefault().Id;
-            int num = int.Parse(modelId.Substring(2));
+            var model = Get().OrderByDescending(m => m.Id).FirstOrDefault();
+            int num;
+            if (model == null) num = 0;
+            else num = int.Parse(model.Id.Substring(2));
             return "MD" + string.Format("{0 :D4}", ++num);
         }
 
         public async Task<CreateModelAccountViewModel> CreateModelAccount(CreateModelAccountViewModel model)
         {
-            if (await FirstOrDefaultAsyn(m => m.Gmail == model.Email) != null)
+            if (await FirstOrDefaultAsyn(m => m.Gmail == model.Gmail) != null)
                 return null;
             var entity = _mapper.Map<Model>(model);
             entity.Id = GetModelId();
