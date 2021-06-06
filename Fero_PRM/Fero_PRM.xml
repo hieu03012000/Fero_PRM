@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Fero_PRM</name>
+    </assembly>
+    <members>
+        <member name="M:Fero_PRM.Controllers.ApplyCastingsController.Create(Fero.Data.ViewModels.ApplyCastingViewModel)">
+            <summary>
+            Model apply vào casting call
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.ApplyCastingsController.Delete(Fero.Data.ViewModels.ApplyCastingViewModel)">
+            <summary>
+            Cancel aplly casting
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CastingsController.Get(System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal})">
+            <summary>
+            Filter casting
+            </summary>
+            <param name="name"></param>
+            <param name="min"></param>
+            <param name="max"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CastingsController.GetById(System.Int32)">
+            <summary>
+            Get casting by Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CastingsController.Create(Fero.Data.ViewModels.CreateCastingCallViewModel)">
+            <summary>
+            Create casting
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CastingsController.Update(System.Int32,Fero.Data.ViewModels.UpdateCastingViewModel)">
+            <summary>
+            Update casting
+            </summary>
+            <param name="id"></param>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CastingsController.Public(System.Int32,Fero.Data.ViewModels.PublicCastingViewModel)">
+            <summary>
+            Public casting
+            </summary>
+            <param name="id"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CastingsController.Stop(System.Int32)">
+            <summary>
+            Stop casting
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CastingsController.Delete(System.Int32)">
+            <summary>
+            Delete casting
+            </summary>
+            <param name="id"></param>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CastingsController.GetApplicant(System.Int32)">
+            <summary>
+            Get applicant list
+            </summary>
+            <param name="castingId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CastingsController.MakeOffer(Fero.Data.ViewModels.MakeOfferViewModel)">
+            <summary>
+            Get applicant list
+            </summary>
+            <param name="offer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CustomersController.Create(Fero.Data.ViewModels.CreateCustomerAccountViewModel)">
+            <summary>
+            Ceate customer account
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.CustomersController.Login(System.String)">
+            <summary>
+            Login
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.ModelCastingsController.Accept(Fero.Data.ViewModels.AcceptCastingViewModel)">
+            <summary>
+            Accept casting (offer)
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.ModelCastingsController.Deny(Fero.Data.ViewModels.AcceptCastingViewModel)">
+            <summary>
+            deny casting (offer)
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.ModelsController.GetById(System.String)">
+            <summary>
+            Get model by Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.ModelsController.Create(Fero.Data.ViewModels.CreateModelAccountViewModel)">
+            <summary>
+            Model sign up
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.StylesController.Gets">
+            <summary>
+            Get all style
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.SubscribeCastingsController.Create(Fero.Data.ViewModels.SubscribeCastingViewModel)">
+            <summary>
+            Subscribe casting
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fero_PRM.Controllers.SubscribeCastingsController.Delete(Fero.Data.ViewModels.SubscribeCastingViewModel)">
+            <summary>
+            Unsubscribe casting
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
