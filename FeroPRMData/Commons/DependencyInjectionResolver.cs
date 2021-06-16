@@ -30,11 +30,17 @@ namespace FeroPRMData.Commons
             services.AddScoped<IModelCastingService, ModelCastingService>();
             services.AddScoped<IModelCastingRepository, ModelCastingRepository>();
         
+            services.AddScoped<IModelOfferService, ModelOfferService>();
+            services.AddScoped<IModelOfferRepository, ModelOfferRepository>();
+        
             services.AddScoped<IModelStyleService, ModelStyleService>();
             services.AddScoped<IModelStyleRepository, ModelStyleRepository>();
         
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
+        
+            services.AddScoped<IOfferService, OfferService>();
+            services.AddScoped<IOfferRepository, OfferRepository>();
         
             services.AddScoped<IStyleService, StyleService>();
             services.AddScoped<IStyleRepository, StyleRepository>();

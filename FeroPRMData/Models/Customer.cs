@@ -8,7 +8,7 @@ namespace FeroPRMData.Models
         public Customer()
         {
             Casting = new HashSet<Casting>();
-            Notification = new HashSet<Notification>();
+            Offer = new HashSet<Offer>();
         }
 
         public string Id { get; set; }
@@ -19,9 +19,8 @@ namespace FeroPRMData.Models
         public string Phone { get; set; }
         public string Gmail { get; set; }
         public string Fanpage { get; set; }
-        public int? Status { get; set; }
 
         public virtual ICollection<Casting> Casting { get; set; }
-        public virtual ICollection<Notification> Notification { get; set; }
+        public virtual ICollection<Offer> Offer { get; set; }
     }
 }

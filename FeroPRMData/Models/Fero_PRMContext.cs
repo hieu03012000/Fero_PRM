@@ -45,7 +45,7 @@ namespace FeroPRMData.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Date).HasColumnType("datetime");
+                entity.Property(e => e.Time).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Casting)
                     .WithMany(p => p.ApplyCasting)
@@ -220,33 +220,18 @@ namespace FeroPRMData.Models
 
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.Property(e => e.CustomerId)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
 
-                entity.Property(e => e.Date).HasColumnType("date");
+                entity.Property(e => e.Time).HasColumnType("date");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ModelId)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Title)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Notification)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK_Notification_Customer");
-
-                entity.HasOne(d => d.Model)
-                    .WithMany(p => p.Notification)
-                    .HasForeignKey(d => d.ModelId)
-                    .HasConstraintName("FK_Notification_Model");
             });
 
             modelBuilder.Entity<Style>(entity =>

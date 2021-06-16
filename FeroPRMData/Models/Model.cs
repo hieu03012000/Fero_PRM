@@ -10,8 +10,8 @@ namespace FeroPRMData.Models
             ApplyCasting = new HashSet<ApplyCasting>();
             Image = new HashSet<Image>();
             ModelCasting = new HashSet<ModelCasting>();
+            ModelOffer = new HashSet<ModelOffer>();
             ModelStyle = new HashSet<ModelStyle>();
-            Notification = new HashSet<Notification>();
             SubscribeCasting = new HashSet<SubscribeCasting>();
         }
 
@@ -19,22 +19,23 @@ namespace FeroPRMData.Models
         public string Name { get; set; }
         public string Address { get; set; }
         public int? Gender { get; set; }
-        public decimal? Height { get; set; }
-        public decimal? Weight { get; set; }
-        public decimal? Bust { get; set; }
-        public decimal? Waist { get; set; }
-        public decimal? Hip { get; set; }
+        public double? Height { get; set; }
+        public double? Weight { get; set; }
+        public double? Bust { get; set; }
+        public double? Waist { get; set; }
+        public double? Hip { get; set; }
         public string Phone { get; set; }
         public string Avatar { get; set; }
         public string Gmail { get; set; }
         public int? Status { get; set; }
         public string SocialNetworkLink { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public virtual ICollection<ApplyCasting> ApplyCasting { get; set; }
         public virtual ICollection<Image> Image { get; set; }
         public virtual ICollection<ModelCasting> ModelCasting { get; set; }
+        public virtual ICollection<ModelOffer> ModelOffer { get; set; }
         public virtual ICollection<ModelStyle> ModelStyle { get; set; }
-        public virtual ICollection<Notification> Notification { get; set; }
         public virtual ICollection<SubscribeCasting> SubscribeCasting { get; set; }
     }
 }

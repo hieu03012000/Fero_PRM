@@ -4,11 +4,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>F:\API_2_Mon\Fero_PRM\Fero_PRM\Fero_PRM.xml</DocumentationFile>
-    <WarningLevel>1</WarningLevel>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\FeroPRMData\FeroPRMData.csproj" />
   </ItemGroup>

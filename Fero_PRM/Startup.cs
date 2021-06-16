@@ -38,7 +38,7 @@ namespace Fero_PRM
                     },
                 });
                 c.SwaggerDoc("v2", new OpenApiInfo { Title = "My API", Version = "v1" });
-                c.IncludeXmlComments(XmlCommentsFilePath);
+                //c.IncludeXmlComments(XmlCommentsFilePath);
             });
             services.ConfigureAutoMapper();
             services.InitializerDI();
