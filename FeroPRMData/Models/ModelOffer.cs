@@ -8,7 +8,7 @@ namespace FeroPRMData.Models
         public string ModelId { get; set; }
         public int OfferId { get; set; }
         public int? Status { get; set; }
-        public long? Time { get; set; }
+        public DateTime? Time { get; set; }
 
         public virtual Model Model { get; set; }
         public virtual Offer Offer { get; set; }

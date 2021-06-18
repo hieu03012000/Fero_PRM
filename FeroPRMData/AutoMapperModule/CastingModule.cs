@@ -1,16 +1,20 @@
 ﻿using AutoMapper;
-using Fero.Data.ViewModels;
+using FeroPRMData.ViewModels;
 using FeroPRMData.Models;
 
-namespace Fero.Data.AutoMapperModule
+namespace FeroPRMData.AutoMapperModule
 {
     public static class CastingModule
     {
         public static void ConfigCastingModule(this IMapperConfigurationExpression mc)
         {
-            mc.CreateMap<Casting, GetAllCastingViewModel>()
+            mc.CreateMap<Casting, NewCastingViewModel>()
                 .ForMember(des => des.CustomerName, opt => opt.MapFrom(src => src.Customer.Name));
-            mc.CreateMap<GetAllCastingViewModel, Casting>();
+            mc.CreateMap<NewCastingViewModel, Casting>();
+
+            mc.CreateMap<Casting, GetNewCastingViewModel>()
+                .ForMember(des => des.CustomerName, opt => opt.MapFrom(src => src.Customer.Name));
+            mc.CreateMap<GetNewCastingViewModel, Casting>();
 
             mc.CreateMap<Casting, DetailCastingViewModel>()
                 .ForMember(des => des.CustomerName, opt => opt.MapFrom(src => src.Customer.Name));

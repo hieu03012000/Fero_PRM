@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Fero.Data.ViewModels;
+using FeroPRMData.ViewModels;
 using FeroPRMData.Models;
 using System;
 
-namespace Fero.Data.AutoMapperModule
+namespace FeroPRMData.AutoMapperModule
 {
     public static class ApplyCastingModule
     {

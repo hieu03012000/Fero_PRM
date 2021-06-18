@@ -9,7 +9,6 @@ namespace FeroPRMData.Models
         {
             ApplyCasting = new HashSet<ApplyCasting>();
             Image = new HashSet<Image>();
-            ModelCasting = new HashSet<ModelCasting>();
             ModelOffer = new HashSet<ModelOffer>();
             ModelStyle = new HashSet<ModelStyle>();
             SubscribeCasting = new HashSet<SubscribeCasting>();
@@ -33,7 +32,6 @@ namespace FeroPRMData.Models
 
         public virtual ICollection<ApplyCasting> ApplyCasting { get; set; }
         public virtual ICollection<Image> Image { get; set; }
-        public virtual ICollection<ModelCasting> ModelCasting { get; set; }
         public virtual ICollection<ModelOffer> ModelOffer { get; set; }
         public virtual ICollection<ModelStyle> ModelStyle { get; set; }
         public virtual ICollection<SubscribeCasting> SubscribeCasting { get; set; }

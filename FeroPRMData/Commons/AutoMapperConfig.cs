@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Fero.Data.AutoMapperModule;
+using FeroPRMData.AutoMapperModule;
 using Microsoft.Extensions.DependencyInjection;
 namespace FeroPRMData.Commons
 {
@@ -13,10 +13,10 @@ namespace FeroPRMData.Commons
                 mc.ConfigModelModule();
                 mc.ConfigCastingModule();
                 mc.ConfigModelStyleModule();
+                mc.ConfigStyleModule();
                 mc.ConfigImageModule();
                 mc.ConfigApplyCastingModule();
                 mc.ConfigSubscribeCastingModule();
-                mc.ConfigModelCastingModule();
                 mc.ConfigCustomerModule();
             });
             IMapper mapper = mappingConfig.CreateMapper();

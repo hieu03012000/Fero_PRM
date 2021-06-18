@@ -7,7 +7,7 @@ namespace FeroPRMData.Models
     {
         public string ModelId { get; set; }
         public int CastingId { get; set; }
-        public long? Time { get; set; }
+        public DateTime? Time { get; set; }
 
         public virtual Casting Casting { get; set; }
         public virtual Model Model { get; set; }

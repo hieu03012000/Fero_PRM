@@ -20,9 +20,10 @@ namespace FeroPRMData.Models
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<Image> Image { get; set; }
         public virtual DbSet<Model> Model { get; set; }
-        public virtual DbSet<ModelCasting> ModelCasting { get; set; }
+        public virtual DbSet<ModelOffer> ModelOffer { get; set; }
         public virtual DbSet<ModelStyle> ModelStyle { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
+        public virtual DbSet<Offer> Offer { get; set; }
         public virtual DbSet<Style> Style { get; set; }
         public virtual DbSet<SubscribeCasting> SubscribeCasting { get; set; }
 
@@ -31,7 +32,7 @@ namespace FeroPRMData.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost,1433;Initial Catalog=Fero_PRM;User ID=sa;Password=123;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=localhost,1433; Database=Fero_PRM; User Id=sa; Password=123;");
             }
         }
 
@@ -64,6 +65,8 @@ namespace FeroPRMData.Models
             {
                 entity.Property(e => e.CloseTime).HasColumnType("datetime");
 
+                entity.Property(e => e.CreateTime).HasColumnType("datetime");
+
                 entity.Property(e => e.CustomerId)
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -78,8 +81,6 @@ namespace FeroPRMData.Models
 
                 entity.Property(e => e.OpenTime).HasColumnType("datetime");
 
-                entity.Property(e => e.Salary).HasColumnType("decimal(18, 3)");
-
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Casting)
                     .HasForeignKey(d => d.CustomerId)
@@ -93,6 +94,10 @@ namespace FeroPRMData.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Address)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Fanpage)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -140,61 +145,53 @@ namespace FeroPRMData.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Address)
-                    .HasMaxLength(200)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Avatar)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Bust).HasColumnType("decimal(5, 3)");
+                entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
 
                 entity.Property(e => e.Gmail)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Height).HasColumnType("decimal(5, 3)");
-
-                entity.Property(e => e.Hip).HasColumnType("decimal(5, 3)");
-
                 entity.Property(e => e.Name)
-                    .HasMaxLength(100)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Phone)
-                    .HasMaxLength(50)
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.SocialNetworkLink)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Waist).HasColumnType("decimal(5, 3)");
-
-                entity.Property(e => e.Weight).HasColumnType("decimal(5, 3)");
             });
 
-            modelBuilder.Entity<ModelCasting>(entity =>
+            modelBuilder.Entity<ModelOffer>(entity =>
             {
-                entity.HasKey(e => new { e.ModelId, e.CastingId });
+                entity.HasKey(e => new { e.ModelId, e.OfferId });
 
                 entity.Property(e => e.ModelId)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Date).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Casting)
-                    .WithMany(p => p.ModelCasting)
-                    .HasForeignKey(d => d.CastingId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ModelCasting_Casting");
+                entity.Property(e => e.Time).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Model)
-                    .WithMany(p => p.ModelCasting)
+                    .WithMany(p => p.ModelOffer)
                     .HasForeignKey(d => d.ModelId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ModelCasting_Model");
+                    .HasConstraintName("FK_ModelOffer_Model");
+
+                entity.HasOne(d => d.Offer)
+                    .WithMany(p => p.ModelOffer)
+                    .HasForeignKey(d => d.OfferId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ModelOffer_Offer");
             });
 
             modelBuilder.Entity<ModelStyle>(entity =>
@@ -220,18 +217,41 @@ namespace FeroPRMData.Models
 
             modelBuilder.Entity<Notification>(entity =>
             {
-
-                entity.Property(e => e.Time).HasColumnType("date");
-
                 entity.Property(e => e.Description)
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Time).HasColumnType("datetime");
 
                 entity.Property(e => e.Title)
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.UserId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Offer>(entity =>
+            {
+                entity.Property(e => e.CustomerId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Time).HasColumnType("datetime");
+
+                entity.Property(e => e.Title)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Offer)
+                    .HasForeignKey(d => d.CustomerId)
+                    .HasConstraintName("FK_Offer_Customer");
             });
 
             modelBuilder.Entity<Style>(entity =>

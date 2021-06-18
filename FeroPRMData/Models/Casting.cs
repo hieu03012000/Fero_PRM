@@ -8,7 +8,6 @@ namespace FeroPRMData.Models
         public Casting()
         {
             ApplyCasting = new HashSet<ApplyCasting>();
-            ModelCasting = new HashSet<ModelCasting>();
             SubscribeCasting = new HashSet<SubscribeCasting>();
         }
 
@@ -17,14 +16,14 @@ namespace FeroPRMData.Models
         public string Description { get; set; }
         public double? Salary { get; set; }
         public int? MonopolisticTime { get; set; }
-        public long? OpenTime { get; set; }
-        public long? CloseTime { get; set; }
+        public DateTime? OpenTime { get; set; }
+        public DateTime? CloseTime { get; set; }
         public int? Status { get; set; }
         public string CustomerId { get; set; }
+        public DateTime? CreateTime { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual ICollection<ApplyCasting> ApplyCasting { get; set; }
-        public virtual ICollection<ModelCasting> ModelCasting { get; set; }
         public virtual ICollection<SubscribeCasting> SubscribeCasting { get; set; }
     }
 }

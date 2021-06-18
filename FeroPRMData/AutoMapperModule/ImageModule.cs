@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Fero.Data.ViewModels;
+using FeroPRMData.ViewModels;
 using FeroPRMData.Models;
 
-namespace Fero.Data.AutoMapperModule
+namespace FeroPRMData.AutoMapperModule
 {
     public static class ImageModule
     {

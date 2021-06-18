@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Fero.Data.ViewModels
+namespace FeroPRMData.ViewModels
 {
     public class ModelDetailViewModel
     {

@@ -1,4 +1,3 @@
-using Fero.Data.ViewModels;
 using FeroPRMData.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +15,16 @@ namespace Fero_PRM.Controllers
         {
             _castingService = castingService;
             _modelService = modelService;
+        }
+
+        /// <summary>
+        /// Filter casting
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("new")]
+        public async Task<IActionResult> GetNewCasting()
+        {
+            return Ok(await _castingService.NewCasting());
         }
 
         //#region hdev

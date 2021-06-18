@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Fero.Data.ViewModels
+namespace FeroPRMData.ViewModels
 {
     public class DetailCastingViewModel
     {

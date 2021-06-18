@@ -1,8 +1,8 @@
 using AutoMapper;
-using Fero.Data.ViewModels;
 using FeroPRMData.Models;
 using FeroPRMData.Repositories;
 using FeroPRMData.Services.Base;
+using FeroPRMData.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;

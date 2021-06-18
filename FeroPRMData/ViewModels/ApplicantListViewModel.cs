@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fero.Data.ViewModels
+namespace FeroPRMData.ViewModels
 {
     public class ApplicantListViewModel
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Fero.Data.ViewModels
+namespace FeroPRMData.ViewModels
 {
-    public class GetAllCastingViewModel
+    public class NewCastingViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

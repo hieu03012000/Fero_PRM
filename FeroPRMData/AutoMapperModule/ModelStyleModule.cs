@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Fero.Data.ViewModels;
 using FeroPRMData.Models;
+using FeroPRMData.ViewModels;
 
-namespace Fero.Data.AutoMapperModule
+namespace FeroPRMData.AutoMapperModule
 {
     public static class ModelStyleModule
     {

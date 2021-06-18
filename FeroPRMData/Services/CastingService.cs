@@ -1,9 +1,9 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Fero.Data.ViewModels;
 using FeroPRMData.Models;
 using FeroPRMData.Repositories;
 using FeroPRMData.Services.Base;
+using FeroPRMData.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +13,7 @@ namespace FeroPRMData.Services
     public partial interface ICastingService : IBaseService<Casting>
     {
         #region hdev
+        Task<IQueryable<NewCastingViewModel>> NewCasting();
         //Task<IQueryable<GetAllCastingViewModel>> FilterCasting(string name, decimal? min, decimal? max);
         //Task<DetailCastingViewModel> GetCastingById(int castingId);
         //Task<CreateCastingCallViewModel> CreateCasting(CreateCastingCallViewModel model);
@@ -25,11 +26,21 @@ namespace FeroPRMData.Services
     }
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
-        //private readonly IMapper _mapper;
-        //public CastingService(ICastingRepository repository, IMapper mapper) : base(repository)
-        //{
-        //    _mapper = mapper;
-        //}
+        private readonly IMapper _mapper;
+        public CastingService(ICastingRepository repository, IMapper mapper) : base(repository)
+        {
+            _mapper = mapper;
+        }
+
+        public async Task<IQueryable<NewCastingViewModel>> NewCasting()
+        {
+            if (await Get().FirstOrDefaultAsync() == null) return null;
+            var castingList = Get().OrderByDescending(c => c.CreateTime).Take(10)
+                .ProjectTo<NewCastingViewModel>(_mapper.ConfigurationProvider);
+            return castingList;
+        }
+
+
         //#region hdev
         //private async Task<decimal?> GetMaxSalary()
         //{

@@ -3,6 +3,7 @@ using FeroPRMData.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fero_PRM.Controllers
 {
@@ -21,9 +22,9 @@ namespace Fero_PRM.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Gets()
+        public async Task<IActionResult> Gets()
         {
-            return Ok(_styleService.Get().ToList());
+            return Ok(await _styleService.GetAllStyle());
         }
         //[HttpGet("{id}")]
         //[ProducesResponseType(StatusCodes.Status200OK)]
