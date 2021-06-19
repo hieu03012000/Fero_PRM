@@ -6,7 +6,7 @@ using FeroPRMData.Services.Base;
 using FeroPRMData.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-
+//test /shdasdhakdasdhjasdjasdhaksjdf
 namespace FeroPRMData.Services
 {
     public partial interface IApplyCastingService : IBaseService<ApplyCasting>

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace FeroPRMData.Services
 {
+    //aall
     public partial interface ICastingService : IBaseService<Casting>
     {
         #region hdev
