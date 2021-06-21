@@ -28,9 +28,11 @@ namespace FeroPRMData.Services
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
         private readonly IMapper _mapper;
-        public CastingService(ICastingRepository repository, IMapper mapper) : base(repository)
+        private readonly ICastingRepository _castingRepository;
+        public CastingService(ICastingRepository castingRepository, IMapper mapper) : base(castingRepository)
         {
             _mapper = mapper;
+            _castingRepository = castingRepository;
         }
 
         public async Task<IQueryable<NewCastingViewModel>> NewCasting()
@@ -144,5 +146,17 @@ namespace FeroPRMData.Services
         //    return 0;
         //}
         //#endregion
+
+        //Tao casting vs form casting
+        public async void CreateCasting(Casting casting)
+        {
+            await _castingRepository.CreateAsyn(casting);
+        }
+
+        public async void CreateCasting(string customerId, Casting casting)
+        {
+            casting.CustomerId = customerId;
+            await _castingRepository.CreateAsyn(casting);
+        }
     }
 }

@@ -19,9 +19,11 @@ namespace FeroPRMData.Services
     public partial class CustomerService : BaseService<Customer>, ICustomerService
     {
         private readonly IMapper _mapper;
-        public CustomerService(ICustomerRepository repository, IMapper mapper) : base(repository)
+        private readonly ICustomerRepository _customerRepository;
+        public CustomerService(ICustomerRepository customerRepository, IMapper mapper) : base(customerRepository)
         {
             _mapper = mapper;
+            _customerRepository = customerRepository;
         }
         #region hdev
         private string GetCustomerId()
@@ -46,8 +48,15 @@ namespace FeroPRMData.Services
         {
             var customer = await Get(c => c.Gmail.Equals(mail)).FirstOrDefaultAsync();
 
-            return null;
+            return customer;
         }
         #endregion
+
+        public async Task<Customer> GetCustomerProfile(string mail)
+        {
+            var customer = await Get(c => c.Gmail.Equals(mail)).FirstOrDefaultAsync();
+
+            return customer;
+        }
     }
 }
