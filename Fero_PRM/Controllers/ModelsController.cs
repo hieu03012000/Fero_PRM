@@ -25,29 +25,54 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Gets(string id)
+        public IActionResult Gets(string id)
         {
-            return Ok( await _modelService.GetModelsById(id));
+            return Ok(_modelService.GetCompleteModelsById(id));
         }
 
         [HttpGet("gmail/{id}")]
-        public async Task<IActionResult> GetGmail(string id)
+        public IActionResult GetModelByGmail(string id)
         {
-            var user = await _modelService.GetModelByGmail(id);
-            if(user != null)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return Ok(_modelService.GetCompleteModelByGmail(id));
+        }
+
+        /*        [HttpGet("gmail/{id}")]
+                public async Task<IActionResult> GetByGmail(string id)
+                {
+                    var user = await _modelService.GetModelByGmail(id);
+                    if(user != null)
+                    {
+                        return Ok(user);
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+                }*/
+
+        [HttpGet("check")]
+        public bool CheckGmail(string gmail)
+        {
+            return _modelService.CheckModelGmail(gmail);
         }
 
         [HttpGet("check")]
         public bool CheckGmail(CheckGmail gmail)
         {
             return _modelService.CheckModelGmail(gmail.Id, gmail.Gmail);
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateModel(Model model)
+        {
+            var result = await _modelService.CreateModel(model);
+            if (result != null) {
+                return StatusCode(201);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         #region hdev

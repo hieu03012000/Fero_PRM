@@ -22,6 +22,7 @@ namespace FeroPRMData.ViewModels
         public string Phone { get; set; }
         public string Avatar { get; set; }
         public string Gmail { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public virtual ICollection<CreateAccountImageViewModel> Image { get; set; }
         public virtual ICollection<CreateAccountModelStyleViewModel> ModelStyle { get; set; }
