@@ -17,25 +17,53 @@ namespace Fero_PRM.Controllers
         {
             _modelService = modelService;
         }
-        //[HttpGet]
-        //public IActionResult Gets()
-        //{
-        //    return Ok(_modelService.Get().ToList());
-        //}
-        #region hdev
-        /// <summary>
-        /// Get model by Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById(string id)
+
+        [HttpGet]
+        public IActionResult Gets()
         {
-            return Ok(await _modelService.GetModelById(id));
+            return Ok(_modelService.Get().ToList());
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Gets(string id)
+        {
+            return Ok( await _modelService.GetModelsById(id));
+        }
+
+        [HttpGet("gmail/{id}")]
+        public async Task<IActionResult> GetGmail(string id)
+        {
+            var user = await _modelService.GetModelByGmail(id);
+            if(user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("check")]
+        public bool CheckGmail(CheckGmail gmail)
+        {
+            return _modelService.CheckModelGmail(gmail.Id, gmail.Gmail);
+        }
+
+        #region hdev
+        /*        /// <summary>
+                /// Get model by Id
+                /// </summary>
+                /// <param name="id"></param>
+                /// <returns></returns>
+                [HttpGet("{id}")]
+                [ProducesResponseType(StatusCodes.Status200OK)]
+                [ProducesResponseType(StatusCodes.Status404NotFound)]
+                public async Task<IActionResult> GetById(string id)
+                {
+                    return Ok(await _modelService.GetModelById(id));
+                }
+        */
         /// <summary>
         /// Model sign up
         /// </summary>

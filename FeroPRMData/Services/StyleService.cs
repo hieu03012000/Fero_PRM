@@ -17,9 +17,11 @@ namespace FeroPRMData.Services
     public partial class StyleService:BaseService<Style>,IStyleService
     {
         private readonly IMapper _mapper;
-        public StyleService(IMapper mapper,IStyleRepository repository):base(repository)
+        private readonly IStyleRepository _styleRepository;
+        public StyleService(IMapper mapper,IStyleRepository styleRepository) :base(styleRepository)
         {
             _mapper = mapper;
+            _styleRepository = styleRepository;
         }
 
         public async Task<IQueryable<GetAllStyleViewModel>> GetAllStyle()
@@ -29,6 +31,5 @@ namespace FeroPRMData.Services
             var styleList = Get().ProjectTo<GetAllStyleViewModel>(_mapper.ConfigurationProvider);
             return styleList;
         }
-
     }
 }

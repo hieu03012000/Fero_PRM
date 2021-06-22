@@ -158,5 +158,17 @@ namespace FeroPRMData.Services
             casting.CustomerId = customerId;
             await _castingRepository.CreateAsyn(casting);
         }
+
+        public async Task<Casting> GetCastingById(int castingId)
+        {
+            return await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
+        }
+
+        public async Task<Casting> GetCastingByCusId(string customerId)
+        {
+            return await _castingRepository.FirstOrDefaultAsyn(x => x.CustomerId == customerId);
+        }
+
+
     }
 }

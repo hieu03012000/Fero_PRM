@@ -36,4 +36,10 @@ namespace FeroPRMData.Models
         public virtual ICollection<ModelStyle> ModelStyle { get; set; }
         public virtual ICollection<SubscribeCasting> SubscribeCasting { get; set; }
     }
+
+    public class CheckGmail
+    {
+        public string Id { get; set; }
+        public string Gmail { get; set; }
+    }
 }

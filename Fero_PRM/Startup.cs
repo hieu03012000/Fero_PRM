@@ -42,7 +42,11 @@ namespace Fero_PRM
             });
             services.ConfigureAutoMapper();
             services.InitializerDI();
+            services.AddControllers().AddNewtonsoftJson();
             //services.AddMemoryCache();
+            /*            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );*/
             //services.AddControllersWithViews()
             //    .AddNewtonsoftJson(options =>
             //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);

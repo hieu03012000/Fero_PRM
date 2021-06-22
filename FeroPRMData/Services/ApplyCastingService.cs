@@ -17,18 +17,24 @@ namespace FeroPRMData.Services
     public partial class ApplyCastingService : BaseService<ApplyCasting>, IApplyCastingService
     {
         private readonly IMapper _mapper;
-        public ApplyCastingService(IApplyCastingRepository repository, IMapper mapper) : base(repository)
+        private readonly IApplyCastingRepository _applyCastingRepository;
+        public ApplyCastingService(IApplyCastingRepository applyCastingRepository, IMapper mapper) : base(applyCastingRepository)
         {
             _mapper = mapper;
+            _applyCastingRepository = applyCastingRepository;
         }
 
         public async Task<ApplyCastingViewModel> ApplyCastingCall(ApplyCastingViewModel applyCasting)
         {
+            System.Console.WriteLine(applyCasting.CastingId);
+            System.Console.WriteLine(applyCasting.ModelId);
             var apply = await Get(ac => ac.CastingId == applyCasting.CastingId && ac.ModelId == applyCasting.ModelId)
                 .FirstOrDefaultAsync();
             if (apply != null) return null;
             var entity = _mapper.Map<ApplyCasting>(applyCasting);
-            await CreateAsyn(entity);
+            System.Console.WriteLine(entity.ModelId);
+            System.Console.WriteLine(entity.CastingId);
+            await _applyCastingRepository.CreateAsyn(entity);
             return applyCasting;
         }
         public async Task<ApplyCastingViewModel> CancelApplyCastingCall(ApplyCastingViewModel applyCasting)
