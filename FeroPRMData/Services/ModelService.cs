@@ -5,6 +5,7 @@ using FeroPRMData.Repositories;
 using FeroPRMData.Services.Base;
 using FeroPRMData.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,14 +33,16 @@ namespace FeroPRMData.Services
         private readonly IModelRepository _modelRepository;
         private readonly IModelStyleRepository _modelStyleRepository;
         private readonly IStyleRepository _styleRepository;
-        public ModelService(IModelRepository modelRepository, IMapper mapper, IStyleRepository styleRepository,
-            IApplyCastingRepository applyCastingRepository, IModelStyleRepository modelStyleRepository) : base(modelRepository)
+        private readonly IImageRepository _imageRepository;
+        public ModelService(IModelRepository modelRepository, IMapper mapper, IStyleRepository styleRepository, IImageRepository imageRepository,
+        IApplyCastingRepository applyCastingRepository, IModelStyleRepository modelStyleRepository) : base(modelRepository)
         {
             _mapper = mapper;
             _applyCastingRepository = applyCastingRepository;
             _modelRepository = modelRepository;
             _modelStyleRepository = modelStyleRepository;
             _styleRepository = styleRepository;
+            _imageRepository = imageRepository;
         }
         private string GetModelId()
         {
@@ -133,15 +136,23 @@ namespace FeroPRMData.Services
         //ok
         public CompleteModel GetCompleteModelByGmail(string gmail)
         {
-           var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
+            var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
             var styles = _modelStyleRepository.Get(x => x.ModelId == model.Id).ToList();
-            List<int> li = new List<int>();
-            List<string> ls = new List<string>();
+            List<Tuple<int, string>> listStyle = new List<Tuple<int, string>>();
+            List<Tuple<int, string>> listImage = new List<Tuple<int, string>>();
             for (int i = 0; i < styles.Count; i++)
             {
                 var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
-                li.Add(style.Id);
-                ls.Add(style.Name);
+                Tuple<int, string> styless = new Tuple<int, string>(style.Id, style.Name);
+                listStyle.Add(styless);
+            }
+            var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+            
+            for (int i = 0; i < images.Count; i++)
+            {
+                var image = _styleRepository.FirstOrDefault(x => x.Id == images[i].Id);
+                Tuple<int, string> imagess = new Tuple<int, string>(image.Id, image.Name);
+                listImage.Add(imagess);
             }
             CompleteModel cm = new CompleteModel
             {
@@ -160,8 +171,8 @@ namespace FeroPRMData.Services
                 Status = model.Status,
                 Waist = model.Waist,
                 Weight = model.Weight,
-                StyleId = li,
-                StyleName = ls
+                Styles = listStyle,
+                Image = listImage
             };
             return cm;
         }
@@ -169,16 +180,23 @@ namespace FeroPRMData.Services
         //ok
         public CompleteModel GetCompleteModelsById(string modelId)
         {
+            var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
             var styles = _modelStyleRepository.Get(x => x.ModelId == modelId).ToList();
-            List<int> li = new List<int>();
-            List<string> ls = new List<string>();
+            List<Tuple<int, string>> listStyle = new List<Tuple<int, string>>();
             for (int i = 0; i < styles.Count; i++)
             {
                 var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
-                li.Add(style.Id);
-                ls.Add(style.Name);
+                Tuple<int, string> styless = new Tuple<int, string>(style.Id, style.Name);
+                listStyle.Add(styless);
             }
-            var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
+            var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+            List<Tuple<int, string>> listImage = new List<Tuple<int, string>>();
+            for (int i = 0; i < images.Count; i++)
+            {
+                var image = _styleRepository.FirstOrDefault(x => x.Id == images[i].Id);
+                Tuple<int, string> imagess = new Tuple<int, string>(image.Id, image.Name);
+                listImage.Add(imagess);
+            }
             CompleteModel cm = new CompleteModel
             {
                 Id = model.Id,
@@ -196,8 +214,8 @@ namespace FeroPRMData.Services
                 Status = model.Status,
                 Waist = model.Waist,
                 Weight = model.Weight,
-                StyleId = li,
-                StyleName = ls
+                Styles = listStyle,
+                Image = listImage
             };
             return cm;
         }

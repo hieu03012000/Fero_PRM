@@ -56,13 +56,13 @@ namespace Fero_PRM.Controllers
             return _modelService.CheckModelGmail(gmail);
         }
 
-        [HttpGet("check")]
+/*        [HttpGet("check")]
         public bool CheckGmail(CheckGmail gmail)
         {
             return _modelService.CheckModelGmail(gmail.Id, gmail.Gmail);
-        }
+        }*/
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IActionResult> CreateModel(Model model)
         {
             var result = await _modelService.CreateModel(model);

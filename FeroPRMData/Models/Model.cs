@@ -60,7 +60,7 @@ namespace FeroPRMData.Models
         public int? Status { get; set; }
         public string SocialNetworkLink { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public List<int> StyleId { get; set; }
-        public List<string> StyleName { get; set; }
+        public List<Tuple<int, string>> Styles { get; set; }
+        public List<Tuple<int, string>> Image { get; set; }
     }
 }
