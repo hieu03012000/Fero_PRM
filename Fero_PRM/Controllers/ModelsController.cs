@@ -27,13 +27,29 @@ namespace Fero_PRM.Controllers
         [HttpGet("{id}")]
         public IActionResult Gets(string id)
         {
-            return Ok(_modelService.GetCompleteModelsById(id));
+            var result = _modelService.GetCompleteModelsById(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("gmail/{id}")]
         public IActionResult GetModelByGmail(string id)
         {
-            return Ok(_modelService.GetCompleteModelByGmail(id));
+            var result = _modelService.GetCompleteModelByGmail(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         /*        [HttpGet("gmail/{id}")]
@@ -94,13 +110,13 @@ namespace Fero_PRM.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(CreateModelAccountViewModel entity)
-        {
-            return Ok(await _modelService.CreateModelAccount(entity));
-        }
+        //[HttpPost]
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public async Task<IActionResult> Create(CreateModelAccountViewModel entity)
+        //{
+        //    return Ok(await _modelService.CreateModelAccount(entity));
+        //}
         #endregion
 
         //[HttpPut("{id}")]
