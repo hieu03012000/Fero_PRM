@@ -8,6 +8,8 @@ namespace FeroPRMData.AutoMapperModule
     {
         public static void ConfigCastingModule(this IMapperConfigurationExpression mc)
         {
+            mc.CreateMap<Casting, ShowCasting>();
+            mc.CreateMap<Offer, ShowOffer>();
             mc.CreateMap<Casting, NewCastingViewModel>()
                 .ForMember(des => des.CustomerName, opt => opt.MapFrom(src => src.Customer.Name));
             mc.CreateMap<NewCastingViewModel, Casting>();

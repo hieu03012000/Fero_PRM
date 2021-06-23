@@ -22,6 +22,9 @@ namespace FeroPRMData.Services
         Task<Model> GetModelByGmail(string gmail);
         Task<Model> GetModelsById(string modelId);
         Task<Model> CreateModel(Model model);
+        Task<List<ShowCasting>> GetCastingsModelById(string modelId);
+        Task<List<ShowOffer>> GetOffersModelById(string modelId);
+
 /*        CompleteModel GetCompleteModelsById(string modelId);
         GetModelViewModel GetCompleteModelByGmail(string gmail);
 */
@@ -34,7 +37,11 @@ namespace FeroPRMData.Services
         private readonly IModelStyleRepository _modelStyleRepository;
         private readonly IStyleRepository _styleRepository;
         private readonly IImageRepository _imageRepository;
-        public ModelService(IModelRepository modelRepository, IMapper mapper, IStyleRepository styleRepository, IImageRepository imageRepository,
+        private readonly ISubscribeCastingRepository _subscribeCastingRepository;
+        private readonly ICastingRepository _castingRepository;
+        private readonly IOfferRepository _offerRepository;
+        private readonly IModelOfferRepository _modelOfferRepository;
+        public ModelService(IModelRepository modelRepository, IMapper mapper, ICastingRepository castingRepository, IModelOfferRepository modelOfferRepository, IOfferRepository offerRepository,ISubscribeCastingRepository subscribeCastingRepository, IStyleRepository styleRepository, IImageRepository imageRepository,
         IApplyCastingRepository applyCastingRepository, IModelStyleRepository modelStyleRepository) : base(modelRepository)
         {
             _mapper = mapper;
@@ -43,6 +50,10 @@ namespace FeroPRMData.Services
             _modelStyleRepository = modelStyleRepository;
             _styleRepository = styleRepository;
             _imageRepository = imageRepository;
+            _subscribeCastingRepository = subscribeCastingRepository;
+            _castingRepository = castingRepository;
+            _offerRepository = offerRepository;
+            _modelOfferRepository = modelOfferRepository;
         }
         private string GetModelId()
         {
@@ -132,8 +143,54 @@ namespace FeroPRMData.Services
             return model;
         }
 
+        public async Task<List<ShowOffer>> GetOffersModelById(string modelId)
+        {
+            var listModelOffer = await _modelOfferRepository.Get(x => x.ModelId == modelId).ToListAsync();
+            List<ShowOffer> lc = new List<ShowOffer>();
+            foreach (var item in listModelOffer)
+            {
+                var offer = await _offerRepository.FirstOrDefaultAsyn(x => x.Id == item.OfferId);
+                var des = _mapper.Map<ShowOffer>(offer);
+                lc.Add(des);
+            }
+            return lc;
+        }
 
-        /*//ok
+        public async Task<List<ShowCasting>> GetCastingsModelById(string modelId)
+        {
+            var listSupCasting = await _subscribeCastingRepository.Get(x => x.ModelId == modelId).ToListAsync();
+            List<ShowCasting> lc = new List<ShowCasting>();
+            foreach (var item in listSupCasting)
+            {
+                var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == item.CastingId);
+                var des = _mapper.Map<ShowCasting>(casting);
+                lc.Add(des);
+            }
+            return lc;
+        }
+
+        public ShowCasting CopyAToB(Casting a)
+        {
+            ShowCasting b = new ShowCasting();
+            // copy fields
+            var typeOfA = a.GetType();
+            var typeOfB = b.GetType();
+            foreach (var fieldOfA in typeOfA.GetFields())
+            {
+                var fieldOfB = typeOfB.GetField(fieldOfA.Name);
+                fieldOfB.SetValue(b, fieldOfA.GetValue(a));
+            }
+            // copy properties
+            foreach (var propertyOfA in typeOfA.GetProperties())
+            {
+                var propertyOfB = typeOfB.GetProperty(propertyOfA.Name);
+                propertyOfB.SetValue(b, propertyOfA.GetValue(a));
+            }
+
+            return b;
+        }
+
+        //ok
         public GetModelViewModel GetCompleteModelByGmail(string gmail)
         {
             var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
@@ -174,7 +231,7 @@ namespace FeroPRMData.Services
         }
 
         //ok
-        public CompleteModel GetCompleteModelsById(string modelId)
+        /*public CompleteModel GetCompleteModelsById(string modelId)
         {
             return null;
             //var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
@@ -217,5 +274,6 @@ namespace FeroPRMData.Services
             };
             return cm;
         }
+        */
     }
 }

@@ -34,9 +34,9 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCastingById(int castingId)
+        public async Task<IActionResult> GetCastingById(int id)
         {
-            return Ok(await _castingService.GetCastingById(castingId));
+            return Ok(await _castingService.GetCastingById(id));
         }
 
         //#region hdev

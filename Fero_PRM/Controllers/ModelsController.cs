@@ -24,33 +24,45 @@ namespace Fero_PRM.Controllers
             return Ok(_modelService.Get().ToList());
         }
 
-/*        [HttpGet("{id}")]
-        public IActionResult Gets(string id)
+        [HttpGet("{id}/castings")]
+        public async Task<IActionResult> GetModelCastings(string id)
         {
-            var result = _modelService.GetCompleteModelsById(id);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }*/
+            return Ok(await _modelService.GetCastingsModelById(id));
+        }
 
-/*        [HttpGet("gmail/{id}")]
-        public IActionResult GetModelByGmail(string id)
+        [HttpGet("{id}/offer")]
+        public async Task<IActionResult> GetModelOffers(string id)
         {
-            var result = _modelService.GetCompleteModelByGmail(id);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }*/
+            return Ok(await _modelService.GetOffersModelById(id));
+        }
+
+        /*        [HttpGet("{id}")]
+                public IActionResult Gets(string id)
+                {
+                    var result = _modelService.GetCompleteModelsById(id);
+                    if (result != null)
+                    {
+                        return Ok(result);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }*/
+
+        /*        [HttpGet("gmail/{id}")]
+                public IActionResult GetModelByGmail(string id)
+                {
+                    var result = _modelService.GetCompleteModelByGmail(id);
+                    if (result != null)
+                    {
+                        return Ok(result);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }*/
 
         /*        [HttpGet("gmail/{id}")]
                 public async Task<IActionResult> GetByGmail(string id)

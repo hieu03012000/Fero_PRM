@@ -8,6 +8,7 @@ namespace FeroPRMData.AutoMapperModule
     {
         public static void ConfigModelModule(this IMapperConfigurationExpression mc)
         {
+            mc.CreateMap<Casting, ShowCasting>();
             mc.CreateMap<Model, CreateModelAccountViewModel>();
             mc.CreateMap<CreateModelAccountViewModel, Model>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => 1));
