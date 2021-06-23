@@ -24,7 +24,7 @@ namespace Fero_PRM.Controllers
         [HttpGet("new")]
         public async Task<IActionResult> GetNewCasting()
         {
-            return Ok(await _castingService.NewCasting());
+            return Ok(await _castingService.GetListCasting());
         }
 
         [HttpGet]

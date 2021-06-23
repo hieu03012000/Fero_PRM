@@ -30,7 +30,7 @@ namespace Fero_PRM.Controllers
             return Ok(await _modelService.GetCastingsModelById(id));
         }
 
-        [HttpGet("{id}/offer")]
+        [HttpGet("{id}/offers")]
         public async Task<IActionResult> GetModelOffers(string id)
         {
             return Ok(await _modelService.GetOffersModelById(id));

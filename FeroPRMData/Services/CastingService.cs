@@ -29,6 +29,7 @@ namespace FeroPRMData.Services
         Task<List<Casting>> GetListCasting(string cusId);
         Task<Casting> GetCastingByCusId(string customerId);
         Task<Casting> GetCastingById(int castingId);
+        Task<List<Casting>> GetListCasting();
     }
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
@@ -161,6 +162,7 @@ namespace FeroPRMData.Services
             await _castingRepository.CreateAsyn(casting);
         }
 
+        //them create at 
         public async void CreateCasting(string customerId, Casting casting)
         {
             casting.CustomerId = customerId;
@@ -180,6 +182,14 @@ namespace FeroPRMData.Services
         public async Task<List<Casting>> GetListCasting(string cusId)
         {
             var listCasting = await _castingRepository.Get(x => x.CustomerId == cusId).ToListAsync();
+            listCasting.Sort((x, y) => DateTime.Compare((DateTime)x.CreateTime, (DateTime)y.CreateTime));
+            var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();
+            return newList;
+        }
+
+        public async Task<List<Casting>> GetListCasting()
+        {
+            var listCasting = await _castingRepository.Get().ToListAsync();
             listCasting.Sort((x, y) => DateTime.Compare((DateTime)x.CreateTime, (DateTime)y.CreateTime));
             var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();
             return newList;

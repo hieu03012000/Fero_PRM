@@ -56,7 +56,6 @@ namespace FeroPRMData.Services
                 }
             }
         }
-
         public async void CreateNotiCusAccept(ModelOffer modelOffer)
         {
             //1 is accept
