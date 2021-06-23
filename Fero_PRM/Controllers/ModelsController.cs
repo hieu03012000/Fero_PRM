@@ -94,13 +94,13 @@ namespace Fero_PRM.Controllers
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(CreateModelAccountViewModel entity)
-        {
-            return Ok(await _modelService.CreateModelAccount(entity));
-        }
+        //[HttpPost]
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public async Task<IActionResult> Create(CreateModelAccountViewModel entity)
+        //{
+        //    return Ok(await _modelService.CreateModelAccount(entity));
+        //}
         #endregion
 
         //[HttpPut("{id}")]

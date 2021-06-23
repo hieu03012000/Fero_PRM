@@ -61,6 +61,6 @@ namespace FeroPRMData.Models
         public string SocialNetworkLink { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public List<Tuple<int, string>> Styles { get; set; }
-        public List<Tuple<int, string>> Image { get; set; }
+        public List<Tuple<int, string>> Images { get; set; }
     }
 }
