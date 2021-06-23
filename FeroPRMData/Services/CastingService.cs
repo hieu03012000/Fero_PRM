@@ -228,6 +228,10 @@ namespace FeroPRMData.Services
             {
                 max = GetMaxSalary();
             }
+            if(search == null)
+            {
+                search = "";
+            }
             var listCasting = await _castingRepository.Get(x => x.Name.Contains(search) && x.Salary >= min && x.Salary <= max  && x.Status == 1).ToListAsync();
             return listCasting;
         }
