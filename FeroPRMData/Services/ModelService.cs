@@ -151,6 +151,7 @@ namespace FeroPRMData.Services
             {
                 var offer = await _offerRepository.FirstOrDefaultAsyn(x => x.Id == item.OfferId);
                 var des = _mapper.Map<ShowOffer>(offer);
+                des.OfferStatus = item.Status;
                 lc.Add(des);
             }
             return lc;

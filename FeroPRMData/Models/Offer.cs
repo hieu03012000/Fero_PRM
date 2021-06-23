@@ -29,6 +29,6 @@ namespace FeroPRMData.Models
         public double? Salary { get; set; }
         public DateTime? Time { get; set; }
         public string CustomerId { get; set; }
-
+        public int? OfferStatus { get; set; }
     }
 }

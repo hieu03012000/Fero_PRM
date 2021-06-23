@@ -30,12 +30,13 @@ namespace FeroPRMData.Services
         Task<Casting> GetCastingByCusId(string customerId);
         Task<Casting> GetCastingById(int castingId);
         Task<List<Casting>> GetListCasting();
+        Task<List<Casting>> SearchListCasting(string search, double? min, double? max);
     }
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
         private readonly IMapper _mapper;
         private readonly ICastingRepository _castingRepository;
-        private readonly ICustomerRepository _customerRepository; 
+        private readonly ICustomerRepository _customerRepository;
 
         public CastingService(ICastingRepository castingRepository, ICustomerRepository customerRepository, IMapper mapper) : base(castingRepository)
         {
@@ -191,8 +192,44 @@ namespace FeroPRMData.Services
         {
             var listCasting = await _castingRepository.Get().ToListAsync();
             listCasting.Sort((x, y) => DateTime.Compare((DateTime)x.CreateTime, (DateTime)y.CreateTime));
-            var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();
-            return newList;
+            foreach (var item in listCasting)
+            {
+                if(item.Status != 1)
+                {
+                    listCasting.Remove(item);
+                }
+            }
+            if (listCasting.Count > 10)
+            {
+                var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();
+                return newList;
+            }
+            else{
+                return listCasting;
+            }
+            
+        }
+
+        public double GetMaxSalary()
+        {
+            var casting =  _castingRepository.Get().OrderByDescending(x => x.Salary).FirstOrDefault();
+            return (double)casting.Salary;
+            
+        }
+        
+        //nguoi mau search casting theo substr casting name, min salary, max salary ( casting - status  published, opened, and closed)
+        public async Task<List<Casting>> SearchListCasting(string search, double? min, double? max)
+        {
+            if(min == null)
+            {
+                min = 0;
+            }
+            if(max == null)
+            {
+                max = GetMaxSalary();
+            }
+            var listCasting = await _castingRepository.Get(x => x.Name.Contains(search) && x.Salary >= min && x.Salary <= max  && x.Status == 1).ToListAsync();
+            return listCasting;
         }
     }
 }

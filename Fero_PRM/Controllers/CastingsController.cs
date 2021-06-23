@@ -39,6 +39,12 @@ namespace Fero_PRM.Controllers
             return Ok(await _castingService.GetCastingById(id));
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchCasting(string search, double? min, double? max)
+        {
+            return Ok(await _castingService.SearchListCasting(search, min, max));
+        }
+
         //#region hdev
         ///// <summary>
         ///// Filter casting
