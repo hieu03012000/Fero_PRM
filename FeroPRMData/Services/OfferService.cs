@@ -2,12 +2,18 @@ using AutoMapper;
 using FeroPRMData.Models;
 using FeroPRMData.Repositories;
 using FeroPRMData.Services.Base;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FeroPRMData.Services
 {
     public partial interface IOfferService:IBaseService<Offer>
     {
+        Task<List<Offer>> GetOffer();
+        Task<List<Offer>> GetOfferById(string customerId);
     }
     public partial class OfferService:BaseService<Offer>,IOfferService
     {
@@ -55,6 +61,20 @@ namespace FeroPRMData.Services
                 };
                 CreateOffer(offer);
             }
+        }
+
+        public async Task<List<Offer>> GetOfferById(string customerId)
+        {
+            var listOffer = await _offerRepository.Get(x => x.CustomerId == customerId).ToListAsync();
+            return listOffer;
+        }
+
+        public async Task<List<Offer>> GetOffer()
+        {
+            var listOffer = await _offerRepository.Get().ToListAsync();
+            listOffer.Sort((x, y) => DateTime.Compare((DateTime)x.Time, (DateTime)y.Time));
+            var newList = listOffer.Skip(Math.Max(0, listOffer.Count() - 10)).ToList();
+            return newList;
         }
     }
 }

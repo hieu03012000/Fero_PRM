@@ -5,6 +5,8 @@ using FeroPRMData.Repositories;
 using FeroPRMData.Services.Base;
 using FeroPRMData.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,15 +26,21 @@ namespace FeroPRMData.Services
         //Task<int> DeleteCasting(int castId);
         //Task<int> MakeOffer(MakeOfferViewModel offer);
         #endregion
+        Task<List<Casting>> GetListCasting(string cusId);
+        Task<Casting> GetCastingByCusId(string customerId);
+        Task<Casting> GetCastingById(int castingId);
     }
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
         private readonly IMapper _mapper;
         private readonly ICastingRepository _castingRepository;
-        public CastingService(ICastingRepository castingRepository, IMapper mapper) : base(castingRepository)
+        private readonly ICustomerRepository _customerRepository; 
+
+        public CastingService(ICastingRepository castingRepository, ICustomerRepository customerRepository, IMapper mapper) : base(castingRepository)
         {
             _mapper = mapper;
             _castingRepository = castingRepository;
+            _customerRepository = customerRepository;
         }
 
         public async Task<IQueryable<NewCastingViewModel>> NewCasting()
@@ -169,6 +177,12 @@ namespace FeroPRMData.Services
             return await _castingRepository.FirstOrDefaultAsyn(x => x.CustomerId == customerId);
         }
 
-
+        public async Task<List<Casting>> GetListCasting(string cusId)
+        {
+            var listCasting = await _castingRepository.Get(x => x.CustomerId == cusId).ToListAsync();
+            listCasting.Sort((x, y) => DateTime.Compare((DateTime)x.CreateTime, (DateTime)y.CreateTime));
+            var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();
+            return newList;
+        }
     }
 }

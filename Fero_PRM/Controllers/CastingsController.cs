@@ -27,6 +27,18 @@ namespace Fero_PRM.Controllers
             return Ok(await _castingService.NewCasting());
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCastings([FromBody]string customerId)
+        {
+            return Ok(await _castingService.GetListCasting(customerId));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCastingById(int castingId)
+        {
+            return Ok(await _castingService.GetCastingById(castingId));
+        }
+
         //#region hdev
         ///// <summary>
         ///// Filter casting

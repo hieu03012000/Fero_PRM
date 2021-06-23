@@ -5,6 +5,7 @@ using FeroPRMData.Repositories;
 using FeroPRMData.Services.Base;
 using FeroPRMData.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FeroPRMData.Services
@@ -13,6 +14,7 @@ namespace FeroPRMData.Services
     {
         Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting);
         Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting);
+        Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId);
     }
     public partial class SubscribeCastingService : BaseService<SubscribeCasting>, ISubscribeCastingService
     {
@@ -38,6 +40,12 @@ namespace FeroPRMData.Services
             var entity = _mapper.Map<SubscribeCasting>(subCasting);
             await DeleteAsync(entity);
             return subCasting;
+        }
+
+        public async Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId)
+        {
+            var list = await _repository.Get(x => x.ModelId == modelId).ToListAsync();
+            return list;
         }
     }
 }
