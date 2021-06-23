@@ -24,7 +24,7 @@ namespace Fero_PRM.Controllers
             return Ok(_modelService.Get().ToList());
         }
 
-        [HttpGet("{id}/castings")]
+        [HttpGet("{id}/subscribe-castings")]
         public async Task<IActionResult> GetModelCastings(string id)
         {
             return Ok(await _modelService.GetCastingsModelById(id));
