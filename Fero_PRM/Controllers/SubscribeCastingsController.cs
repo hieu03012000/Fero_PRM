@@ -16,10 +16,10 @@ namespace Fero_PRM.Controllers
             _subscribeCastingService = subscribeCastingService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Gets(string modeId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Gets(string id)
         {
-            return Ok(await _subscribeCastingService.GetSubscribeCastings(modeId));
+            return Ok(await _subscribeCastingService.GetSubscribeCastings(id));
         }
         //[HttpGet]
         //public IActionResult Gets()

@@ -19,9 +19,11 @@ namespace FeroPRMData.Services
     public partial class SubscribeCastingService : BaseService<SubscribeCasting>, ISubscribeCastingService
     {
         private readonly IMapper _mapper;
-        public SubscribeCastingService(ISubscribeCastingRepository repository, IMapper mapper) : base(repository)
+        private readonly ISubscribeCastingRepository _subscribeCastingRepository;
+        public SubscribeCastingService(ISubscribeCastingRepository subscribeCastingRepository, IMapper mapper) : base(subscribeCastingRepository)
         {
             _mapper = mapper;
+            _subscribeCastingRepository = subscribeCastingRepository;
         }
         public async Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting)
         {
@@ -44,7 +46,7 @@ namespace FeroPRMData.Services
 
         public async Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId)
         {
-            var list = await _repository.Get(x => x.ModelId == modelId).ToListAsync();
+            var list = await _subscribeCastingRepository.Get(x => x.ModelId == modelId).ToListAsync();
             return list;
         }
     }

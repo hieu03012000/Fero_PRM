@@ -24,7 +24,7 @@ namespace Fero_PRM.Controllers
             return Ok(_modelService.Get().ToList());
         }
 
-        [HttpGet("{id}")]
+/*        [HttpGet("{id}")]
         public IActionResult Gets(string id)
         {
             var result = _modelService.GetCompleteModelsById(id);
@@ -36,9 +36,9 @@ namespace Fero_PRM.Controllers
             {
                 return NotFound();
             }
-        }
+        }*/
 
-        [HttpGet("gmail/{id}")]
+/*        [HttpGet("gmail/{id}")]
         public IActionResult GetModelByGmail(string id)
         {
             var result = _modelService.GetCompleteModelByGmail(id);
@@ -50,7 +50,7 @@ namespace Fero_PRM.Controllers
             {
                 return NotFound();
             }
-        }
+        }*/
 
         /*        [HttpGet("gmail/{id}")]
                 public async Task<IActionResult> GetByGmail(string id)

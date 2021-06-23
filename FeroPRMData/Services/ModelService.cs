@@ -22,9 +22,9 @@ namespace FeroPRMData.Services
         Task<Model> GetModelByGmail(string gmail);
         Task<Model> GetModelsById(string modelId);
         Task<Model> CreateModel(Model model);
-        CompleteModel GetCompleteModelsById(string modelId);
+/*        CompleteModel GetCompleteModelsById(string modelId);
         GetModelViewModel GetCompleteModelByGmail(string gmail);
-
+*/
     }
     public partial class ModelService : BaseService<Model>, IModelService
     {
@@ -133,7 +133,7 @@ namespace FeroPRMData.Services
         }
 
 
-        //ok
+        /*//ok
         public GetModelViewModel GetCompleteModelByGmail(string gmail)
         {
             var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
@@ -229,6 +229,6 @@ namespace FeroPRMData.Services
                 Images = listImage
             };
             return cm;
-        }
+        }*/
     }
 }

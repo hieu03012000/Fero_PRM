@@ -19,9 +19,9 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Gets(string cusId)
+        public async Task<IActionResult> Gets(string id)
         {
-            return Ok(await _offerService.GetOfferById(cusId));
+            return Ok(await _offerService.GetOfferById(id));
         }
 
         [HttpGet]
