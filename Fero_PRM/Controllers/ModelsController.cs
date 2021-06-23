@@ -27,13 +27,29 @@ namespace Fero_PRM.Controllers
         [HttpGet("{id}")]
         public IActionResult Gets(string id)
         {
-            return Ok(_modelService.GetCompleteModelsById(id));
+            var result = _modelService.GetCompleteModelsById(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("gmail/{id}")]
         public IActionResult GetModelByGmail(string id)
         {
-            return Ok(_modelService.GetCompleteModelByGmail(id));
+            var result = _modelService.GetCompleteModelByGmail(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         /*        [HttpGet("gmail/{id}")]

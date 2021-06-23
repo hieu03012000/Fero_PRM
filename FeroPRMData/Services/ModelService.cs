@@ -137,6 +137,10 @@ namespace FeroPRMData.Services
         public GetModelViewModel GetCompleteModelByGmail(string gmail)
         {
             var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
+            if (model == null)
+            {
+                return null;
+            }
             GetModelViewModel dto = new GetModelViewModel
             {
                 Id = model.Id,
