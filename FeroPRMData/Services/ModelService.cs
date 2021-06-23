@@ -137,23 +137,11 @@ namespace FeroPRMData.Services
         public GetModelViewModel GetCompleteModelByGmail(string gmail)
         {
             var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
-            var styles = _modelStyleRepository.Get(x => x.ModelId == model.Id).ToList();
-            List<Tuple<int, string>> listStyle = new List<Tuple<int, string>>();
-            List<Tuple<int, string>> listImage = new List<Tuple<int, string>>();
-            for (int i = 0; i < styles.Count; i++)
+            if (model == null)
             {
-                var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
-                Tuple<int, string> styless = new Tuple<int, string>(style.Id, style.Name);
-                listStyle.Add(styless);
+                return null;
             }
-            GetModelViewModel dto = new GetModelViewModel
-            {
-                var image = _styleRepository.FirstOrDefault(x => x.Id == images[i].Id);
-                Tuple<int, string> imagess = new Tuple<int, string>(image.Id, image.Name);
-                listImage.Add(imagess);
-            }
-            CompleteModel cm = new CompleteModel
-            {
+            GetModelViewModel dto = new GetModelViewModel {
                 Id = model.Id,
                 Name = model.Name,
                 Address = model.Address,
@@ -168,9 +156,7 @@ namespace FeroPRMData.Services
                 SocialNetworkLink = model.SocialNetworkLink,
                 Status = model.Status,
                 Waist = model.Waist,
-                Weight = model.Weight,
-                Styles = listStyle,
-                Image = listImage
+                Weight = model.Weight
             };
             var styles = _modelStyleRepository.Get(x => x.ModelId == model.Id).ToList();
             for (int i = 0; i < styles.Count; i++)
@@ -190,45 +176,46 @@ namespace FeroPRMData.Services
         //ok
         public CompleteModel GetCompleteModelsById(string modelId)
         {
-            var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
-            var styles = _modelStyleRepository.Get(x => x.ModelId == modelId).ToList();
-            List<(int Id, string Name)> listStyle = new List<(int Id, string Name)>();
-            List<(int Id, string Name)> listImage = new List<(int Id, string Name)>();
-            for (int i = 0; i < styles.Count; i++)
-            {
-                var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
-                (int Id, string Name) styless = (style.Id, style.Name);
-                listStyle.Add(styless);
-            }
-            var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+            return null;
+            //var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
+            //var styles = _modelStyleRepository.Get(x => x.ModelId == modelId).ToList();
+            //List<(int Id, string Name)> listStyle = new List<(int Id, string Name)>();
+            //List<(int Id, string Name)> listImage = new List<(int Id, string Name)>();
+            //for (int i = 0; i < styles.Count; i++)
+            //{
+            //    var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
+            //    (int Id, string Name) styless = (style.Id, style.Name);
+            //    listStyle.Add(styless);
+            //}
+            //var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
 
-            for (int i = 0; i < images.Count; i++)
-            {
-                var image = _styleRepository.FirstOrDefault(x => x.Id == images[i].Id);
-                Tuple<int, string> imagess = new Tuple<int, string>(image.Id, image.Name);
-                listImage.Add(imagess);
-            }
-            CompleteModel cm = new CompleteModel
-            {
-                Id = model.Id,
-                Name = model.Name,
-                Address = model.Address,
-                Avatar = model.Avatar,
-                Bust = model.Bust,
-                DateOfBirth = model.DateOfBirth,
-                Gender = model.Gender,
-                Gmail = model.Gmail,
-                Height = model.Height,
-                Hip = model.Hip,
-                Phone = model.Phone,
-                SocialNetworkLink = model.SocialNetworkLink,
-                Status = model.Status,
-                Waist = model.Waist,
-                Weight = model.Weight,
-                Styles = listStyle,
-                Images = listImage
-            };
-            return cm;
+            //for (int i = 0; i < images.Count; i++)
+            //{
+            //    var image = _imageRepository.FirstOrDefault(x => x.Id == images[i].Id);
+            //    (int Id, string Link) imagess = (image.Id, image.Link);
+            //    listImage.Add(imagess);
+            //}
+            //CompleteModel cm = new CompleteModel
+            //{
+            //    Id = model.Id,
+            //    Name = model.Name,
+            //    Address = model.Address,
+            //    Avatar = model.Avatar,
+            //    Bust = model.Bust,
+            //    DateOfBirth = model.DateOfBirth,
+            //    Gender = model.Gender,
+            //    Gmail = model.Gmail,
+            //    Height = model.Height,
+            //    Hip = model.Hip,
+            //    Phone = model.Phone,
+            //    SocialNetworkLink = model.SocialNetworkLink,
+            //    Status = model.Status,
+            //    Waist = model.Waist,
+            //    Weight = model.Weight,
+            //    Styles = listStyle,
+            //    Images = listImage
+            //};
+            //return cm;
         }
     }
 }
