@@ -55,6 +55,7 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_subscribeCastingService.Get(id));
         //}
+        /*
         #region hdev
         /// <summary>
         /// Subscribe casting
@@ -91,6 +92,6 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_subscribeCastingService.Count());
         //}
-        #endregion
+        #endregion*/
     }
 }
