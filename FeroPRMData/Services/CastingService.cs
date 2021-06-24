@@ -31,6 +31,9 @@ namespace FeroPRMData.Services
         Task<Casting> GetCastingById(int castingId);
         Task<List<Casting>> GetListCasting();
         Task<List<Casting>> SearchListCasting(string search, double? min, double? max);
+        Task<Casting> CreateCasting(Casting casting);
+        Task<Casting> CreateCasting(string customerId, Casting casting);
+        Task<Casting> DeleteCasting(int castingId);
     }
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
@@ -158,16 +161,30 @@ namespace FeroPRMData.Services
         //#endregion
 
         //Tao casting vs form casting
-        public async void CreateCasting(Casting casting)
+        public async Task<Casting> CreateCasting(Casting casting)
         {
+            var cus = await _customerRepository.FirstOrDefaultAsyn(x => x.Id == casting.CustomerId);
+            if(cus == null)
+            {
+                return null;
+            }
+            casting.CreateTime = DateTime.Now;
             await _castingRepository.CreateAsyn(casting);
+            return casting;
         }
 
         //them create at 
-        public async void CreateCasting(string customerId, Casting casting)
+        public async Task<Casting> CreateCasting(string customerId, Casting casting)
         {
+            var cus = await _customerRepository.FirstOrDefaultAsyn(x => x.Id == customerId);
+            if (cus == null)
+            {
+                return null;
+            }
             casting.CustomerId = customerId;
+            casting.CreateTime = DateTime.Now;
             await _castingRepository.CreateAsyn(casting);
+            return casting;
         }
 
         public async Task<Casting> GetCastingById(int castingId)
@@ -235,5 +252,52 @@ namespace FeroPRMData.Services
             var listCasting = await _castingRepository.Get(x => x.Name.Contains(search) && x.Salary >= min && x.Salary <= max  && x.Status == 1).ToListAsync();
             return listCasting;
         }
+
+        public async Task<Casting> DeleteCasting(int castingId)
+        {
+            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
+            casting.Status = 2;
+            await UpdateAsync(casting);
+            return casting;
+        }
+
+        //ta dao
+        /*public async Task<Casting> UpdateCasting(int castingId, Casting updateCasting)
+        {
+            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
+            if (updateCasting.Description == null)
+            {
+                Description = 
+            }
+            if (updateCasting.Name == null)
+            {
+                updateCasting.Name = casting.Name
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            Casting cast = new Casting
+            {
+
+                
+            }
+        }*/
     }
 }

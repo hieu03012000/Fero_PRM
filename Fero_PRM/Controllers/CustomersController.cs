@@ -11,10 +11,39 @@ namespace Fero_PRM.Controllers
     public partial class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
+        private readonly ICastingService _castingService;
+        private readonly IOfferService _offerService;
+
         public CustomersController(ICustomerService customerService)
         {
             _customerService = customerService;
         }
+
+        [HttpGet("{id}/castings")]
+        public async Task<IActionResult> GetCastings(string id)
+        {
+            return Ok(await _castingService.GetListCasting(id));
+        }
+
+
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckGmail(string mail)
+        {
+            return Ok(await _customerService.CheckCusGmail(mail));
+        }
+
+        [HttpGet("{gmail}")]
+        public async Task<IActionResult>GetCusByGmail(string gmail)
+        {
+            return Ok(await _customerService.GetCustomerProfile(gmail));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Gets(string id)
+        {
+            return Ok(await _offerService.GetOfferById(id));
+        }
+
         //[HttpGet]
         //public IActionResult Gets()
         //{

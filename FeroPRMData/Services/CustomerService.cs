@@ -15,6 +15,11 @@ namespace FeroPRMData.Services
         Task<CreateCustomerAccountViewModel> CreateCustomerAccount(CreateCustomerAccountViewModel customer);
         Task<Customer> CustomerLogin(string customer);
         #endregion
+        Task<bool> CheckCusGmail(string mail);
+
+        Task<Customer> GetCustomerProfile(string mail);
+
+
     }
     public partial class CustomerService : BaseService<Customer>, ICustomerService
     {
@@ -58,5 +63,19 @@ namespace FeroPRMData.Services
 
             return customer;
         }
+
+        public async Task<bool> CheckCusGmail(string mail)
+        {
+            var cus = await _customerRepository.FirstOrDefaultAsyn(x => x.Gmail == mail);
+            if(cus != null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
     }
 }

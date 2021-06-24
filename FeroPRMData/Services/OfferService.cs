@@ -65,7 +65,6 @@ namespace FeroPRMData.Services
 
         public async Task<List<Offer>> GetOfferById(string customerId)
         {
-            Console.WriteLine(customerId);
             var listOffer = await _offerRepository.Get(x => x.CustomerId == customerId).ToListAsync();
             return listOffer;
         }
