@@ -24,10 +24,10 @@ namespace FeroPRMData.Services
         Task<Model> CreateModel(Model model);
         Task<List<ShowCasting>> GetCastingsModelById(string modelId);
         Task<List<ShowOffer>> GetOffersModelById(string modelId);
+/*
+        CompleteModel GetCompleteModelsById(string modelId);
+        GetModelViewModel GetCompleteModelByGmail(string gmail);*/
 
-/*        CompleteModel GetCompleteModelsById(string modelId);
-        GetModelViewModel GetCompleteModelByGmail(string gmail);
-*/
     }
     public partial class ModelService : BaseService<Model>, IModelService
     {
@@ -192,7 +192,7 @@ namespace FeroPRMData.Services
         }
 
         //ok
-        public GetModelViewModel GetCompleteModelByGmail(string gmail)
+       /* public GetModelViewModel GetCompleteModelByGmail(string gmail)
         {
             var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
             if (model == null)
@@ -229,10 +229,10 @@ namespace FeroPRMData.Services
                 dto.Images.Add(new GetModelImageViewModel { Id = image.Id, Link = image.Link });
             }
             return dto;
-        }
+        }*/
 
         //ok
-        /*public CompleteModel GetCompleteModelsById(string modelId)
+/*        public CompleteModel GetCompleteModelsById(string modelId)
         {
             return null;
             //var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
@@ -274,7 +274,7 @@ namespace FeroPRMData.Services
                 Images = listImage
             };
             return cm;
-        }
-        */
+        }*/
+
     }
 }

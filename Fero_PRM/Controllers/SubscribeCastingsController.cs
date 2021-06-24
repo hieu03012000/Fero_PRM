@@ -37,6 +37,12 @@ namespace Fero_PRM.Controllers
             }
         }
 
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckSubCastingId(SubscribeCasting subscribeCasting)
+        {
+            return Ok(await _subscribeCastingService.CheckSubscribeCasting(subscribeCasting));
+        }
+
         //[HttpGet]
         //public IActionResult Gets()
         //{

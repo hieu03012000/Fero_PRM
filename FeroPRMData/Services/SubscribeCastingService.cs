@@ -16,15 +16,20 @@ namespace FeroPRMData.Services
         Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting);*/
         Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId);
         Task<SubscribeCasting> DeleteSubscribeCasting(SubscribeCasting subscribeCasting);
+        Task<bool> CheckSubscribeCasting(SubscribeCasting subscribeCasting);
     }
     public partial class SubscribeCastingService : BaseService<SubscribeCasting>, ISubscribeCastingService
     {
         private readonly IMapper _mapper;
         private readonly ISubscribeCastingRepository _subscribeCastingRepository;
-        public SubscribeCastingService(ISubscribeCastingRepository subscribeCastingRepository, IMapper mapper) : base(subscribeCastingRepository)
+        private readonly ICastingRepository _castingRepository;
+        private readonly IModelRepository _modelRepository;
+        public SubscribeCastingService(ISubscribeCastingRepository subscribeCastingRepository, IModelRepository modelRepository, ICastingRepository castingRepository, IMapper mapper) : base(subscribeCastingRepository)
         {
             _mapper = mapper;
             _subscribeCastingRepository = subscribeCastingRepository;
+            _modelRepository = modelRepository;
+            _castingRepository = castingRepository;
         }
 /*        public async Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting)
         {
@@ -63,6 +68,20 @@ namespace FeroPRMData.Services
             {
                 await DeleteAsync(subCasting);
                 return subCasting;
+            }
+        }
+
+        public async Task<bool> CheckSubscribeCasting(SubscribeCasting subscribeCasting)
+        {
+            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == subscribeCasting.CastingId);
+            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == subscribeCasting.ModelId);
+            if(model == null || casting == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }

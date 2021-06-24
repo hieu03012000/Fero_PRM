@@ -36,47 +36,47 @@ namespace Fero_PRM.Controllers
             return Ok(await _modelService.GetOffersModelById(id));
         }
 
-        /*        [HttpGet("{id}")]
-                public IActionResult Gets(string id)
-                {
-                    var result = _modelService.GetCompleteModelsById(id);
-                    if (result != null)
-                    {
-                        return Ok(result);
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
-                }*/
+        /*[HttpGet("{id}")]
+        public IActionResult Gets(string id)
+        {
+            var result = _modelService.GetCompleteModelsById(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
-        /*        [HttpGet("gmail/{id}")]
-                public IActionResult GetModelByGmail(string id)
-                {
-                    var result = _modelService.GetCompleteModelByGmail(id);
-                    if (result != null)
-                    {
-                        return Ok(result);
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
-                }*/
+        [HttpGet("gmail/{id}")]
+        public IActionResult GetModelByGmail(string id)
+        {
+            var result = _modelService.GetCompleteModelByGmail(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }*/
 
-        /*        [HttpGet("gmail/{id}")]
-                public async Task<IActionResult> GetByGmail(string id)
-                {
-                    var user = await _modelService.GetModelByGmail(id);
-                    if(user != null)
-                    {
-                        return Ok(user);
-                    }
-                    else
-                    {
-                        return BadRequest();
-                    }
-                }*/
+        [HttpGet("gmail/{id}")]
+        public async Task<IActionResult> GetByGmail(string id)
+        {
+            var user = await _modelService.GetModelByGmail(id);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
         [HttpGet("check")]
         public bool CheckGmail(string gmail)

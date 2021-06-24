@@ -16,6 +16,7 @@ namespace FeroPRMData.Services
                 Task<ApplyCastingViewModel> CancelApplyCastingCall(ApplyCastingViewModel applyCasting);*/
         Task<ApplyCasting> ApplyCastingCalls(ApplyCasting applyCasting);
         Task<ApplyCasting> DeleteApplyCasting(ApplyCasting applyCasting);
+        Task<bool> CheckApplyCasting(ApplyCasting applyCasting);
     }
     public partial class ApplyCastingService : BaseService<ApplyCasting>, IApplyCastingService
     {
@@ -80,6 +81,20 @@ namespace FeroPRMData.Services
             {
                 await DeleteAsync(apply);
                 return apply;
+            }
+        }
+
+        public async Task<bool> CheckApplyCasting(ApplyCasting applyCasting)
+        {
+            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == applyCasting.CastingId);
+            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == applyCasting.ModelId);
+            if (model == null || casting == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }
