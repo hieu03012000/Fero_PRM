@@ -24,6 +24,7 @@ namespace FeroPRMData.Services
         Task<Model> CreateModel(Model model);
         Task<List<ShowCasting>> GetCastingsModelById(string modelId);
         Task<List<ShowOffer>> GetOffersModelById(string modelId);
+        Task<ModelGeneral> GetModelGeneralById(string modelId);
 /*
         CompleteModel GetCompleteModelsById(string modelId);
         GetModelViewModel GetCompleteModelByGmail(string gmail);*/
@@ -168,6 +169,21 @@ namespace FeroPRMData.Services
                 lc.Add(des);
             }
             return lc;
+        }
+
+        public async Task<ModelGeneral> GetModelGeneralById(string modelId)
+        {
+            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == modelId);
+            var listStyleId = await _modelStyleRepository.Get(x => x.ModelId == modelId).ProjectTo<ModelStyleGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+            List<Style> ls = new List<Style>();
+            foreach (var item in listStyleId)
+            {
+                var style = await _styleRepository.FirstOrDefaultAsyn(x => x.Id == item.StyleId);
+                ls.Add(style);
+            }
+            var des = _mapper.Map<ModelGeneral>(model);
+            des.ListStyles = ls;
+            return des;
         }
 
         public ShowCasting CopyAToB(Casting a)

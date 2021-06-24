@@ -12,7 +12,7 @@ namespace FeroPRMData.Services
 {
     public partial interface INotificationService:IBaseService<Notification>
     {
-        Task<Notification> UpdateNoti(int notiId, Notification noti);
+        Task<Notification> UpdateNoti(int notiId, NotificationUpdate noti);
 
         Task<List<Notification>> GetCusNoti(string cusId);
         Task<Notification> CreateNoti(string userId, Notification noti);
@@ -86,11 +86,34 @@ namespace FeroPRMData.Services
         }
 
         //bi ngu moi nguoi eiii
-        public async Task<Notification> UpdateNoti(int notiId, Notification noti)
+        /*        public async Task<Notification> UpdateNoti(int notiId, Notification noti)
+                {
+                    var notification = await _notificationRepository.FirstOrDefaultAsyn(x => x.Id == notiId);
+                    noti.Id = notification.Id;
+                    noti.UserId = notification.UserId;
+                    if (noti.Status == null)
+                    {
+                        noti.Status = notification.Status;
+                    }
+                    if (noti.Time == null)
+                    {
+                        noti.Time = notification.Time;
+                    }
+                    if (noti.Title == null)
+                    {
+                        noti.Title = notification.Title;
+                    }
+                    if (noti.Description == null)
+                    {
+                        noti.Description = notification.Description;
+                    }
+                    await UpdateAsync(noti);
+                    return noti;
+                }*/
+
+        public async Task<Notification> UpdateNoti(int notiId, NotificationUpdate noti)
         {
             var notification = await _notificationRepository.FirstOrDefaultAsyn(x => x.Id == notiId);
-            noti.Id = notification.Id;
-            noti.UserId = notification.UserId;
             if (noti.Status == null)
             {
                 noti.Status = notification.Status;
@@ -107,8 +130,9 @@ namespace FeroPRMData.Services
             {
                 noti.Description = notification.Description;
             }
-            await UpdateAsync(noti);
-            return noti;
+            notification = _mapper.Map(noti, notification);
+            await UpdateAsync(notification);
+            return notification;
         }
 
         public async Task<List<Notification>> GetCusNoti(string cusId)

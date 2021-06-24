@@ -31,4 +31,15 @@ namespace FeroPRMData.Models
         public string CustomerId { get; set; }
         public int? OfferStatus { get; set; }
     }
+
+    public class OfferWithListModel
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public double? Salary { get; set; }
+        public DateTime? Time { get; set; }
+        public string CustomerId { get; set; }
+        public List<ModelForOffer> Model { get; set; }
+    }
 }

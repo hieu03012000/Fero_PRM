@@ -1,3 +1,4 @@
+using FeroPRMData.Models;
 using FeroPRMData.Services;
 using FeroPRMData.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +47,21 @@ namespace Fero_PRM.Controllers
             return Ok(await _offerService.GetOfferById(id));
         }
 
+        [HttpPost]
+        public async Task<IActionResult>CreateCustomer(Customer customer)
+        {
+            var result = await _customerService.CreateCustomer(customer);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return StatusCode(201);
+            }
+        }
+
+
         //[HttpGet]
         //public IActionResult Gets()
         //{
@@ -58,7 +74,7 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_customerService.Get(id));
         //}
-        #region hdev
+/*        #region hdev
         /// <summary>
         /// Ceate customer account
         /// </summary>
@@ -86,7 +102,7 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _customerService.CustomerLogin(email));
         }
-        #endregion
+        #endregion*/
         //[HttpPut("{id}")]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
         //public IActionResult Update(string id,Customer entity)

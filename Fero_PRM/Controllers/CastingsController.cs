@@ -78,6 +78,24 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _castingService.DeleteCasting(id));
         }
+
+        [HttpGet("{id}/applicants")]
+        public async Task<IActionResult> GetListModelByCastingId(int id)
+        {
+            return Ok(await _castingService.GetModelsByCastingId(id));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCasting(int id, ShowCasting casting)
+        {
+            var result = await _castingService.UpdateCasting(id, casting);
+            if(result == null)
+            {
+                return BadRequest();
+            }else return Ok(result);
+        }
+
+
         //#region hdev
         ///// <summary>
         ///// Filter casting

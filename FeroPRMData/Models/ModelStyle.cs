@@ -11,4 +11,10 @@ namespace FeroPRMData.Models
         public virtual Model Model { get; set; }
         public virtual Style Style { get; set; }
     }
+
+    public  class ModelStyleGeneral
+    {
+        public string ModelId { get; set; }
+        public int StyleId { get; set; }
+    }
 }

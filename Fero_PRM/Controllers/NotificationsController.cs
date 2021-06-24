@@ -52,7 +52,7 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateNoti(int id, Notification notification)
+        public async Task<IActionResult> UpdateNoti(int id, NotificationUpdate notification)
         {
             return Ok(await _notificationService.UpdateNoti(id, notification));
         }

@@ -84,6 +84,12 @@ namespace Fero_PRM.Controllers
             return _modelService.CheckModelGmail(gmail);
         }
 
+        [HttpGet("{id}/general")]
+        public async Task<IActionResult> GetModelGeneral(string id)
+        {
+            return Ok(await _modelService.GetModelGeneralById(id));
+        }
+
 /*        [HttpGet("check")]
         public bool CheckGmail(CheckGmail gmail)
         {

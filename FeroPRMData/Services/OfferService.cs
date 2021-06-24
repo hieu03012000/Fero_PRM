@@ -14,17 +14,23 @@ namespace FeroPRMData.Services
     {
         Task<List<Offer>> GetOffer();
         Task<List<Offer>> GetOfferById(string customerId);
+        Task<OfferWithListModel> GetOfferWithListModel(int offerId);
     }
     public partial class OfferService:BaseService<Offer>,IOfferService
     {
         private readonly IMapper _mapper;
         private readonly ICastingRepository _castingRepository;
         private readonly IOfferRepository _offerRepository;
-        public OfferService(IMapper mapper, IOfferRepository offerRepository, ICastingRepository castingRepository) :base(offerRepository)
+        private readonly IModelOfferRepository _modelOfferRepository;
+        private readonly IModelRepository _modelRepository;
+
+        public OfferService(IMapper mapper, IOfferRepository offerRepository, IModelRepository modelRepository, IModelOfferRepository modelOfferRepository, ICastingRepository castingRepository) :base(offerRepository)
         {
             _mapper = mapper;
             _offerRepository = offerRepository;
             _castingRepository = castingRepository;
+            _modelOfferRepository = modelOfferRepository;
+            _modelRepository = modelRepository;
         }
 
         public async void CreateOffer(string customerId, Offer offer)
@@ -75,6 +81,23 @@ namespace FeroPRMData.Services
             listOffer.Sort((x, y) => DateTime.Compare((DateTime)x.Time, (DateTime)y.Time));
             var newList = listOffer.Skip(Math.Max(0, listOffer.Count() - 10)).ToList();
             return newList;
+        }
+
+        public async Task<OfferWithListModel> GetOfferWithListModel(int offerId)
+        {
+            var offer = await _offerRepository.FirstOrDefaultAsyn(x => x.Id == offerId);
+            var listModelId = await _modelOfferRepository.Get(x => x.OfferId == offerId).ToListAsync();
+            List<ModelForOffer> lm = new List<ModelForOffer>();
+            foreach (var item in listModelId)
+            {
+                var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == item.ModelId);
+                var modelForOffer = _mapper.Map<ModelForOffer>(model);
+                modelForOffer.OfferStatus = item.Status;
+                lm.Add(modelForOffer);
+            }
+            OfferWithListModel ow = _mapper.Map<OfferWithListModel>(offer);
+            ow.Model = lm;
+            return ow;
         }
     }
 }
