@@ -12,9 +12,10 @@ namespace FeroPRMData.Services
 {
     public partial interface ISubscribeCastingService : IBaseService<SubscribeCasting>
     {
-        Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting);
-        Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting);
+/*        Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting);
+        Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting);*/
         Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId);
+        Task<SubscribeCasting> DeleteSubscribeCasting(SubscribeCasting subscribeCasting);
     }
     public partial class SubscribeCastingService : BaseService<SubscribeCasting>, ISubscribeCastingService
     {
@@ -25,7 +26,7 @@ namespace FeroPRMData.Services
             _mapper = mapper;
             _subscribeCastingRepository = subscribeCastingRepository;
         }
-        public async Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting)
+/*        public async Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting)
         {
             var apply = await Get(ac => ac.CastingId == subCasting.CastingId && ac.ModelId == subCasting.ModelId)
                 .FirstOrDefaultAsync();
@@ -42,12 +43,27 @@ namespace FeroPRMData.Services
             var entity = _mapper.Map<SubscribeCasting>(subCasting);
             await DeleteAsync(entity);
             return subCasting;
-        }
+        }*/
 
         public async Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId)
         {
             var list = await _subscribeCastingRepository.Get(x => x.ModelId == modelId).ToListAsync();
             return list;
+        }
+
+        public async Task<SubscribeCasting> DeleteSubscribeCasting(SubscribeCasting subscribeCasting)
+        {
+            var subCasting = await _subscribeCastingRepository.FirstOrDefaultAsyn(x => x.CastingId == subscribeCasting.CastingId &&
+                                                                                       x.ModelId == subscribeCasting.ModelId);
+            if(subCasting == null)
+            {
+                return null;
+            }
+            else
+            {
+                await DeleteAsync(subCasting);
+                return subCasting;
+            }
         }
     }
 }

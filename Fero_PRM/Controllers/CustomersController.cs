@@ -14,9 +14,11 @@ namespace Fero_PRM.Controllers
         private readonly ICastingService _castingService;
         private readonly IOfferService _offerService;
 
-        public CustomersController(ICustomerService customerService)
+        public CustomersController(ICustomerService customerService, ICastingService castingService, IOfferService offerService)
         {
             _customerService = customerService;
+            _castingService = castingService;
+            _offerService = offerService;
         }
 
         [HttpGet("{id}/castings")]
@@ -38,7 +40,7 @@ namespace Fero_PRM.Controllers
             return Ok(await _customerService.GetCustomerProfile(gmail));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}/offers")]
         public async Task<IActionResult> Gets(string id)
         {
             return Ok(await _offerService.GetOfferById(id));

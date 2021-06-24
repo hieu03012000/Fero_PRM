@@ -19,20 +19,31 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateApplyCasting(ApplyCastingViewModel apply)
+        public async Task<IActionResult> CreateApplyCasting(ApplyCasting apply)
         {
-            System.Console.WriteLine(apply.CastingId);
-            System.Console.WriteLine(apply.ModelId);
-            var applyCasting = _applyCastingService.ApplyCastingCall(apply);
+            var applyCasting = await _applyCastingService.ApplyCastingCalls(apply);
             if(applyCasting == null)
             {
-                return BadRequest("already created");
+                return BadRequest();
             }
             else
             {
                 return StatusCode(201);
+            }          
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteApplyCasting(ApplyCasting apply)
+        {
+            var applyCasting = await _applyCastingService.DeleteApplyCasting(apply);
+            if (applyCasting == null)
+            {
+                return BadRequest("can't find model or casting");
             }
-            
+            else
+            {
+                return Ok();
+            }
         }
 
         //[HttpGet]
@@ -47,13 +58,13 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_applyCastingService.Get(id));
         //}
-        #region hdev
+/*        #region hdev
         /// <summary>
         /// Model apply vào casting call
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-/*        [HttpPost]
+*//*        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(ApplyCastingViewModel entity)
@@ -61,6 +72,7 @@ namespace Fero_PRM.Controllers
 
             return Ok(await _applyCastingService.ApplyCastingCall(entity));
         }*/
+        /*
 
         //[HttpPut("{id}")]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -85,6 +97,6 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_applyCastingService.Count());
         //}
-        #endregion
+        #endregion*/
     }
 }

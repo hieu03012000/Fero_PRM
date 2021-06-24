@@ -1,3 +1,4 @@
+using FeroPRMData.Models;
 using FeroPRMData.Services;
 using FeroPRMData.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,21 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _subscribeCastingService.GetSubscribeCastings(id));
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSubCasting(SubscribeCasting subscribeCasting)
+        {
+            var result = await _subscribeCastingService.DeleteSubscribeCasting(subscribeCasting);
+            if(result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok();
+            }
+        }
+
         //[HttpGet]
         //public IActionResult Gets()
         //{
