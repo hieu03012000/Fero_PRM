@@ -24,10 +24,8 @@ namespace FeroPRMData.Services
         Task<Model> CreateModel(Model model);
         Task<List<ShowCasting>> GetCastingsModelById(string modelId);
         Task<List<ShowOffer>> GetOffersModelById(string modelId);
-
-/*        CompleteModel GetCompleteModelsById(string modelId);
+        GetModelViewModel GetCompleteModelsById(string modelId);
         GetModelViewModel GetCompleteModelByGmail(string gmail);
-*/
     }
     public partial class ModelService : BaseService<Model>, IModelService
     {
@@ -191,10 +189,9 @@ namespace FeroPRMData.Services
             return b;
         }
 
-        //ok
         public GetModelViewModel GetCompleteModelByGmail(string gmail)
         {
-            var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
+            var model =  _modelRepository.FirstOrDefault(x => x.Gmail.Equals(gmail));
             if (model == null)
             {
                 return null;
@@ -231,29 +228,14 @@ namespace FeroPRMData.Services
             return dto;
         }
 
-        //ok
-        /*public CompleteModel GetCompleteModelsById(string modelId)
+        public GetModelViewModel GetCompleteModelsById(string modelId)
         {
-            return null;
-            //var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
-            //var styles = _modelStyleRepository.Get(x => x.ModelId == modelId).ToList();
-            //List<(int Id, string Name)> listStyle = new List<(int Id, string Name)>();
-            //List<(int Id, string Name)> listImage = new List<(int Id, string Name)>();
-            //for (int i = 0; i < styles.Count; i++)
-            //{
-            //    var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
-            //    (int Id, string Name) styless = (style.Id, style.Name);
-            //    listStyle.Add(styless);
-            //}
-            //var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
-
-            for (int i = 0; i < images.Count; i++)
+            var model = _modelRepository.FirstOrDefault(x => x.Id.Equals(modelId));
+            if (model == null)
             {
-                var image = _styleRepository.FirstOrDefault(x => x.Id == images[i].Id);
-                Tuple<int, string> imagess = new Tuple<int, string>(image.Id, image.Name);
-                listImage.Add(imagess);
+                return null;
             }
-            CompleteModel cm = new CompleteModel
+            GetModelViewModel dto = new GetModelViewModel
             {
                 Id = model.Id,
                 Name = model.Name,
@@ -269,12 +251,22 @@ namespace FeroPRMData.Services
                 SocialNetworkLink = model.SocialNetworkLink,
                 Status = model.Status,
                 Waist = model.Waist,
-                Weight = model.Weight,
-                Styles = listStyle,
-                Images = listImage
+                Weight = model.Weight
             };
-            return cm;
+            var styles = _modelStyleRepository.Get(x => x.ModelId == model.Id).ToList();
+            for (int i = 0; i < styles.Count; i++)
+            {
+                var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
+                dto.Styles.Add(new GetModelStyleViewModel { Id = style.Id, Name = style.Name });
+            }
+            var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+            for (int i = 0; i < images.Count; i++)
+            {
+                var image = _imageRepository.FirstOrDefault(x => x.Id == images[i].Id);
+                dto.Images.Add(new GetModelImageViewModel { Id = image.Id, Link = image.Link });
+            }
+            return dto;
         }
-        */
+        
     }
 }
