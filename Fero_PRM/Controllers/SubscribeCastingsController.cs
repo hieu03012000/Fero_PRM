@@ -43,6 +43,20 @@ namespace Fero_PRM.Controllers
             return Ok(await _subscribeCastingService.CheckSubscribeCasting(subscribeCasting));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateSubCasting(SubscribeCasting subscribeCasting)
+        {
+            var result = await _subscribeCastingService.SubCastingCalls(subscribeCasting);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return StatusCode(201);
+            }
+        }
+
         //[HttpGet]
         //public IActionResult Gets()
         //{
