@@ -87,7 +87,8 @@ namespace FeroPRMData.Services
         {
             var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == id);
             var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == modelId);
-            if (model == null || casting == null)
+            var apply = await _applyCastingRepository.FirstOrDefaultAsyn(x => x.CastingId == id && x.ModelId == modelId);
+            if (model == null || casting == null || apply == null)
             {
                 return false;
             }
