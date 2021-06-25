@@ -46,10 +46,10 @@ namespace Fero_PRM.Controllers
             }
         }
 
-        [HttpPost("check")]
-        public async Task<IActionResult> CheckApplyCastingId(ApplyCasting apply)
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckApplyCastingId(int castingId, string modelId)
         {
-            return Ok(await _applyCastingService.CheckApplyCasting(apply));
+            return Ok(await _applyCastingService.CheckApplyCasting(castingId, modelId));
         }
 
         //[HttpGet]
