@@ -27,12 +27,12 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _castingService.GetListCasting());
         }
-
+/*
         [HttpGet("{cusId}")]
         public async Task<IActionResult> GetCastings(string cusId)
         {
             return Ok(await _castingService.GetListCasting(cusId));
-        }
+        }*/
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCastingById(int id)

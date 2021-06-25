@@ -213,15 +213,8 @@ namespace FeroPRMData.Services
 
         public async Task<List<Casting>> GetListCasting()
         {
-            var listCasting = await _castingRepository.Get().ToListAsync();
+            var listCasting = await _castingRepository.Get(x => x.Status == 1).ToListAsync();
             listCasting.Sort((x, y) => DateTime.Compare((DateTime)x.CreateTime, (DateTime)y.CreateTime));
-            foreach (var item in listCasting)
-            {
-                if(item.Status != 1)
-                {
-                    listCasting.Remove(item);
-                }
-            }
             if (listCasting.Count > 10)
             {
                 var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();

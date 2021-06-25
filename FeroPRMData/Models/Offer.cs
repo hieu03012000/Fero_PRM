@@ -20,7 +20,7 @@ namespace FeroPRMData.Models
         public virtual Customer Customer { get; set; }
         public virtual ICollection<ModelOffer> ModelOffer { get; set; }
     }
-
+    //isc301
     public class ShowOffer
     {
         public int Id { get; set; }

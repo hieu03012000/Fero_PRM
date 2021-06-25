@@ -71,8 +71,7 @@ namespace FeroPRMData.Services
         public async Task<ApplyCasting> DeleteApplyCasting(ApplyCasting applyCasting)
         {
             var apply = await _applyCastingRepository.Get(x => x.CastingId == applyCasting.CastingId &&
-                                                               x.ModelId == applyCasting.ModelId &&
-                                                               x.Time == applyCasting.Time).FirstOrDefaultAsync();
+                                                               x.ModelId == applyCasting.ModelId).FirstOrDefaultAsync();
             if(apply == null)
             {
                 return null;
