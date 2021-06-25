@@ -17,11 +17,11 @@ namespace Fero_PRM.Controllers
             _subscribeCastingService = subscribeCastingService;
         }
 
-        [HttpGet("{id}")]
+/*        [HttpGet("{id}")]
         public async Task<IActionResult> Gets(string id)
         {
             return Ok(await _subscribeCastingService.GetSubscribeCastings(id));
-        }
+        }*/
 
         [HttpDelete]
         public async Task<IActionResult> DeleteSubCasting(SubscribeCasting subscribeCasting)
@@ -38,9 +38,9 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpGet("check")]
-        public async Task<IActionResult> CheckSubCastingId(SubscribeCasting subscribeCasting)
+        public async Task<IActionResult> CheckSubCastingId(int id, string modelId)
         {
-            return Ok(await _subscribeCastingService.CheckSubscribeCasting(subscribeCasting));
+            return Ok(await _subscribeCastingService.CheckSubscribeCasting(id, modelId));
         }
 
         [HttpPost]

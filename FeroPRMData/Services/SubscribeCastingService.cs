@@ -16,7 +16,7 @@ namespace FeroPRMData.Services
         Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting);*/
         Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId);
         Task<SubscribeCasting> DeleteSubscribeCasting(SubscribeCasting subscribeCasting);
-        Task<bool> CheckSubscribeCasting(SubscribeCasting subscribeCasting);
+        Task<bool> CheckSubscribeCasting(int id, string modelId);
 
         Task<SubscribeCasting> SubCastingCalls(SubscribeCasting subCasting);
     }
@@ -89,11 +89,11 @@ namespace FeroPRMData.Services
             }
         }
 
-        public async Task<bool> CheckSubscribeCasting(SubscribeCasting subscribeCasting)
+        public async Task<bool> CheckSubscribeCasting(int id, string modelId)
         {
-            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == subscribeCasting.CastingId);
-            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == subscribeCasting.ModelId);
-            var sup = await _subscribeCastingRepository.FirstOrDefaultAsyn(x => x.CastingId == subscribeCasting.CastingId && x.ModelId == subscribeCasting.ModelId);
+            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == id);
+            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == modelId);
+            var sup = await _subscribeCastingRepository.FirstOrDefaultAsyn(x => x.CastingId == id && x.ModelId == modelId);
             if(model == null || casting == null || sup == null)
             {
                 return false;
