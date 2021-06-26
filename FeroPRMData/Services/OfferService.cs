@@ -15,6 +15,7 @@ namespace FeroPRMData.Services
         Task<List<Offer>> GetOffer();
         Task<List<Offer>> GetOfferById(string customerId);
         Task<OfferWithListModel> GetOfferWithListModel(int offerId);
+        Task<ShowOffer> CreateOffers(CreateOffer createOffer);
     }
     public partial class OfferService:BaseService<Offer>,IOfferService
     {
@@ -42,6 +43,31 @@ namespace FeroPRMData.Services
         public async void CreateOffer(Offer offer)
         {
             await _offerRepository.CreateAsyn(offer);
+        }
+
+        public int GetNewOfferId()
+        {
+            var offerId = _offerRepository.Get().OrderByDescending(x => x.Id).FirstOrDefault();
+            Console.WriteLine(offerId.Id);
+  
+            return offerId.Id;
+        }
+
+        public async Task<ShowOffer> CreateOffers(CreateOffer createOffer)
+        {
+            var showOffer = _mapper.Map<ShowOffer>(createOffer.Offer);
+            await _offerRepository.CreateAsyn(createOffer.Offer);
+            var offerId = GetNewOfferId();
+            foreach (var item in createOffer.ListModelId)
+            {
+                ModelOffer mo = new ModelOffer
+                {
+                    ModelId = item,
+                    OfferId = offerId
+                };
+                await _modelOfferRepository.CreateAsyn(mo);
+            }
+            return showOffer;
         }
 
         public void Offer(string cusId, string des, double salary, bool monopolistic, DateTime monoTime)

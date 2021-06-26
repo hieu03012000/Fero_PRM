@@ -42,4 +42,10 @@ namespace FeroPRMData.Models
         public string CustomerId { get; set; }
         public List<ModelForOffer> Model { get; set; }
     }
+
+    public class CreateOffer
+    {
+        public Offer Offer { get; set; }
+        public List<string> ListModelId { get; set; }
+    }
 }

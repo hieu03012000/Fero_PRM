@@ -90,11 +90,11 @@ namespace Fero_PRM.Controllers
             return Ok(await _modelService.GetModelGeneralById(id));
         }
 
-/*        [HttpGet("check")]
-        public bool CheckGmail(CheckGmail gmail)
-        {
-            return _modelService.CheckModelGmail(gmail.Id, gmail.Gmail);
-        }*/
+        /*        [HttpGet("check")]
+                public bool CheckGmail(CheckGmail gmail)
+                {
+                    return _modelService.CheckModelGmail(gmail.Id, gmail.Gmail);
+                }*/
 
         [HttpPost]
         public async Task<IActionResult> CreateModel(Model model)
@@ -107,6 +107,12 @@ namespace Fero_PRM.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchModel(string location, int? gender, double? maxW, double? minW, double? maxH, double? minH)
+        {
+            return Ok(await _modelService.SearchListModel(location, gender, minW, maxW, minH, maxH));
         }
 
         #region hdev

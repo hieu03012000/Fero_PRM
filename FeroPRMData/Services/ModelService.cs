@@ -25,6 +25,8 @@ namespace FeroPRMData.Services
         Task<List<ShowCasting>> GetCastingsModelById(string modelId);
         Task<List<ShowOffer>> GetOffersModelById(string modelId);
         Task<ModelGeneral> GetModelGeneralById(string modelId);
+
+        Task<List<ModelGeneral>> SearchListModel(string location, int? gender, double? minW, double? maxW, double? minH, double? maxH);
 /*
         CompleteModel GetCompleteModelsById(string modelId);
         GetModelViewModel GetCompleteModelByGmail(string gmail);*/
@@ -207,90 +209,144 @@ namespace FeroPRMData.Services
             return b;
         }
 
-        //ok
-       /* public GetModelViewModel GetCompleteModelByGmail(string gmail)
+        public double GetMaxWeight()
         {
-            var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
-            if (model == null)
+            var model = _modelRepository.Get().OrderByDescending(x => x.Weight).FirstOrDefault();
+            return (double)model.Weight;
+
+        }
+
+        public double GetMaxHeight()
+        {
+            var model = _modelRepository.Get().OrderByDescending(x => x.Height).FirstOrDefault();
+            return (double)model.Height;
+
+        }
+
+        public async Task<List<ModelGeneral>> SearchListModel(string location, int? gender, double? minW, double? maxW, double? minH, double? maxH)
+        {
+            if (minW == null)
             {
-                return null;
+                minW = 0;
             }
-            GetModelViewModel dto = new GetModelViewModel {
-                Id = model.Id,
-                Name = model.Name,
-                Address = model.Address,
-                Avatar = model.Avatar,
-                Bust = model.Bust,
-                DateOfBirth = model.DateOfBirth,
-                Gender = model.Gender,
-                Gmail = model.Gmail,
-                Height = model.Height,
-                Hip = model.Hip,
-                Phone = model.Phone,
-                SocialNetworkLink = model.SocialNetworkLink,
-                Status = model.Status,
-                Waist = model.Waist,
-                Weight = model.Weight
-            };
-            var styles = _modelStyleRepository.Get(x => x.ModelId == model.Id).ToList();
-            for (int i = 0; i < styles.Count; i++)
+            if (minH == null)
             {
-                var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
-                dto.Styles.Add(new GetModelStyleViewModel { Id = style.Id, Name = style.Name });
+                minH = 0;
             }
-            var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
-            for (int i = 0; i < images.Count; i++)
+            if (maxH == null)
             {
-                var image = _imageRepository.FirstOrDefault(x => x.Id == images[i].Id);
-                dto.Images.Add(new GetModelImageViewModel { Id = image.Id, Link = image.Link });
+                maxH = GetMaxHeight();
             }
-            return dto;
-        }*/
+            if (maxW == null)
+            {
+                maxW = GetMaxWeight();
+            }
+            if (location == null)
+            {
+                location = "";
+            }
+            if(gender == null)
+            {
+                var listCasting = await _modelRepository.Get(x => x.Address.Contains(location) && 
+                                                                  x.Weight >= minW && x.Weight <= maxW &&
+                                                                  x.Height >= minH && x.Height <= maxH).ProjectTo<ModelGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+                return listCasting;
+            }
+            else
+            {
+                var listCasting = await _modelRepository.Get(x => x.Address.Contains(location) &&
+                                                  x.Weight >= minW && x.Weight <= maxW &&
+                                                  x.Height >= minH && x.Height <= maxH &&
+                                                  x.Gender == gender).ProjectTo<ModelGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+                return listCasting;
+            }
+
+        }
 
         //ok
-/*        public CompleteModel GetCompleteModelsById(string modelId)
-        {
-            return null;
-            //var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
-            //var styles = _modelStyleRepository.Get(x => x.ModelId == modelId).ToList();
-            //List<(int Id, string Name)> listStyle = new List<(int Id, string Name)>();
-            //List<(int Id, string Name)> listImage = new List<(int Id, string Name)>();
-            //for (int i = 0; i < styles.Count; i++)
-            //{
-            //    var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
-            //    (int Id, string Name) styless = (style.Id, style.Name);
-            //    listStyle.Add(styless);
-            //}
-            //var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+        /* public GetModelViewModel GetCompleteModelByGmail(string gmail)
+         {
+             var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
+             if (model == null)
+             {
+                 return null;
+             }
+             GetModelViewModel dto = new GetModelViewModel {
+                 Id = model.Id,
+                 Name = model.Name,
+                 Address = model.Address,
+                 Avatar = model.Avatar,
+                 Bust = model.Bust,
+                 DateOfBirth = model.DateOfBirth,
+                 Gender = model.Gender,
+                 Gmail = model.Gmail,
+                 Height = model.Height,
+                 Hip = model.Hip,
+                 Phone = model.Phone,
+                 SocialNetworkLink = model.SocialNetworkLink,
+                 Status = model.Status,
+                 Waist = model.Waist,
+                 Weight = model.Weight
+             };
+             var styles = _modelStyleRepository.Get(x => x.ModelId == model.Id).ToList();
+             for (int i = 0; i < styles.Count; i++)
+             {
+                 var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
+                 dto.Styles.Add(new GetModelStyleViewModel { Id = style.Id, Name = style.Name });
+             }
+             var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+             for (int i = 0; i < images.Count; i++)
+             {
+                 var image = _imageRepository.FirstOrDefault(x => x.Id == images[i].Id);
+                 dto.Images.Add(new GetModelImageViewModel { Id = image.Id, Link = image.Link });
+             }
+             return dto;
+         }*/
 
-            for (int i = 0; i < images.Count; i++)
-            {
-                var image = _styleRepository.FirstOrDefault(x => x.Id == images[i].Id);
-                Tuple<int, string> imagess = new Tuple<int, string>(image.Id, image.Name);
-                listImage.Add(imagess);
-            }
-            CompleteModel cm = new CompleteModel
-            {
-                Id = model.Id,
-                Name = model.Name,
-                Address = model.Address,
-                Avatar = model.Avatar,
-                Bust = model.Bust,
-                DateOfBirth = model.DateOfBirth,
-                Gender = model.Gender,
-                Gmail = model.Gmail,
-                Height = model.Height,
-                Hip = model.Hip,
-                Phone = model.Phone,
-                SocialNetworkLink = model.SocialNetworkLink,
-                Status = model.Status,
-                Waist = model.Waist,
-                Weight = model.Weight,
-                Styles = listStyle,
-                Images = listImage
-            };
-            return cm;
-        }*/
+        //ok
+        /*        public CompleteModel GetCompleteModelsById(string modelId)
+                {
+                    return null;
+                    //var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
+                    //var styles = _modelStyleRepository.Get(x => x.ModelId == modelId).ToList();
+                    //List<(int Id, string Name)> listStyle = new List<(int Id, string Name)>();
+                    //List<(int Id, string Name)> listImage = new List<(int Id, string Name)>();
+                    //for (int i = 0; i < styles.Count; i++)
+                    //{
+                    //    var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
+                    //    (int Id, string Name) styless = (style.Id, style.Name);
+                    //    listStyle.Add(styless);
+                    //}
+                    //var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+
+                    for (int i = 0; i < images.Count; i++)
+                    {
+                        var image = _styleRepository.FirstOrDefault(x => x.Id == images[i].Id);
+                        Tuple<int, string> imagess = new Tuple<int, string>(image.Id, image.Name);
+                        listImage.Add(imagess);
+                    }
+                    CompleteModel cm = new CompleteModel
+                    {
+                        Id = model.Id,
+                        Name = model.Name,
+                        Address = model.Address,
+                        Avatar = model.Avatar,
+                        Bust = model.Bust,
+                        DateOfBirth = model.DateOfBirth,
+                        Gender = model.Gender,
+                        Gmail = model.Gmail,
+                        Height = model.Height,
+                        Hip = model.Hip,
+                        Phone = model.Phone,
+                        SocialNetworkLink = model.SocialNetworkLink,
+                        Status = model.Status,
+                        Waist = model.Waist,
+                        Weight = model.Weight,
+                        Styles = listStyle,
+                        Images = listImage
+                    };
+                    return cm;
+                }*/
 
     }
 }

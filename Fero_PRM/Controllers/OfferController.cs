@@ -1,4 +1,5 @@
-﻿using FeroPRMData.Services;
+﻿using FeroPRMData.Models;
+using FeroPRMData.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,12 @@ namespace Fero_PRM.Controllers
         public async Task<IActionResult> Gets()
         {
             return Ok(await _offerService.GetOffer());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateOffers(CreateOffer createOffer)
+        {
+            return Ok(await _offerService.CreateOffers(createOffer));
         }
     }
 }
