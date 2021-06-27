@@ -1,3 +1,4 @@
+using FeroPRMData.Models;
 using FeroPRMData.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +27,12 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _castingService.GetListCasting());
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetCastings([FromBody]string customerId)
+/*
+        [HttpGet("{cusId}")]
+        public async Task<IActionResult> GetCastings(string cusId)
         {
-            return Ok(await _castingService.GetListCasting(customerId));
-        }
+            return Ok(await _castingService.GetListCasting(cusId));
+        }*/
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCastingById(int id)
@@ -44,6 +45,56 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _castingService.SearchListCasting(search, min, max));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCasting(Casting casting)
+        {
+            var result = await _castingService.CreateCasting(casting);
+            if (result != null) {
+                return StatusCode(201);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("{cusId}")]
+        public async Task<IActionResult> CreateCasting(string cusId, Casting casting)
+        {
+            var result = await _castingService.CreateCasting(cusId, casting);
+            if (result != null)
+            {
+                return StatusCode(201);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCasting(int id)
+        {
+            return Ok(await _castingService.DeleteCasting(id));
+        }
+
+        [HttpGet("{id}/applicants")]
+        public async Task<IActionResult> GetListModelByCastingId(int id)
+        {
+            return Ok(await _castingService.GetModelsByCastingId(id));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCasting(int id, ShowCasting casting)
+        {
+            var result = await _castingService.UpdateCasting(id, casting);
+            if(result == null)
+            {
+                return BadRequest();
+            }else return Ok(result);
+        }
+
 
         //#region hdev
         ///// <summary>

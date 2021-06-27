@@ -63,4 +63,34 @@ namespace FeroPRMData.Models
         public List<Tuple<int, string>> Styles { get; set; }
         public List<Tuple<int, string>> Image { get; set; }
     }
+
+    public class ListModelCasting
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int? Gender { get; set; }
+        public double? Height { get; set; }
+        public double? Weight { get; set; }
+        public string Avatar { get; set; }
+    }
+
+    public class ModelGeneral
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int? Gender { get; set; }
+        public double? Height { get; set; }
+        public double? Weight { get; set; }
+        public string Avatar { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public List<Style> Styles { get; set; }
+    }
+
+    public class ModelForOffer
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Avatar { get; set; }
+        public int? OfferStatus { get; set; }
+    }
 }

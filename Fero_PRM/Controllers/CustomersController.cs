@@ -1,3 +1,4 @@
+using FeroPRMData.Models;
 using FeroPRMData.Services;
 using FeroPRMData.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -11,10 +12,56 @@ namespace Fero_PRM.Controllers
     public partial class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-        public CustomersController(ICustomerService customerService)
+        private readonly ICastingService _castingService;
+        private readonly IOfferService _offerService;
+
+        public CustomersController(ICustomerService customerService, ICastingService castingService, IOfferService offerService)
         {
             _customerService = customerService;
+            _castingService = castingService;
+            _offerService = offerService;
         }
+
+        [HttpGet("{id}/castings")]
+        public async Task<IActionResult> GetCastings(string id)
+        {
+            return Ok(await _castingService.GetListCasting(id));
+        }
+
+
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckGmail(string mail)
+        {
+            return Ok(await _customerService.CheckCusGmail(mail));
+        }
+
+        [HttpGet("{gmail}")]
+        public async Task<IActionResult>GetCusByGmail(string gmail)
+        {
+            return Ok(await _customerService.GetCustomerProfile(gmail));
+        }
+
+        [HttpGet("{id}/offers")]
+        public async Task<IActionResult> Gets(string id)
+        {
+            return Ok(await _offerService.GetOfferById(id));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>CreateCustomer(Customer customer)
+        {
+            var result = await _customerService.CreateCustomer(customer);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return StatusCode(201);
+            }
+        }
+
+
         //[HttpGet]
         //public IActionResult Gets()
         //{
@@ -27,7 +74,7 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_customerService.Get(id));
         //}
-        #region hdev
+/*        #region hdev
         /// <summary>
         /// Ceate customer account
         /// </summary>
@@ -55,7 +102,7 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _customerService.CustomerLogin(email));
         }
-        #endregion
+        #endregion*/
         //[HttpPut("{id}")]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
         //public IActionResult Update(string id,Customer entity)

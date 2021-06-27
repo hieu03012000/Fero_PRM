@@ -31,18 +31,27 @@ namespace FeroPRMData.Services
         Task<DetailCastingViewModel> GetCastingById(int castingId);
         Task<List<SearchCastingViewModel>> GetListCasting();
         Task<List<SearchCastingViewModel>> SearchListCasting(string search, double? min, double? max);
+        Task<Casting> CreateCasting(Casting casting);
+        Task<Casting> CreateCasting(string customerId, Casting casting);
+        Task<Casting> DeleteCasting(int castingId);
+        Task<List<ListModelCasting>> GetModelsByCastingId(int castingId);
+        Task<Casting> UpdateCasting(int id, ShowCasting updateCasting);
     }
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
         private readonly IMapper _mapper;
         private readonly ICastingRepository _castingRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IApplyCastingRepository _applyCastingRepository;
+        private readonly IModelRepository _modelRepository;
 
-        public CastingService(ICastingRepository castingRepository, ICustomerRepository customerRepository, IMapper mapper) : base(castingRepository)
+        public CastingService(ICastingRepository castingRepository, ICustomerRepository customerRepository, IModelRepository modelRepository, IApplyCastingRepository applyCastingRepository, IMapper mapper) : base(castingRepository)
         {
             _mapper = mapper;
             _castingRepository = castingRepository;
             _customerRepository = customerRepository;
+            _applyCastingRepository = applyCastingRepository;
+            _modelRepository = modelRepository;
         }
 
         public async Task<IQueryable<NewCastingViewModel>> NewCasting()
@@ -158,16 +167,30 @@ namespace FeroPRMData.Services
         //#endregion
 
         //Tao casting vs form casting
-        public async void CreateCasting(Casting casting)
+        public async Task<Casting> CreateCasting(Casting casting)
         {
+            var cus = await _customerRepository.FirstOrDefaultAsyn(x => x.Id == casting.CustomerId);
+            if(cus == null)
+            {
+                return null;
+            }
+            casting.CreateTime = DateTime.Now;
             await _castingRepository.CreateAsyn(casting);
+            return casting;
         }
 
         //them create at 
-        public async void CreateCasting(string customerId, Casting casting)
+        public async Task<Casting> CreateCasting(string customerId, Casting casting)
         {
+            var cus = await _customerRepository.FirstOrDefaultAsyn(x => x.Id == customerId);
+            if (cus == null)
+            {
+                return null;
+            }
             casting.CustomerId = customerId;
+            casting.CreateTime = DateTime.Now;
             await _castingRepository.CreateAsyn(casting);
+            return casting;
         }
 
         public async Task<Casting> GetCastingByCusId(string customerId)
@@ -177,7 +200,7 @@ namespace FeroPRMData.Services
 
         public async Task<List<Casting>> GetListCasting(string cusId)
         {
-            var listCasting = await _castingRepository.Get(x => x.CustomerId == cusId).ToListAsync();
+            var listCasting = await _castingRepository.Get(x => x.CustomerId == cusId && (x.Status == 0 || x.Status == 1)).ToListAsync();
             listCasting.Sort((x, y) => DateTime.Compare((DateTime)x.CreateTime, (DateTime)y.CreateTime));
             var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();
             return newList;
@@ -211,6 +234,7 @@ namespace FeroPRMData.Services
                 }
             }
             return result;
+
         }
 
         private double GetMaxSalary()
@@ -253,5 +277,82 @@ namespace FeroPRMData.Services
             }
             return result;
         }
+
+        public async Task<Casting> DeleteCasting(int castingId)
+        {
+            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
+            casting.Status = 2;
+            await UpdateAsync(casting);
+            return casting;
+        }
+
+        public async Task<List<ListModelCasting>> GetModelsByCastingId(int castingId)
+        {
+            var listApplyCasting = await _applyCastingRepository.Get(x => x.CastingId == castingId).ToListAsync();
+            List<ListModelCasting> lm = new List<ListModelCasting>();
+            foreach (var item in listApplyCasting)
+            {
+                var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == item.ModelId);
+                var des = _mapper.Map<ListModelCasting>(model);
+                lm.Add(des);
+            }
+            return lm;
+        }
+
+        public async Task<Casting> UpdateCasting(int castingId, ShowCasting updateCasting)
+        {
+            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
+            if (casting == null)
+            {
+                return null;
+            }
+            else
+            {
+                updateCasting.Id = castingId;
+                updateCasting.CustomerId = casting.CustomerId;
+                casting = _mapper.Map(updateCasting, casting);
+                await UpdateAsync(casting);
+                return casting;
+            }
+        }
+
+        //ta dao
+        /*public async Task<Casting> UpdateCasting(int castingId, Casting updateCasting)
+        {
+            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
+            if (updateCasting.Description == null)
+            {
+                Description = 
+            }
+            if (updateCasting.Name == null)
+            {
+                updateCasting.Name = casting.Name
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            if (updateCasting.Description == null)
+            {
+                Description =
+            }
+            Casting cast = new Casting
+            {
+
+                
+            }
+        }*/
     }
 }

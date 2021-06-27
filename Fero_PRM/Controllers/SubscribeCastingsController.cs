@@ -1,3 +1,4 @@
+using FeroPRMData.Models;
 using FeroPRMData.Services;
 using FeroPRMData.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -16,11 +17,46 @@ namespace Fero_PRM.Controllers
             _subscribeCastingService = subscribeCastingService;
         }
 
-        [HttpGet("{id}")]
+/*        [HttpGet("{id}")]
         public async Task<IActionResult> Gets(string id)
         {
             return Ok(await _subscribeCastingService.GetSubscribeCastings(id));
+        }*/
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSubCasting(SubscribeCasting subscribeCasting)
+        {
+            var result = await _subscribeCastingService.DeleteSubscribeCasting(subscribeCasting);
+            if(result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok();
+            }
         }
+
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckSubCastingId(int id, string modelId)
+        {
+            return Ok(await _subscribeCastingService.CheckSubscribeCasting(id, modelId));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSubCasting(SubscribeCasting subscribeCasting)
+        {
+            var result = await _subscribeCastingService.SubCastingCalls(subscribeCasting);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return StatusCode(201);
+            }
+        }
+
         //[HttpGet]
         //public IActionResult Gets()
         //{
@@ -33,6 +69,7 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_subscribeCastingService.Get(id));
         //}
+        /*
         #region hdev
         /// <summary>
         /// Subscribe casting
@@ -69,6 +106,6 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_subscribeCastingService.Count());
         //}
-        #endregion
+        #endregion*/
     }
 }

@@ -2,12 +2,21 @@ using AutoMapper;
 using FeroPRMData.Models;
 using FeroPRMData.Repositories;
 using FeroPRMData.Services.Base;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FeroPRMData.Services
 {
     public partial interface INotificationService:IBaseService<Notification>
     {
+        Task<Notification> UpdateNoti(int notiId, NotificationUpdate noti);
+
+        Task<List<Notification>> GetCusNoti(string cusId);
+        Task<Notification> CreateNoti(string userId, Notification noti);
+        Task<Notification> CreateNoti(Notification noti);
     }
     public partial class NotificationService:BaseService<Notification>,INotificationService
     {
@@ -15,13 +24,15 @@ namespace FeroPRMData.Services
         private readonly IMapper _mapper;
         private readonly ICastingRepository _castingRepository;
         private readonly IModelRepository _modelRepository;
+        private readonly ICustomerRepository _customerRepository;
 
-        public NotificationService(INotificationRepository notificationRepository, IMapper mapper, IModelRepository modelRepository, ICastingRepository castingRepository) : base(notificationRepository)
+        public NotificationService(INotificationRepository notificationRepository, IMapper mapper, ICustomerRepository customerRepository, IModelRepository modelRepository, ICastingRepository castingRepository) : base(notificationRepository)
         {
             _notificationRepository = notificationRepository;
             _mapper = mapper;
             _castingRepository = castingRepository;
             _modelRepository = modelRepository;
+            _customerRepository = customerRepository;
         }
 
         public async void CreateNotiCusEnd(Casting casting)
@@ -71,6 +82,93 @@ namespace FeroPRMData.Services
                     Description = model.Name + "have accept your invitation"
                 };
                 await CreateAsyn(noti);
+            }
+        }
+
+        //bi ngu moi nguoi eiii
+        /*        public async Task<Notification> UpdateNoti(int notiId, Notification noti)
+                {
+                    var notification = await _notificationRepository.FirstOrDefaultAsyn(x => x.Id == notiId);
+                    noti.Id = notification.Id;
+                    noti.UserId = notification.UserId;
+                    if (noti.Status == null)
+                    {
+                        noti.Status = notification.Status;
+                    }
+                    if (noti.Time == null)
+                    {
+                        noti.Time = notification.Time;
+                    }
+                    if (noti.Title == null)
+                    {
+                        noti.Title = notification.Title;
+                    }
+                    if (noti.Description == null)
+                    {
+                        noti.Description = notification.Description;
+                    }
+                    await UpdateAsync(noti);
+                    return noti;
+                }*/
+
+        public async Task<Notification> UpdateNoti(int notiId, NotificationUpdate noti)
+        {
+            var notification = await _notificationRepository.FirstOrDefaultAsyn(x => x.Id == notiId);
+            if (noti.Status == null)
+            {
+                noti.Status = notification.Status;
+            }
+            if (noti.Time == null)
+            {
+                noti.Time = notification.Time;
+            }
+            if (noti.Title == null)
+            {
+                noti.Title = notification.Title;
+            }
+            if (noti.Description == null)
+            {
+                noti.Description = notification.Description;
+            }
+            notification = _mapper.Map(noti, notification);
+            await UpdateAsync(notification);
+            return notification;
+        }
+
+        public async Task<List<Notification>> GetCusNoti(string cusId)
+        {
+            var listNoti = await _notificationRepository.Get(x => x.UserId == cusId).OrderByDescending(x => x.Time).ToListAsync();
+            return listNoti;
+        }
+
+        public async Task<Notification> CreateNoti(Notification noti)
+        {
+            var customer = await _customerRepository.FirstOrDefaultAsyn(x => x.Id == noti.UserId);
+            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id ==  noti.UserId);
+            if(customer != null || model != null)
+            {
+                await _notificationRepository.CreateAsyn(noti);
+                return noti;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Notification> CreateNoti(string userId, Notification noti)
+        {
+            var customer = await _customerRepository.FirstOrDefaultAsyn(x => x.Id == userId);
+            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == userId);
+            noti.UserId = userId;
+            if (customer != null || model != null)
+            {
+                await _notificationRepository.CreateAsyn(noti);
+                return noti;
+            }
+            else
+            {
+                return null;
             }
         }
     }

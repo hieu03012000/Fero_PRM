@@ -26,6 +26,13 @@ namespace FeroPRMData.Services
         Task<List<ShowOffer>> GetOffersModelById(string modelId);
         GetModelViewModel GetCompleteModelsById(string modelId);
         GetModelViewModel GetCompleteModelByGmail(string gmail);
+
+        Task<ModelGeneral> GetModelGeneralById(string modelId);
+
+        Task<List<ModelGeneral>> SearchListModel(string location, int? gender, double? minW, double? maxW, double? minH, double? maxH);
+/*
+        CompleteModel GetCompleteModelsById(string modelId);
+        GetModelViewModel GetCompleteModelByGmail(string gmail);*/
     }
     public partial class ModelService : BaseService<Model>, IModelService
     {
@@ -168,6 +175,21 @@ namespace FeroPRMData.Services
             return lc;
         }
 
+        public async Task<ModelGeneral> GetModelGeneralById(string modelId)
+        {
+            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == modelId);
+            var listStyleId = await _modelStyleRepository.Get(x => x.ModelId == modelId).ProjectTo<ModelStyleGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+            List<Style> ls = new List<Style>();
+            foreach (var item in listStyleId)
+            {
+                var style = await _styleRepository.FirstOrDefaultAsyn(x => x.Id == item.StyleId);
+                ls.Add(style);
+            }
+            var des = _mapper.Map<ModelGeneral>(model);
+            des.Styles = ls;
+            return des;
+        }
+
         public ShowCasting CopyAToB(Casting a)
         {
             ShowCasting b = new ShowCasting();
@@ -193,39 +215,7 @@ namespace FeroPRMData.Services
         {
             var model =  _modelRepository.FirstOrDefault(x => x.Gmail.Equals(gmail));
             if (model == null)
-            {
-                return null;
-            }
-            GetModelViewModel dto = new GetModelViewModel {
-                Id = model.Id,
-                Name = model.Name,
-                Address = model.Address,
-                Avatar = model.Avatar,
-                Bust = model.Bust,
-                DateOfBirth = model.DateOfBirth,
-                Gender = model.Gender,
-                Gmail = model.Gmail,
-                Height = model.Height,
-                Hip = model.Hip,
-                Phone = model.Phone,
-                SocialNetworkLink = model.SocialNetworkLink,
-                Status = model.Status,
-                Waist = model.Waist,
-                Weight = model.Weight
-            };
-            var styles = _modelStyleRepository.Get(x => x.ModelId == model.Id).ToList();
-            for (int i = 0; i < styles.Count; i++)
-            {
-                var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
-                dto.Styles.Add(new GetModelStyleViewModel { Id = style.Id, Name = style.Name });
-            }
-            var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
-            for (int i = 0; i < images.Count; i++)
-            {
-                var image = _imageRepository.FirstOrDefault(x => x.Id == images[i].Id);
-                dto.Images.Add(new GetModelImageViewModel { Id = image.Id, Link = image.Link });
-            }
-            return dto;
+                return dto;
         }
 
         public GetModelViewModel GetCompleteModelsById(string modelId)
@@ -268,5 +258,167 @@ namespace FeroPRMData.Services
             return dto;
         }
         
+        public double GetMaxWeight()
+        {
+            var model = _modelRepository.Get().OrderByDescending(x => x.Weight).FirstOrDefault();
+            Console.WriteLine(model.Weight);
+            return (double)model.Weight;
+
+        }
+
+        public double GetMaxHeight()
+        {
+            var model = _modelRepository.Get().OrderByDescending(x => x.Height).FirstOrDefault();
+            Console.WriteLine(model.Height);
+            return (double)model.Height;
+
+        }
+
+        public async Task<List<ModelGeneral>> SearchListModel(string location, int? gender, double? minW, double? maxW, double? minH, double? maxH)
+        {
+            if (minW == null)
+            {
+                minW = 0;
+            }
+            if (minH == null)
+            {
+                minH = 0;
+            }
+            if (maxH == null)
+            {
+                maxH = GetMaxHeight();
+            }
+            if (maxW == null)
+            {
+                maxW = GetMaxWeight();
+            }
+            if (location == null)
+            {
+                location = "";
+            }
+            if(gender == null)
+            {
+                var listModel = await _modelRepository.Get(x => x.Address.Contains(location) && 
+                                                                  x.Weight >= minW && x.Weight <= maxW &&
+                                                                  x.Height >= minH && x.Height <= maxH).ProjectTo<ModelGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+                foreach (var item in listModel)
+                {
+                    List<Style> ls = new List<Style>();
+                    var listStyleId = await _modelStyleRepository.Get(x => x.ModelId == item.Id).ProjectTo<ModelStyleGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+                    foreach (var styleId in listStyleId)
+                    {
+                        var style = await _styleRepository.FirstOrDefaultAsyn(x => x.Id == styleId.StyleId);
+                        ls.Add(style);
+                    }
+                    item.Styles = ls;
+                }
+                return listModel;
+            }
+            else
+            {
+                var listModel = await _modelRepository.Get(x => x.Address.Contains(location) &&
+                                                  x.Weight >= minW && x.Weight <= maxW &&
+                                                  x.Height >= minH && x.Height <= maxH &&
+                                                  x.Gender == gender).ProjectTo<ModelGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+                foreach (var item in listModel)
+                {
+                    List<Style> ls = new List<Style>();
+                    var listStyleId = await _modelStyleRepository.Get(x => x.ModelId == item.Id).ProjectTo<ModelStyleGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+                    foreach (var styleId in listStyleId)
+                    {
+                        var style = await _styleRepository.FirstOrDefaultAsyn(x => x.Id == styleId.StyleId);
+                        ls.Add(style);
+                    }
+                    item.Styles = ls;
+                }
+                return listModel;
+            }
+
+        }
+
+        //ok
+        /* public GetModelViewModel GetCompleteModelByGmail(string gmail)
+         {
+             var model =  _modelRepository.FirstOrDefault(x => x.Gmail == gmail);
+             if (model == null)
+             {
+                 return null;
+             }
+             GetModelViewModel dto = new GetModelViewModel {
+                 Id = model.Id,
+                 Name = model.Name,
+                 Address = model.Address,
+                 Avatar = model.Avatar,
+                 Bust = model.Bust,
+                 DateOfBirth = model.DateOfBirth,
+                 Gender = model.Gender,
+                 Gmail = model.Gmail,
+                 Height = model.Height,
+                 Hip = model.Hip,
+                 Phone = model.Phone,
+                 SocialNetworkLink = model.SocialNetworkLink,
+                 Status = model.Status,
+                 Waist = model.Waist,
+                 Weight = model.Weight
+             };
+             var styles = _modelStyleRepository.Get(x => x.ModelId == model.Id).ToList();
+             for (int i = 0; i < styles.Count; i++)
+             {
+                 var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
+                 dto.Styles.Add(new GetModelStyleViewModel { Id = style.Id, Name = style.Name });
+             }
+             var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+             for (int i = 0; i < images.Count; i++)
+             {
+                 var image = _imageRepository.FirstOrDefault(x => x.Id == images[i].Id);
+                 dto.Images.Add(new GetModelImageViewModel { Id = image.Id, Link = image.Link });
+             }
+             return dto;
+         }*/
+
+        //ok
+        /*        public CompleteModel GetCompleteModelsById(string modelId)
+                {
+                    return null;
+                    //var model = _modelRepository.FirstOrDefault(x => x.Id == modelId);
+                    //var styles = _modelStyleRepository.Get(x => x.ModelId == modelId).ToList();
+                    //List<(int Id, string Name)> listStyle = new List<(int Id, string Name)>();
+                    //List<(int Id, string Name)> listImage = new List<(int Id, string Name)>();
+                    //for (int i = 0; i < styles.Count; i++)
+                    //{
+                    //    var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
+                    //    (int Id, string Name) styless = (style.Id, style.Name);
+                    //    listStyle.Add(styless);
+                    //}
+                    //var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+
+                    for (int i = 0; i < images.Count; i++)
+                    {
+                        var image = _styleRepository.FirstOrDefault(x => x.Id == images[i].Id);
+                        Tuple<int, string> imagess = new Tuple<int, string>(image.Id, image.Name);
+                        listImage.Add(imagess);
+                    }
+                    CompleteModel cm = new CompleteModel
+                    {
+                        Id = model.Id,
+                        Name = model.Name,
+                        Address = model.Address,
+                        Avatar = model.Avatar,
+                        Bust = model.Bust,
+                        DateOfBirth = model.DateOfBirth,
+                        Gender = model.Gender,
+                        Gmail = model.Gmail,
+                        Height = model.Height,
+                        Hip = model.Hip,
+                        Phone = model.Phone,
+                        SocialNetworkLink = model.SocialNetworkLink,
+                        Status = model.Status,
+                        Waist = model.Waist,
+                        Weight = model.Weight,
+                        Styles = listStyle,
+                        Images = listImage
+                    };
+                    return cm;
+                }*/
     }
 }

@@ -36,10 +36,10 @@ namespace Fero_PRM.Controllers
             return Ok(await _modelService.GetOffersModelById(id));
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Gets(string id)
+        [HttpGet("gmail/{id}")]
+        public IActionResult GetModelByGmail(string id)
         {
-            var result = _modelService.GetCompleteModelsById(id);
+            var result = _modelService.GetCompleteModelByGmail(id);
             if (result != null)
             {
                 return Ok(result);
@@ -49,34 +49,6 @@ namespace Fero_PRM.Controllers
                 return NotFound();
             }
         }
-
-        [HttpGet("gmail/{gmail}")]
-        public IActionResult GetModelByGmail(string gmail)
-        {
-            var result = _modelService.GetCompleteModelByGmail(gmail);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        /*        [HttpGet("gmail/{id}")]
-                public async Task<IActionResult> GetByGmail(string id)
-                {
-                    var user = await _modelService.GetModelByGmail(id);
-                    if(user != null)
-                    {
-                        return Ok(user);
-                    }
-                    else
-                    {
-                        return BadRequest();
-                    }
-                }*/
 
         [HttpGet("check")]
         public bool CheckGmail(string gmail)
@@ -84,11 +56,11 @@ namespace Fero_PRM.Controllers
             return _modelService.CheckModelGmail(gmail);
         }
 
-/*        [HttpGet("check")]
-        public bool CheckGmail(CheckGmail gmail)
+        [HttpGet("{id}/general")]
+        public async Task<IActionResult> GetModelGeneral(string id)
         {
-            return _modelService.CheckModelGmail(gmail.Id, gmail.Gmail);
-        }*/
+            return Ok(await _modelService.GetModelGeneralById(id));
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateModel(Model model)
@@ -101,6 +73,12 @@ namespace Fero_PRM.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchModel(string location, int? gender, double? maxW, double? minW, double? maxH, double? minH)
+        {
+            return Ok(await _modelService.SearchListModel(location, gender, minW, maxW, minH, maxH));
         }
 
         #region hdev

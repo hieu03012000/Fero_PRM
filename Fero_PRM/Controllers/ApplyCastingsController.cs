@@ -19,20 +19,37 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateApplyCasting(ApplyCastingViewModel apply)
+        public async Task<IActionResult> CreateApplyCasting(ApplyCasting apply)
         {
-            System.Console.WriteLine(apply.CastingId);
-            System.Console.WriteLine(apply.ModelId);
-            var applyCasting = _applyCastingService.ApplyCastingCall(apply);
+            var applyCasting = await _applyCastingService.ApplyCastingCalls(apply);
             if(applyCasting == null)
             {
-                return BadRequest("already created");
+                return BadRequest();
             }
             else
             {
                 return StatusCode(201);
+            }          
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteApplyCasting(ApplyCasting apply)
+        {
+            var applyCasting = await _applyCastingService.DeleteApplyCasting(apply);
+            if (applyCasting == null)
+            {
+                return BadRequest("can't find model or casting");
             }
-            
+            else
+            {
+                return Ok();
+            }
+        }
+
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckApplyCastingId(int castingId, string modelId)
+        {
+            return Ok(await _applyCastingService.CheckApplyCasting(castingId, modelId));
         }
 
         //[HttpGet]
@@ -47,20 +64,21 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_applyCastingService.Get(id));
         //}
-        #region hdev
-        /// <summary>
-        /// Model apply vào casting call
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-/*        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(ApplyCastingViewModel entity)
-        {
+        /*        #region hdev
+                /// <summary>
+                /// Model apply vào casting call
+                /// </summary>
+                /// <param name="entity"></param>
+                /// <returns></returns>
+        *//*        [HttpPost]
+                [ProducesResponseType(StatusCodes.Status201Created)]
+                [ProducesResponseType(StatusCodes.Status400BadRequest)]
+                public async Task<IActionResult> Create(ApplyCastingViewModel entity)
+                {
 
-            return Ok(await _applyCastingService.ApplyCastingCall(entity));
-        }*/
+                    return Ok(await _applyCastingService.ApplyCastingCall(entity));
+                }*/
+        /*
 
         //[HttpPut("{id}")]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -85,6 +103,6 @@ namespace Fero_PRM.Controllers
         //{
         //    return Ok(_applyCastingService.Count());
         //}
-        #endregion
+        #endregion*/
     }
 }
