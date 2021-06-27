@@ -24,7 +24,6 @@ namespace FeroPRMData.Services
         Task<Model> CreateModel(Model model);
         Task<List<ShowCasting>> GetCastingsModelById(string modelId);
         Task<List<ShowOffer>> GetOffersModelById(string modelId);
-        GetModelViewModel GetCompleteModelsById(string modelId);
         GetModelViewModel GetCompleteModelByGmail(string gmail);
 
         Task<ModelGeneral> GetModelGeneralById(string modelId);
@@ -190,37 +189,9 @@ namespace FeroPRMData.Services
             return des;
         }
 
-        public ShowCasting CopyAToB(Casting a)
-        {
-            ShowCasting b = new ShowCasting();
-            // copy fields
-            var typeOfA = a.GetType();
-            var typeOfB = b.GetType();
-            foreach (var fieldOfA in typeOfA.GetFields())
-            {
-                var fieldOfB = typeOfB.GetField(fieldOfA.Name);
-                fieldOfB.SetValue(b, fieldOfA.GetValue(a));
-            }
-            // copy properties
-            foreach (var propertyOfA in typeOfA.GetProperties())
-            {
-                var propertyOfB = typeOfB.GetProperty(propertyOfA.Name);
-                propertyOfB.SetValue(b, propertyOfA.GetValue(a));
-            }
-
-            return b;
-        }
-
         public GetModelViewModel GetCompleteModelByGmail(string gmail)
         {
-            var model =  _modelRepository.FirstOrDefault(x => x.Gmail.Equals(gmail));
-            if (model == null)
-                return dto;
-        }
-
-        public GetModelViewModel GetCompleteModelsById(string modelId)
-        {
-            var model = _modelRepository.FirstOrDefault(x => x.Id.Equals(modelId));
+            var model = _modelRepository.FirstOrDefault(x => x.Gmail.Equals(gmail));
             if (model == null)
             {
                 return null;

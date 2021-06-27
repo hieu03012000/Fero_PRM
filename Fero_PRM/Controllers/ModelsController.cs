@@ -1,7 +1,5 @@
 using FeroPRMData.Models;
 using FeroPRMData.Services;
-using FeroPRMData.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,10 +34,10 @@ namespace Fero_PRM.Controllers
             return Ok(await _modelService.GetOffersModelById(id));
         }
 
-        [HttpGet("gmail/{id}")]
-        public IActionResult GetModelByGmail(string id)
+        [HttpGet("/gmail/{gmail}")]
+        public IActionResult GetModelByGmail(string gmail)
         {
-            var result = _modelService.GetCompleteModelByGmail(id);
+            var result = _modelService.GetCompleteModelByGmail(gmail);
             if (result != null)
             {
                 return Ok(result);
@@ -81,51 +79,5 @@ namespace Fero_PRM.Controllers
             return Ok(await _modelService.SearchListModel(location, gender, minW, maxW, minH, maxH));
         }
 
-        #region hdev
-        /*        /// <summary>
-                /// Get model by Id
-                /// </summary>
-                /// <param name="id"></param>
-                /// <returns></returns>
-                [HttpGet("{id}")]
-                [ProducesResponseType(StatusCodes.Status200OK)]
-                [ProducesResponseType(StatusCodes.Status404NotFound)]
-                public async Task<IActionResult> GetById(string id)
-                {
-                    return Ok(await _modelService.GetModelById(id));
-                }
-        */
-        /// <summary>
-        /// Model sign up
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        //[HttpPost]
-        //[ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public async Task<IActionResult> Create(CreateModelAccountViewModel entity)
-        //{
-        //    return Ok(await _modelService.CreateModelAccount(entity));
-        //}
-        #endregion
-
-        //[HttpPut("{id}")]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public IActionResult Update(string id,Model entity)
-        //{
-        //    _modelService.Update(entity);
-        //    return Ok();
-        //}
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(string id,Model entity)
-        //{
-        //    _modelService.Delete(entity);
-        //    return Ok();
-        //}
-        //[HttpGet("count")]
-        //public IActionResult Count()
-        //{
-        //    return Ok(_modelService.Count());
-        //}
     }
 }
