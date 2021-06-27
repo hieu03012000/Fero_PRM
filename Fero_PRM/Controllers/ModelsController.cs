@@ -36,20 +36,6 @@ namespace Fero_PRM.Controllers
             return Ok(await _modelService.GetOffersModelById(id));
         }
 
-        /*[HttpGet("{id}")]
-        public IActionResult Gets(string id)
-        {
-            var result = _modelService.GetCompleteModelsById(id);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
         [HttpGet("gmail/{id}")]
         public IActionResult GetModelByGmail(string id)
         {
@@ -61,20 +47,6 @@ namespace Fero_PRM.Controllers
             else
             {
                 return NotFound();
-            }
-        }*/
-
-        [HttpGet("gmail/{id}")]
-        public async Task<IActionResult> GetByGmail(string id)
-        {
-            var user = await _modelService.GetModelByGmail(id);
-            if (user != null)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                return BadRequest();
             }
         }
 
@@ -89,12 +61,6 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _modelService.GetModelGeneralById(id));
         }
-
-        /*        [HttpGet("check")]
-                public bool CheckGmail(CheckGmail gmail)
-                {
-                    return _modelService.CheckModelGmail(gmail.Id, gmail.Gmail);
-                }*/
 
         [HttpPost]
         public async Task<IActionResult> CreateModel(Model model)

@@ -28,9 +28,9 @@ namespace FeroPRMData.Services
         #endregion
         Task<List<Casting>> GetListCasting(string cusId);
         Task<Casting> GetCastingByCusId(string customerId);
-        Task<Casting> GetCastingById(int castingId);
-        Task<List<Casting>> GetListCasting();
-        Task<List<Casting>> SearchListCasting(string search, double? min, double? max);
+        Task<DetailCastingViewModel> GetCastingById(int castingId);
+        Task<List<SearchCastingViewModel>> GetListCasting();
+        Task<List<SearchCastingViewModel>> SearchListCasting(string search, double? min, double? max);
         Task<Casting> CreateCasting(Casting casting);
         Task<Casting> CreateCasting(string customerId, Casting casting);
         Task<Casting> DeleteCasting(int castingId);
@@ -80,12 +80,12 @@ namespace FeroPRMData.Services
         //    return castingList;
         //}
 
-        //public async Task<DetailCastingViewModel> GetCastingById(int castingId)
-        //{
-        //    var casting = await Get(c => c.Id == castingId && c.Status != 4)
-        //        .ProjectTo<DetailCastingViewModel>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
-        //    return casting;
-        //}
+        public async Task<DetailCastingViewModel> GetCastingById(int castingId)
+        {
+            var casting = await Get(c => c.Id == castingId && c.Status != 2)
+                .ProjectTo<DetailCastingViewModel>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
+            return casting;
+        }
 
         //public async Task<CreateCastingCallViewModel> CreateCasting(CreateCastingCallViewModel model)
         //{
@@ -193,11 +193,6 @@ namespace FeroPRMData.Services
             return casting;
         }
 
-        public async Task<Casting> GetCastingById(int castingId)
-        {
-            return await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
-        }
-
         public async Task<Casting> GetCastingByCusId(string customerId)
         {
             return await _castingRepository.FirstOrDefaultAsyn(x => x.CustomerId == customerId);
@@ -211,22 +206,38 @@ namespace FeroPRMData.Services
             return newList;
         }
 
-        public async Task<List<Casting>> GetListCasting()
+        public async Task<List<SearchCastingViewModel>> GetListCasting()
         {
-            var listCasting = await _castingRepository.Get(x => x.Status == 1).ToListAsync();
+            var listCasting = await _castingRepository.Get().ToListAsync();
             listCasting.Sort((x, y) => DateTime.Compare((DateTime)y.CreateTime, (DateTime)x.CreateTime));
-            if (listCasting.Count > 10)
+            var result = new List<SearchCastingViewModel>();
+            for (int i = 0; i < Math.Min(listCasting.Count, 10); i++)
             {
-                var newList = listCasting.Take(10).ToList();
-                return newList;
+                var casting = listCasting[i];
+                if (casting.Status != 1)
+                {
+                    listCasting.RemoveAt(i);
+                    i--;
+                } else
+                {
+                    var customer = _customerRepository.FirstOrDefault(c => c.Id.Equals(listCasting[i].CustomerId));
+                    result.Add(new SearchCastingViewModel
+                    {
+                        Id = casting.Id,
+                        Name = casting.Name,
+                        Description = casting.Description,
+                        Salary = casting.Salary,
+                        OpenTime = casting.OpenTime,
+                        CloseTime = casting.CloseTime,
+                        CustomerName = customer.Name
+                    });
+                }
             }
-            else{
-                return listCasting;
-            }
-            
+            return result;
+
         }
 
-        public double GetMaxSalary()
+        private double GetMaxSalary()
         {
             var casting =  _castingRepository.Get().OrderByDescending(x => x.Salary).FirstOrDefault();
             return (double)casting.Salary;
@@ -234,7 +245,7 @@ namespace FeroPRMData.Services
         }
         
         //nguoi mau search casting theo substr casting name, min salary, max salary ( casting - status  published, opened, and closed)
-        public async Task<List<Casting>> SearchListCasting(string search, double? min, double? max)
+        public async Task<List<SearchCastingViewModel>> SearchListCasting(string search, double? min, double? max)
         {
             if(min == null)
             {
@@ -249,7 +260,22 @@ namespace FeroPRMData.Services
                 search = "";
             }
             var listCasting = await _castingRepository.Get(x => x.Name.Contains(search) && x.Salary >= min && x.Salary <= max  && x.Status == 1).ToListAsync();
-            return listCasting;
+            listCasting.Sort((x, y) => DateTime.Compare((DateTime)y.CreateTime, (DateTime)x.CreateTime));
+            var result = new List<SearchCastingViewModel>();
+            foreach (var casting in listCasting)
+            {
+                var customer = _customerRepository.FirstOrDefault(c => c.Id.Equals(casting.CustomerId));
+                result.Add(new SearchCastingViewModel {
+                    Id = casting.Id,
+                    Name = casting.Name,
+                    Description = casting.Description,
+                    Salary = casting.Salary,
+                    OpenTime = casting.OpenTime,
+                    CloseTime = casting.CloseTime,
+                    CustomerName = customer.Name
+                });
+            }
+            return result;
         }
 
         public async Task<Casting> DeleteCasting(int castingId)

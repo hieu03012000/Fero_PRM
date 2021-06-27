@@ -24,13 +24,15 @@ namespace FeroPRMData.Services
         Task<Model> CreateModel(Model model);
         Task<List<ShowCasting>> GetCastingsModelById(string modelId);
         Task<List<ShowOffer>> GetOffersModelById(string modelId);
+        GetModelViewModel GetCompleteModelsById(string modelId);
+        GetModelViewModel GetCompleteModelByGmail(string gmail);
+
         Task<ModelGeneral> GetModelGeneralById(string modelId);
 
         Task<List<ModelGeneral>> SearchListModel(string location, int? gender, double? minW, double? maxW, double? minH, double? maxH);
 /*
         CompleteModel GetCompleteModelsById(string modelId);
         GetModelViewModel GetCompleteModelByGmail(string gmail);*/
-
     }
     public partial class ModelService : BaseService<Model>, IModelService
     {
@@ -209,6 +211,53 @@ namespace FeroPRMData.Services
             return b;
         }
 
+        public GetModelViewModel GetCompleteModelByGmail(string gmail)
+        {
+            var model =  _modelRepository.FirstOrDefault(x => x.Gmail.Equals(gmail));
+            if (model == null)
+                return dto;
+        }
+
+        public GetModelViewModel GetCompleteModelsById(string modelId)
+        {
+            var model = _modelRepository.FirstOrDefault(x => x.Id.Equals(modelId));
+            if (model == null)
+            {
+                return null;
+            }
+            GetModelViewModel dto = new GetModelViewModel
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Address = model.Address,
+                Avatar = model.Avatar,
+                Bust = model.Bust,
+                DateOfBirth = model.DateOfBirth,
+                Gender = model.Gender,
+                Gmail = model.Gmail,
+                Height = model.Height,
+                Hip = model.Hip,
+                Phone = model.Phone,
+                SocialNetworkLink = model.SocialNetworkLink,
+                Status = model.Status,
+                Waist = model.Waist,
+                Weight = model.Weight
+            };
+            var styles = _modelStyleRepository.Get(x => x.ModelId == model.Id).ToList();
+            for (int i = 0; i < styles.Count; i++)
+            {
+                var style = _styleRepository.FirstOrDefault(x => x.Id == styles[i].StyleId);
+                dto.Styles.Add(new GetModelStyleViewModel { Id = style.Id, Name = style.Name });
+            }
+            var images = _imageRepository.Get(x => x.ModelId == model.Id).ToList();
+            for (int i = 0; i < images.Count; i++)
+            {
+                var image = _imageRepository.FirstOrDefault(x => x.Id == images[i].Id);
+                dto.Images.Add(new GetModelImageViewModel { Id = image.Id, Link = image.Link });
+            }
+            return dto;
+        }
+        
         public double GetMaxWeight()
         {
             var model = _modelRepository.Get().OrderByDescending(x => x.Weight).FirstOrDefault();
@@ -247,7 +296,6 @@ namespace FeroPRMData.Services
             {
                 location = "";
             }
-
             if(gender == null)
             {
                 var listModel = await _modelRepository.Get(x => x.Address.Contains(location) && 
@@ -372,6 +420,5 @@ namespace FeroPRMData.Services
                     };
                     return cm;
                 }*/
-
     }
 }
