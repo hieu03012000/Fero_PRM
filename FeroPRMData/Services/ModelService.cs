@@ -184,7 +184,7 @@ namespace FeroPRMData.Services
                 ls.Add(style);
             }
             var des = _mapper.Map<ModelGeneral>(model);
-            des.ListStyles = ls;
+            des.Styles = ls;
             return des;
         }
 
@@ -212,6 +212,7 @@ namespace FeroPRMData.Services
         public double GetMaxWeight()
         {
             var model = _modelRepository.Get().OrderByDescending(x => x.Weight).FirstOrDefault();
+            Console.WriteLine(model.Weight);
             return (double)model.Weight;
 
         }
@@ -219,6 +220,7 @@ namespace FeroPRMData.Services
         public double GetMaxHeight()
         {
             var model = _modelRepository.Get().OrderByDescending(x => x.Height).FirstOrDefault();
+            Console.WriteLine(model.Height);
             return (double)model.Height;
 
         }
@@ -245,20 +247,43 @@ namespace FeroPRMData.Services
             {
                 location = "";
             }
+
             if(gender == null)
             {
-                var listCasting = await _modelRepository.Get(x => x.Address.Contains(location) && 
+                var listModel = await _modelRepository.Get(x => x.Address.Contains(location) && 
                                                                   x.Weight >= minW && x.Weight <= maxW &&
                                                                   x.Height >= minH && x.Height <= maxH).ProjectTo<ModelGeneral>(_mapper.ConfigurationProvider).ToListAsync();
-                return listCasting;
+                foreach (var item in listModel)
+                {
+                    List<Style> ls = new List<Style>();
+                    var listStyleId = await _modelStyleRepository.Get(x => x.ModelId == item.Id).ProjectTo<ModelStyleGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+                    foreach (var styleId in listStyleId)
+                    {
+                        var style = await _styleRepository.FirstOrDefaultAsyn(x => x.Id == styleId.StyleId);
+                        ls.Add(style);
+                    }
+                    item.Styles = ls;
+                }
+                return listModel;
             }
             else
             {
-                var listCasting = await _modelRepository.Get(x => x.Address.Contains(location) &&
+                var listModel = await _modelRepository.Get(x => x.Address.Contains(location) &&
                                                   x.Weight >= minW && x.Weight <= maxW &&
                                                   x.Height >= minH && x.Height <= maxH &&
                                                   x.Gender == gender).ProjectTo<ModelGeneral>(_mapper.ConfigurationProvider).ToListAsync();
-                return listCasting;
+                foreach (var item in listModel)
+                {
+                    List<Style> ls = new List<Style>();
+                    var listStyleId = await _modelStyleRepository.Get(x => x.ModelId == item.Id).ProjectTo<ModelStyleGeneral>(_mapper.ConfigurationProvider).ToListAsync();
+                    foreach (var styleId in listStyleId)
+                    {
+                        var style = await _styleRepository.FirstOrDefaultAsyn(x => x.Id == styleId.StyleId);
+                        ls.Add(style);
+                    }
+                    item.Styles = ls;
+                }
+                return listModel;
             }
 
         }

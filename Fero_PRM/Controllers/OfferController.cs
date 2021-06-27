@@ -36,5 +36,19 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _offerService.CreateOffers(createOffer));
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateOffer(ShowModelOffer modelOffer)
+        {
+            var result = await _offerService.UpdateModelOffer(modelOffer);
+            if(result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
     }
 }

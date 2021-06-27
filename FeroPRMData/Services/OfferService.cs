@@ -16,6 +16,7 @@ namespace FeroPRMData.Services
         Task<List<Offer>> GetOfferById(string customerId);
         Task<OfferWithListModel> GetOfferWithListModel(int offerId);
         Task<ShowOffer> CreateOffers(CreateOffer createOffer);
+        Task<ModelOffer> UpdateModelOffer(ShowModelOffer updateModelOffer);
     }
     public partial class OfferService:BaseService<Offer>,IOfferService
     {
@@ -56,6 +57,7 @@ namespace FeroPRMData.Services
         public async Task<ShowOffer> CreateOffers(CreateOffer createOffer)
         {
             var showOffer = _mapper.Map<ShowOffer>(createOffer.Offer);
+            showOffer.Time = DateTime.Now;
             await _offerRepository.CreateAsyn(createOffer.Offer);
             var offerId = GetNewOfferId();
             foreach (var item in createOffer.ListModelId)
@@ -63,6 +65,7 @@ namespace FeroPRMData.Services
                 ModelOffer mo = new ModelOffer
                 {
                     ModelId = item,
+                    Time = DateTime.Now,
                     OfferId = offerId
                 };
                 await _modelOfferRepository.CreateAsyn(mo);
@@ -124,6 +127,23 @@ namespace FeroPRMData.Services
             OfferWithListModel ow = _mapper.Map<OfferWithListModel>(offer);
             ow.Model = lm;
             return ow;
+        }
+
+        public async Task<ModelOffer> UpdateModelOffer(ShowModelOffer updateModelOffer)
+        {
+
+            var modelOffer = await _modelOfferRepository.FirstOrDefaultAsyn(x => x.ModelId == updateModelOffer.ModelId && x.OfferId == updateModelOffer.OfferId);
+            if (modelOffer == null)
+            {
+                return null;
+            }
+            else
+            {
+                updateModelOffer.Time = DateTime.Now;
+                modelOffer = _mapper.Map(updateModelOffer, modelOffer);
+                await _modelOfferRepository.UpdateAsync(modelOffer);
+                return modelOffer;
+            }
         }
     }
 }
