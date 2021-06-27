@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FeroPRMData.ViewModels
+﻿namespace FeroPRMData.ViewModels
 {
     public class SubscribeCastingViewModel
     {

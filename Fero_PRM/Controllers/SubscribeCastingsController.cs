@@ -1,7 +1,5 @@
-using FeroPRMData.Models;
 using FeroPRMData.Services;
 using FeroPRMData.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -17,16 +15,10 @@ namespace Fero_PRM.Controllers
             _subscribeCastingService = subscribeCastingService;
         }
 
-/*        [HttpGet("{id}")]
-        public async Task<IActionResult> Gets(string id)
-        {
-            return Ok(await _subscribeCastingService.GetSubscribeCastings(id));
-        }*/
-
         [HttpDelete]
-        public async Task<IActionResult> DeleteSubCasting(SubscribeCasting subscribeCasting)
+        public async Task<IActionResult> DeleteSubCasting(SubscribeCastingViewModel subscribeCasting)
         {
-            var result = await _subscribeCastingService.DeleteSubscribeCasting(subscribeCasting);
+            var result = await _subscribeCastingService.CancelSubscribeCastingCall(subscribeCasting);
             if(result == null)
             {
                 return BadRequest();
@@ -38,15 +30,15 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpGet("check")]
-        public async Task<IActionResult> CheckSubCastingId(int id, string modelId)
+        public async Task<IActionResult> CheckSubCastingId(int castingId, string modelId)
         {
-            return Ok(await _subscribeCastingService.CheckSubscribeCasting(id, modelId));
+            return Ok(await _subscribeCastingService.CheckSubscribeCasting(castingId, modelId));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSubCasting(SubscribeCasting subscribeCasting)
+        public async Task<IActionResult> CreateSubCasting(SubscribeCastingViewModel subscribeCasting)
         {
-            var result = await _subscribeCastingService.SubCastingCalls(subscribeCasting);
+            var result = await _subscribeCastingService.SubscribeCastingCall(subscribeCasting);
             if (result == null)
             {
                 return BadRequest();
@@ -57,55 +49,5 @@ namespace Fero_PRM.Controllers
             }
         }
 
-        //[HttpGet]
-        //public IActionResult Gets()
-        //{
-        //    return Ok(_subscribeCastingService.Get().ToList());
-        //}
-        //[HttpGet("{id}")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //public IActionResult GetById(string id)
-        //{
-        //    return Ok(_subscribeCastingService.Get(id));
-        //}
-        /*
-        #region hdev
-        /// <summary>
-        /// Subscribe casting
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(SubscribeCastingViewModel entity)
-        {
-            return Ok(await _subscribeCastingService.SubscribeCastingCall(entity));
-        }
-        //[HttpPut("{id}")]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public IActionResult Update(string id,SubscribeCasting entity)
-        //{
-        //    _subscribeCastingService.Update(entity);
-        //    return Ok();
-        //}
-
-        /// <summary>
-        /// Unsubscribe casting
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(SubscribeCastingViewModel entity)
-        {
-            return Ok(await _subscribeCastingService.CancelSubscribeCastingCall(entity));
-        }
-        //[HttpGet("count")]
-        //public IActionResult Count()
-        //{
-        //    return Ok(_subscribeCastingService.Count());
-        //}
-        #endregion*/
     }
 }

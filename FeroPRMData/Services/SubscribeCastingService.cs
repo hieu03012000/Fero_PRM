@@ -12,13 +12,11 @@ namespace FeroPRMData.Services
 {
     public partial interface ISubscribeCastingService : IBaseService<SubscribeCasting>
     {
-/*        Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting);
-        Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting);*/
+        Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting);
+        Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting);
         Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId);
-        Task<SubscribeCasting> DeleteSubscribeCasting(SubscribeCasting subscribeCasting);
         Task<bool> CheckSubscribeCasting(int id, string modelId);
 
-        Task<SubscribeCasting> SubCastingCalls(SubscribeCasting subCasting);
     }
     public partial class SubscribeCastingService : BaseService<SubscribeCasting>, ISubscribeCastingService
     {
@@ -33,67 +31,41 @@ namespace FeroPRMData.Services
             _modelRepository = modelRepository;
             _castingRepository = castingRepository;
         }
-        /*        public async Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting)
-                {
-                    var apply = await Get(ac => ac.CastingId == subCasting.CastingId && ac.ModelId == subCasting.ModelId)
-                        .FirstOrDefaultAsync();
-                    if (apply != null) return null;
-                    var entity = _mapper.Map<SubscribeCasting>(subCasting);
-                    await CreateAsyn(entity);
-                    return subCasting;
-                }
-                public async Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting)
-                {
-                    var apply = await Get(ac => ac.CastingId == subCasting.CastingId && ac.ModelId == subCasting.ModelId)
-                        .ProjectTo<SubscribeCastingViewModel>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
-                    if (apply == null) return null;
-                    var entity = _mapper.Map<SubscribeCasting>(subCasting);
-                    await DeleteAsync(entity);
-                    return subCasting;
-                }*/
-
-
-        public async Task<SubscribeCasting> SubCastingCalls(SubscribeCasting subCasting)
+        
+        public async Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting)
         {
-            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == subCasting.CastingId);
-            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == subCasting.ModelId);
-            var sub = await _subscribeCastingRepository.FirstOrDefaultAsyn(x => x.ModelId == subCasting.ModelId && x.CastingId == subCasting.CastingId);
-            if (model == null || casting == null || sub != null)
+            var apply = await Get(ac => ac.CastingId == subCasting.CastingId && ac.ModelId == subCasting.ModelId)
+                .FirstOrDefaultAsync();
+            if (apply != null)
             {
                 return null;
             }
-            else
-            {
-                await CreateAsyn(subCasting);
-                return subCasting;
-            }
+            var entity = _mapper.Map<SubscribeCasting>(subCasting);
+            await CreateAsyn(entity);
+            return subCasting;
         }
+
+        public async Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting)
+        {
+            var apply = await Get(ac => ac.CastingId == subCasting.CastingId && ac.ModelId == subCasting.ModelId)
+                .ProjectTo<SubscribeCastingViewModel>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
+            if (apply == null) return null;
+            var entity = _mapper.Map<SubscribeCasting>(subCasting);
+            await DeleteAsync(entity);
+            return subCasting;
+        }
+
         public async Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId)
         {
             var list = await _subscribeCastingRepository.Get(x => x.ModelId == modelId).ToListAsync();
             return list;
         }
 
-        public async Task<SubscribeCasting> DeleteSubscribeCasting(SubscribeCasting subscribeCasting)
+        public async Task<bool> CheckSubscribeCasting(int castingId, string modelId)
         {
-            var subCasting = await _subscribeCastingRepository.FirstOrDefaultAsyn(x => x.CastingId == subscribeCasting.CastingId &&
-                                                                                       x.ModelId == subscribeCasting.ModelId);
-            if(subCasting == null)
-            {
-                return null;
-            }
-            else
-            {
-                await DeleteAsync(subCasting);
-                return subCasting;
-            }
-        }
-
-        public async Task<bool> CheckSubscribeCasting(int id, string modelId)
-        {
-            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == id);
+            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
             var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == modelId);
-            var sup = await _subscribeCastingRepository.FirstOrDefaultAsyn(x => x.CastingId == id && x.ModelId == modelId);
+            var sup = await _subscribeCastingRepository.FirstOrDefaultAsyn(x => x.CastingId == castingId && x.ModelId == modelId);
             if(model == null || casting == null || sup == null)
             {
                 return false;
