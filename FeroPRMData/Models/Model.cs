@@ -82,6 +82,8 @@ namespace FeroPRMData.Models
         public double? Height { get; set; }
         public double? Weight { get; set; }
         public string Avatar { get; set; }
+        public string Address { get; set; }
+
         public DateTime? DateOfBirth { get; set; }
         public List<Style> Styles { get; set; }
     }
