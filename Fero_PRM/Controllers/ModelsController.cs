@@ -34,7 +34,7 @@ namespace Fero_PRM.Controllers
             return Ok(await _modelService.GetOffersModelById(id));
         }
 
-        [HttpGet("/gmail/{gmail}")]
+        [HttpGet("gmail/{gmail}")]
         public IActionResult GetModelByGmail(string gmail)
         {
             var result = _modelService.GetCompleteModelByGmail(gmail);
