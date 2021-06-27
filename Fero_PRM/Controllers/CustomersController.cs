@@ -1,7 +1,5 @@
 using FeroPRMData.Models;
 using FeroPRMData.Services;
-using FeroPRMData.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -30,15 +28,22 @@ namespace Fero_PRM.Controllers
 
 
         [HttpGet("check")]
-        public async Task<IActionResult> CheckGmail(string mail)
+        public async Task<IActionResult> CheckGmail(string gmail)
         {
-            return Ok(await _customerService.CheckCusGmail(mail));
+            return Ok(await _customerService.CheckCustomerGmail(gmail));
         }
 
-        [HttpGet("{gmail}")]
-        public async Task<IActionResult>GetCusByGmail(string gmail)
+        [HttpGet("gmail/{gmail}")]
+        public async Task<IActionResult>GetCustomerByGmail(string gmail)
         {
-            return Ok(await _customerService.GetCustomerProfile(gmail));
+            var customer = await _customerService.GetCustomerProfile(gmail);
+            if (customer != null)
+            {
+                return Ok(customer);
+            } else
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("{id}/offers")]
@@ -60,66 +65,5 @@ namespace Fero_PRM.Controllers
                 return StatusCode(201);
             }
         }
-
-
-        //[HttpGet]
-        //public IActionResult Gets()
-        //{
-        //    return Ok(_customerService.Get().ToList());
-        //}
-        //[HttpGet("{id}")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //public IActionResult GetById(string id)
-        //{
-        //    return Ok(_customerService.Get(id));
-        //}
-/*        #region hdev
-        /// <summary>
-        /// Ceate customer account
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(CreateCustomerAccountViewModel entity)
-        {
-            return Ok(await _customerService.CreateCustomerAccount(entity));
-        }
-
-        /// <summary>
-        /// Login
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        [HttpPost]
-        //[AllowAnonymous]
-        [Route("login")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Login(string email)
-        {
-            return Ok(await _customerService.CustomerLogin(email));
-        }
-        #endregion*/
-        //[HttpPut("{id}")]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public IActionResult Update(string id,Customer entity)
-        //{
-        //    _customerService.Update(entity);
-        //    return Ok();
-        //}
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(string id,Customer entity)
-        //{
-        //    _customerService.Delete(entity);
-        //    return Ok();
-        //}
-        //[HttpGet("count")]
-        //public IActionResult Count()
-        //{
-        //    return Ok(_customerService.Count());
-        //}
     }
 }

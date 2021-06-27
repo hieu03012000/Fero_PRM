@@ -15,8 +15,8 @@ namespace FeroPRMData.Services
         Task<CreateCustomerAccountViewModel> CreateCustomerAccount(CreateCustomerAccountViewModel customer);
         Task<Customer> CustomerLogin(string customer);
         #endregion
-        Task<bool> CheckCusGmail(string mail);
-        Task<Customer> GetCustomerProfile(string mail);
+        Task<bool> CheckCustomerGmail(string mail);
+        Task<Customer> GetCustomerProfile(string gmail);
         Task<Customer> CreateCustomer(Customer newCustomer);
 
     }
@@ -56,14 +56,13 @@ namespace FeroPRMData.Services
         }
         #endregion
 
-        public async Task<Customer> GetCustomerProfile(string mail)
+        public async Task<Customer> GetCustomerProfile(string gmail)
         {
-            var customer = await Get(c => c.Gmail.Equals(mail)).FirstOrDefaultAsync();
-
+            var customer = await Get(c => c.Gmail.Equals(gmail)).FirstOrDefaultAsync();
             return customer;
         }
 
-        public async Task<bool> CheckCusGmail(string mail)
+        public async Task<bool> CheckCustomerGmail(string mail)
         {
             var cus = await _customerRepository.FirstOrDefaultAsyn(x => x.Gmail == mail);
             if(cus != null)
