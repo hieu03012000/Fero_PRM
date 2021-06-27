@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Fero_PRM.Controllers
 {
     [ApiController]
-    [Route("api/offer")]
+    [Route("api/offers")]
     public partial class OfferController : ControllerBase
     {
         private readonly IOfferService _offerService;
