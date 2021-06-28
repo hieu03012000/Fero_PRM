@@ -15,23 +15,16 @@ namespace FeroPRMData.Services
     public partial interface IModelService : IBaseService<Model>
     {
         Task<CreateModelAccountViewModel> CreateModelAccount(CreateModelAccountViewModel model);
-        //Task<ModelDetailViewModel> GetModelById(string modelId);
         Task<IQueryable<ApplicantListViewModel>> GetApplicantList(int castingID);
         bool CheckModelGmail(string modelId, string gmail);
         bool CheckModelGmail(string gmail);
         Task<Model> GetModelByGmail(string gmail);
         Task<Model> GetModelsById(string modelId);
         Task<Model> CreateModel(Model model);
-        Task<List<ShowCasting>> GetCastingsModelById(string modelId);
         Task<List<ShowOffer>> GetOffersModelById(string modelId);
         GetModelViewModel GetCompleteModelByGmail(string gmail);
-
         Task<ModelGeneral> GetModelGeneralById(string modelId);
-
         Task<List<ModelGeneral>> SearchListModel(string location, int? gender, double? minW, double? maxW, double? minH, double? maxH);
-/*
-        CompleteModel GetCompleteModelsById(string modelId);
-        GetModelViewModel GetCompleteModelByGmail(string gmail);*/
     }
     public partial class ModelService : BaseService<Model>, IModelService
     {
@@ -156,19 +149,6 @@ namespace FeroPRMData.Services
                 var offer = await _offerRepository.FirstOrDefaultAsyn(x => x.Id == item.OfferId);
                 var des = _mapper.Map<ShowOffer>(offer);
                 des.OfferStatus = item.Status;
-                lc.Add(des);
-            }
-            return lc;
-        }
-
-        public async Task<List<ShowCasting>> GetCastingsModelById(string modelId)
-        {
-            var listSupCasting = await _subscribeCastingRepository.Get(x => x.ModelId == modelId).ToListAsync();
-            List<ShowCasting> lc = new List<ShowCasting>();
-            foreach (var item in listSupCasting)
-            {
-                var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == item.CastingId);
-                var des = _mapper.Map<ShowCasting>(casting);
                 lc.Add(des);
             }
             return lc;

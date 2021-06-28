@@ -14,7 +14,7 @@ namespace FeroPRMData.Services
     {
         Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting);
         Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting);
-        Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId);
+        Task<List<ShowCasting>> GetSubscribeCastings(string modelId);
         Task<bool> CheckSubscribeCasting(int id, string modelId);
 
     }
@@ -24,14 +24,17 @@ namespace FeroPRMData.Services
         private readonly ISubscribeCastingRepository _subscribeCastingRepository;
         private readonly ICastingRepository _castingRepository;
         private readonly IModelRepository _modelRepository;
-        public SubscribeCastingService(ISubscribeCastingRepository subscribeCastingRepository, IModelRepository modelRepository, ICastingRepository castingRepository, IMapper mapper) : base(subscribeCastingRepository)
+        private readonly ICustomerRepository _customerRepository;
+
+        public SubscribeCastingService(IMapper mapper, ISubscribeCastingRepository subscribeCastingRepository, ICastingRepository castingRepository, IModelRepository modelRepository, ICustomerRepository customerRepository)
         {
             _mapper = mapper;
             _subscribeCastingRepository = subscribeCastingRepository;
-            _modelRepository = modelRepository;
             _castingRepository = castingRepository;
+            _modelRepository = modelRepository;
+            _customerRepository = customerRepository;
         }
-        
+
         public async Task<SubscribeCastingViewModel> SubscribeCastingCall(SubscribeCastingViewModel subCasting)
         {
             var apply = await Get(ac => ac.CastingId == subCasting.CastingId && ac.ModelId == subCasting.ModelId)
@@ -55,9 +58,21 @@ namespace FeroPRMData.Services
             return subCasting;
         }
 
-        public async Task<List<SubscribeCasting>> GetSubscribeCastings(string modelId)
+        public async Task<List<ShowCasting>> GetSubscribeCastings(string modelId)
         {
-            var list = await _subscribeCastingRepository.Get(x => x.ModelId == modelId).ToListAsync();
+            var subscribeCastings = await _subscribeCastingRepository.Get(x => x.ModelId == modelId).ToListAsync();
+            List<ShowCasting> list = new List<ShowCasting>();
+            foreach (var item in subscribeCastings)
+            {
+                var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == item.CastingId);
+                if (casting.Status == 1)
+                {
+                    var dto = _mapper.Map<ShowCasting>(casting);
+                    var customer = _customerRepository.FirstOrDefault(c => c.Id.Equals(casting.CustomerId));
+                    dto.CustomerName = customer.Name;
+                    list.Add(dto);
+                }
+            }
             return list;
         }
 

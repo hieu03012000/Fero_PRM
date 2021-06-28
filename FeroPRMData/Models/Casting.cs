@@ -37,6 +37,8 @@ namespace FeroPRMData.Models
         public DateTime? CloseTime { get; set; }
         public int? Status { get; set; }
         public string CustomerId { get; set; }
+        public string CustomerName { get; set; }
+
         public DateTime? CreateTime { get; set; }
     }
 }

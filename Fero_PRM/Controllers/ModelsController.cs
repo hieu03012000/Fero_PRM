@@ -11,9 +11,12 @@ namespace Fero_PRM.Controllers
     public partial class ModelsController : ControllerBase
     {
         private readonly IModelService _modelService;
-        public ModelsController(IModelService modelService)
+        private readonly ISubscribeCastingService _subscribeCastingService;
+
+        public ModelsController(IModelService modelService, ISubscribeCastingService subscribeCastingService)
         {
             _modelService = modelService;
+            _subscribeCastingService = subscribeCastingService;
         }
 
         [HttpGet]
@@ -25,7 +28,7 @@ namespace Fero_PRM.Controllers
         [HttpGet("{id}/subscribe-castings")]
         public async Task<IActionResult> GetModelCastings(string id)
         {
-            return Ok(await _modelService.GetCastingsModelById(id));
+            return Ok(await _subscribeCastingService.GetSubscribeCastings(id));
         }
 
         [HttpGet("{id}/offers")]
