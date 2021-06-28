@@ -201,9 +201,9 @@ namespace FeroPRMData.Services
         public async Task<List<Casting>> GetListCasting(string cusId)
         {
             var listCasting = await _castingRepository.Get(x => x.CustomerId == cusId && (x.Status == 0 || x.Status == 1)).ToListAsync();
-            listCasting.Sort((x, y) => DateTime.Compare((DateTime)x.CreateTime, (DateTime)y.CreateTime));
-            var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();
-            return newList;
+            listCasting.Sort((x, y) => DateTime.Compare((DateTime)y.CreateTime, (DateTime)x.CreateTime));
+            //var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();
+            return listCasting;
         }
 
         public async Task<List<SearchCastingViewModel>> GetListCasting()
