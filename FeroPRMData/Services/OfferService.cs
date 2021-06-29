@@ -1,5 +1,6 @@
 using AutoMapper;
 using FeroPRMData.Models;
+using FeroPRMData.ViewModels;
 using FeroPRMData.Repositories;
 using FeroPRMData.Services.Base;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace FeroPRMData.Services
         Task<ShowOffer> CreateOffers(CreateOffer createOffer);
         Task<ModelOffer> UpdateModelOffer(ShowModelOffer updateModelOffer);
     }
-    public partial class OfferService:BaseService<Offer>,IOfferService
+    public partial class OfferService:BaseService<Offer>, IOfferService
     {
         private readonly IMapper _mapper;
         private readonly ICastingRepository _castingRepository;

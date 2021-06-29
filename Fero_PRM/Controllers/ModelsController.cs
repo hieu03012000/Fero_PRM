@@ -12,11 +12,13 @@ namespace Fero_PRM.Controllers
     {
         private readonly IModelService _modelService;
         private readonly ISubscribeCastingService _subscribeCastingService;
+        private readonly IModelOfferService _modelOfferService;
 
-        public ModelsController(IModelService modelService, ISubscribeCastingService subscribeCastingService)
+        public ModelsController(IModelService modelService, ISubscribeCastingService subscribeCastingService, IModelOfferService modelOfferService)
         {
             _modelService = modelService;
             _subscribeCastingService = subscribeCastingService;
+            _modelOfferService = modelOfferService;
         }
 
         [HttpGet]
@@ -34,7 +36,7 @@ namespace Fero_PRM.Controllers
         [HttpGet("{id}/offers")]
         public async Task<IActionResult> GetModelOffers(string id)
         {
-            return Ok(await _modelService.GetOffersModelById(id));
+            return Ok(await _modelOfferService.GetByModelId(id));
         }
 
         [HttpGet("gmail/{gmail}")]

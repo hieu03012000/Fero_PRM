@@ -1,9 +1,6 @@
 ﻿using FeroPRMData.Models;
 using FeroPRMData.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fero_PRM.Controllers
@@ -13,16 +10,23 @@ namespace Fero_PRM.Controllers
     public partial class OfferController : ControllerBase
     {
         private readonly IOfferService _offerService;
-
-        public OfferController(IOfferService offerService)
+        private readonly IModelOfferService _modelOfferService;
+        public OfferController(IOfferService offerService, IModelOfferService modelOfferService)
         {
             _offerService = offerService;
+            _modelOfferService = modelOfferService;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Gets(int id)
         {
             return Ok(await _offerService.GetOfferWithListModel(id));
+        }
+
+        [HttpGet("general")]
+        public async Task<IActionResult> GetGeneral(string modelId, int offerId)
+        {
+            return Ok(await _modelOfferService.GetById(modelId, offerId));
         }
 
         [HttpGet]
@@ -36,19 +40,5 @@ namespace Fero_PRM.Controllers
         {
             return Ok(await _offerService.CreateOffers(createOffer));
         }
-
-/*        [HttpPut]
-        public async Task<IActionResult> UpdateOffer(ShowModelOffer modelOffer)
-        {
-            var result = await _offerService.UpdateModelOffer(modelOffer);
-            if(result == null)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                return Ok(result);
-            }
-        }*/
     }
 }

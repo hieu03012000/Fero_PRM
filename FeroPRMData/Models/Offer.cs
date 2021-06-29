@@ -13,6 +13,7 @@ namespace FeroPRMData.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public int? MonopolisticTime { get; set; }
         public double? Salary { get; set; }
         public DateTime? Time { get; set; }
         public string CustomerId { get; set; }
@@ -26,9 +27,11 @@ namespace FeroPRMData.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public int? MonopolisticTime { get; set; }
         public double? Salary { get; set; }
         public DateTime? Time { get; set; }
         public string CustomerId { get; set; }
+        public string CustomerName { get; set; }
         public int? OfferStatus { get; set; }
     }
 
@@ -37,6 +40,7 @@ namespace FeroPRMData.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public int? MonopolisticTime { get; set; }
         public double? Salary { get; set; }
         public DateTime? Time { get; set; }
         public string CustomerId { get; set; }
