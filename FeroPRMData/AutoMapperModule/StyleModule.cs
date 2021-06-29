@@ -10,8 +10,6 @@ namespace FeroPRMData.AutoMapperModule
         {
             mc.CreateMap<Style, GetAllStyleViewModel>();
             mc.CreateMap<GetAllStyleViewModel, Style>();
-            mc.CreateMap<Notification, NotificationUpdate>();
-            mc.CreateMap<NotificationUpdate,Notification>();
         }
     }
 }

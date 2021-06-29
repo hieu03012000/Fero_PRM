@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace FeroPRMData.Models
 {
     public partial class Notification
     {
         public int Id { get; set; }
-        public string Title { get; set; }
         public string Description { get; set; }
+        // 0 : casting, 1: offer
+        public int? LinkObjectType { get; set; }
+        public int? LinkObjectId { get; set; }
         public int? Status { get; set; }
         public DateTime? Time { get; set; }
         public string UserId { get; set; }
-    }
-
-    public class NotificationUpdate
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public int? Status { get; set; }
-        public DateTime? Time { get; set; }
     }
 }
