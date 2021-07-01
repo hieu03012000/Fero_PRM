@@ -18,7 +18,6 @@ namespace FeroPRMData.Services
         Task<bool> CheckCustomerGmail(string mail);
         Task<Customer> GetCustomerProfile(string gmail);
         Task<Customer> CreateCustomer(Customer newCustomer);
-
     }
     public partial class CustomerService : BaseService<Customer>, ICustomerService
     {
