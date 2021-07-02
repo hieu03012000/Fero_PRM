@@ -32,7 +32,7 @@ namespace FeroPRMData.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost,1433; Database=Fero_PRM; User Id=phuongpt; Password=phuongpt123;");
+                optionsBuilder.UseSqlServer("Server=localhost,1433; Database=ModelBooking; User Id=admin; Password=teen;");
             }
         }
 
@@ -223,8 +223,12 @@ namespace FeroPRMData.Models
 
                 entity.Property(e => e.Time).HasColumnType("datetime");
 
-                entity.Property(e => e.Title)
-                    .HasMaxLength(200)
+                entity.Property(e => e.LinkObjectId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LinkObjectType)
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserId)

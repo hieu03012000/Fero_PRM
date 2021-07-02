@@ -1,8 +1,6 @@
 using FeroPRMData.Models;
 using FeroPRMData.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fero_PRM.Controllers
@@ -19,7 +17,7 @@ namespace Fero_PRM.Controllers
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUserNoti(string id)
         {
-            return Ok(await _notificationService.GetCusNoti(id));
+            return Ok(await _notificationService.Get(id));
         }
 
         [HttpPost]
@@ -52,9 +50,9 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateNoti(int id, NotificationUpdate notification)
+        public async Task<IActionResult> Update(int id, int status)
         {
-            return Ok(await _notificationService.UpdateNoti(id, notification));
+            return Ok(await _notificationService.UpdateStatus(id, status));
         }
 
         //[HttpGet]

@@ -12,9 +12,8 @@ namespace FeroPRMData.Services
 {
     public partial interface INotificationService:IBaseService<Notification>
     {
-        Task<Notification> UpdateNoti(int notiId, NotificationUpdate noti);
-
-        Task<List<Notification>> GetCusNoti(string cusId);
+        Task<Notification> UpdateStatus(int notiId, int status);
+        Task<List<Notification>> Get(string userId);
         Task<Notification> CreateNoti(string userId, Notification noti);
         Task<Notification> CreateNoti(Notification noti);
     }
@@ -111,33 +110,20 @@ namespace FeroPRMData.Services
                     return noti;
                 }*/
 
-        public async Task<Notification> UpdateNoti(int notiId, NotificationUpdate noti)
+        public async Task<Notification> UpdateStatus(int notificationId, int status)
         {
-            var notification = await _notificationRepository.FirstOrDefaultAsyn(x => x.Id == notiId);
-            if (noti.Status == null)
-            {
-                noti.Status = notification.Status;
-            }
-            if (noti.Time == null)
-            {
-                noti.Time = notification.Time;
-            }
-            if (noti.Title == null)
-            {
-                noti.Title = notification.Title;
-            }
-            if (noti.Description == null)
-            {
-                noti.Description = notification.Description;
-            }
-            notification = _mapper.Map(noti, notification);
+            var notification = await _notificationRepository.FirstOrDefaultAsyn(x => x.Id == notificationId);
+            notification.Status = status;
             await UpdateAsync(notification);
             return notification;
         }
 
-        public async Task<List<Notification>> GetCusNoti(string cusId)
+        public async Task<List<Notification>> Get(string userId)
         {
-            var listNoti = await _notificationRepository.Get(x => x.UserId == cusId).OrderByDescending(x => x.Time).ToListAsync();
+            var listNoti = await _notificationRepository
+                .Get(x => x.UserId == userId)
+                .OrderByDescending(x => x.Time)
+                .ToListAsync();
             return listNoti;
         }
 

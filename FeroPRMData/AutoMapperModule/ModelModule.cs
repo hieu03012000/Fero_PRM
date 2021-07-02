@@ -26,6 +26,8 @@ namespace FeroPRMData.AutoMapperModule
             mc.CreateMap<ModelForOffer, Model>();
             mc.CreateMap<ShowModelOffer, ModelOffer>();
             mc.CreateMap<ModelOffer, ShowModelOffer>();
+            mc.CreateMap<GetGeneralOfferViewModel, Offer>();
+            mc.CreateMap<Offer, GetGeneralOfferViewModel>();
         }
     }
 }
