@@ -1,5 +1,6 @@
 using FeroPRMData.Models;
 using FeroPRMData.Services;
+using FeroPRMData.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -53,9 +54,9 @@ namespace Fero_PRM.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>CreateCustomer(Customer customer)
+        public async Task<IActionResult>CreateCustomer(CreateCustomerAccountViewModel customer)
         {
-            var result = await _customerService.CreateCustomer(customer);
+            var result = await _customerService.CreateCustomerAccount(customer);
             if (result == null)
             {
                 return BadRequest();

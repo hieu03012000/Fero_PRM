@@ -15,6 +15,7 @@ namespace FeroPRMData.Models
         public string Description { get; set; }
         public double? Salary { get; set; }
         public DateTime? Time { get; set; }
+        public int? MonopolisticTime { get; set; }
         public string CustomerId { get; set; }
 
         public virtual Customer Customer { get; set; }
