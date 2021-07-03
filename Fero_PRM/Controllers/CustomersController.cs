@@ -1,4 +1,3 @@
-using FeroPRMData.Models;
 using FeroPRMData.Services;
 using FeroPRMData.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -13,20 +12,15 @@ namespace Fero_PRM.Controllers
         private readonly ICustomerService _customerService;
         private readonly ICastingService _castingService;
         private readonly IOfferService _offerService;
+        private readonly IFavoriteModelService _favoriteModelService;
 
-        public CustomersController(ICustomerService customerService, ICastingService castingService, IOfferService offerService)
+        public CustomersController(ICustomerService customerService, ICastingService castingService, IOfferService offerService, IFavoriteModelService favoriteModelService)
         {
             _customerService = customerService;
             _castingService = castingService;
             _offerService = offerService;
+            _favoriteModelService = favoriteModelService;
         }
-
-        [HttpGet("{id}/castings")]
-        public async Task<IActionResult> GetCastings(string id)
-        {
-            return Ok(await _castingService.GetListCasting(id));
-        }
-
 
         [HttpGet("check")]
         public async Task<IActionResult> CheckGmail(string gmail)
@@ -47,10 +41,22 @@ namespace Fero_PRM.Controllers
             }
         }
 
+        [HttpGet("{id}/castings")]
+        public async Task<IActionResult> GetCastings(string id)
+        {
+            return Ok(await _castingService.GetListCasting(id));
+        }
+
         [HttpGet("{id}/offers")]
-        public async Task<IActionResult> Gets(string id)
+        public async Task<IActionResult> GetOffers(string id)
         {
             return Ok(await _offerService.GetOfferById(id));
+        }
+
+        [HttpGet("{id}/favorite-models")]
+        public async Task<IActionResult> GetFavoriteModels(string id)
+        {
+            return Ok(await _favoriteModelService.GetAll(id));
         }
 
         [HttpPost]
