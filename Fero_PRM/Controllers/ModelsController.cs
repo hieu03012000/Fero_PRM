@@ -21,10 +21,10 @@ namespace Fero_PRM.Controllers
             _modelOfferService = modelOfferService;
         }
 
-        [HttpGet]
+        [HttpGet("new")]
         public IActionResult Gets()
         {
-            return Ok(_modelService.Get().ToList());
+            return Ok(_modelService.GetNew());
         }
 
         [HttpGet("{id}/subscribe-castings")]
@@ -53,17 +53,31 @@ namespace Fero_PRM.Controllers
             }
         }
 
+        [HttpGet("{id}/{customerId}")]
+        public IActionResult GetModelById(string id, string customerId)
+        {
+            var result = _modelService.GetCompleteModelById(id, customerId);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         [HttpGet("check")]
         public bool CheckGmail(string gmail)
         {
             return _modelService.CheckModelGmail(gmail);
         }
 
-        [HttpGet("{id}/general")]
-        public async Task<IActionResult> GetModelGeneral(string id)
-        {
-            return Ok(await _modelService.GetModelGeneralById(id));
-        }
+        //[HttpGet("{id}/general")]
+        //public async Task<IActionResult> GetModelGeneral(string id)
+        //{
+        //    return Ok(await _modelService.GetModelGeneralById(id));
+        //}
 
         [HttpPost]
         public async Task<IActionResult> CreateModel(Model model)

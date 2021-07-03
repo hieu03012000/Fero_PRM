@@ -12,11 +12,15 @@ namespace Fero_PRM.Controllers
     {
         private readonly ICastingService _castingService;
         private readonly IModelService _modelService;
-        public CastingsController(ICastingService castingService, IModelService modelService)
+        private readonly IApplyCastingService _applyCastingService;
+
+        public CastingsController(ICastingService castingService, IModelService modelService, IApplyCastingService applyCastingService)
         {
             _castingService = castingService;
             _modelService = modelService;
+            _applyCastingService = applyCastingService;
         }
+
 
         /// <summary>
         /// Filter casting
@@ -82,18 +86,18 @@ namespace Fero_PRM.Controllers
         [HttpGet("{id}/applicants")]
         public async Task<IActionResult> GetListModelByCastingId(int id)
         {
-            return Ok(await _castingService.GetModelsByCastingId(id));
+            return Ok(await _applyCastingService.GetApplyModel(id));
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCasting(int id, ShowCasting casting)
-        {
-            var result = await _castingService.UpdateCasting(id, casting);
-            if(result == null)
-            {
-                return BadRequest();
-            }else return Ok(result);
-        }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateCasting(int id, ShowCasting casting)
+        //{
+        //    var result = await _castingService.UpdateCasting(id, casting);
+        //    if(result == null)
+        //    {
+        //        return BadRequest();
+        //    }else return Ok(result);
+        //}
 
 
         //#region hdev

@@ -44,6 +44,9 @@ namespace FeroPRMData.Commons
         
             services.AddScoped<ISubscribeCastingService, SubscribeCastingService>();
             services.AddScoped<ISubscribeCastingRepository, SubscribeCastingRepository>();
+
+            services.AddScoped<IFavoriteModelService, FavoriteModelService>();
+            services.AddScoped<IFavoriteModelRepository, FavoriteModelRepository>();
         }
     }
 }

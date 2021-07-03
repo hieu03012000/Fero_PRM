@@ -18,6 +18,7 @@ namespace FeroPRMData.Models
         public virtual DbSet<ApplyCasting> ApplyCasting { get; set; }
         public virtual DbSet<Casting> Casting { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
+        public virtual DbSet<FavoriteModel> FavoriteModel { get; set; }
         public virtual DbSet<Image> Image { get; set; }
         public virtual DbSet<Model> Model { get; set; }
         public virtual DbSet<ModelOffer> ModelOffer { get; set; }
@@ -122,6 +123,31 @@ namespace FeroPRMData.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<FavoriteModel>(entity =>
+            {
+                entity.HasKey(e => new { e.ModelId, e.CustomerId });
+
+                entity.Property(e => e.ModelId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.FavoriteModel)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_FavoriteModel_Customer");
+
+                entity.HasOne(d => d.Model)
+                    .WithMany(p => p.FavoriteModel)
+                    .HasForeignKey(d => d.ModelId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_FavoriteModel_Model");
+            });
+
             modelBuilder.Entity<Image>(entity =>
             {
                 entity.Property(e => e.Link)
@@ -222,14 +248,6 @@ namespace FeroPRMData.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Time).HasColumnType("datetime");
-
-                entity.Property(e => e.LinkObjectId)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.LinkObjectType)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.UserId)
                     .HasMaxLength(10)

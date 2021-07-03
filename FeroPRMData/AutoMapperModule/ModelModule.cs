@@ -8,26 +8,20 @@ namespace FeroPRMData.AutoMapperModule
     {
         public static void ConfigModelModule(this IMapperConfigurationExpression mc)
         {
-            mc.CreateMap<Casting, ShowCasting>();
-            mc.CreateMap<Model, ModelGeneral>();
-            mc.CreateMap<ModelGeneral, Model>();
             mc.CreateMap<Model, CreateModelAccountViewModel>();
             mc.CreateMap<CreateModelAccountViewModel, Model>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => 1));
-
-            mc.CreateMap<Model, ModelDetailViewModel>();
-            mc.CreateMap<ModelDetailViewModel, Model>();
-
             mc.CreateMap<Model, ApplicantListViewModel>();
             mc.CreateMap<ApplicantListViewModel, Model>();
-            mc.CreateMap<Offer, OfferWithListModel>();
-            mc.CreateMap<OfferWithListModel, Offer>();
-            mc.CreateMap<Model, ModelForOffer>();
-            mc.CreateMap<ModelForOffer, Model>();
-            mc.CreateMap<ShowModelOffer, ModelOffer>();
-            mc.CreateMap<ModelOffer, ShowModelOffer>();
             mc.CreateMap<GetGeneralOfferViewModel, Offer>();
             mc.CreateMap<Offer, GetGeneralOfferViewModel>();
+            mc.CreateMap<Model, Offer>();
+            mc.CreateMap<Offer, GetGeneralOfferViewModel>();
+
+            mc.CreateMap<Model, GetModelViewModel>();
+            mc.CreateMap<GetModelViewModel, Model>();
+            mc.CreateMap<Model, GetGeneralModelViewModel>();
+            mc.CreateMap<GetGeneralModelViewModel, Model>();
         }
     }
 }

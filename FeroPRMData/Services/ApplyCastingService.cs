@@ -5,6 +5,7 @@ using FeroPRMData.Services.Base;
 using FeroPRMData.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FeroPRMData.Services
@@ -14,6 +15,7 @@ namespace FeroPRMData.Services
         Task<ApplyCastingViewModel> ApplyCastingCall(ApplyCastingViewModel applyCasting);
         Task<ApplyCastingViewModel> CancelApplyCastingCall(ApplyCastingViewModel applyCasting);
         Task<bool> CheckApplyCasting(int castingId, string modelId);
+        Task<List<GetGeneralModelViewModel>> GetApplyModel(int castingId);
     }
     public partial class ApplyCastingService : BaseService<ApplyCasting>, IApplyCastingService
     {
@@ -70,6 +72,18 @@ namespace FeroPRMData.Services
             {
                 return true;
             }
+        }
+        public async Task<List<GetGeneralModelViewModel>> GetApplyModel(int castingId)
+        {
+            var listApplyCasting = await _applyCastingRepository.Get(x => x.CastingId == castingId).ToListAsync();
+            List<GetGeneralModelViewModel> lm = new List<GetGeneralModelViewModel>();
+            foreach (var item in listApplyCasting)
+            {
+                var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == item.ModelId);
+                var des = _mapper.Map<GetGeneralModelViewModel>(model);
+                lm.Add(des);
+            }
+            return lm;
         }
     }
 }

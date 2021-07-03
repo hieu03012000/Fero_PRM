@@ -8,6 +8,7 @@ namespace FeroPRMData.Models
         public Customer()
         {
             Casting = new HashSet<Casting>();
+            FavoriteModel = new HashSet<FavoriteModel>();
             Offer = new HashSet<Offer>();
         }
 
@@ -21,6 +22,7 @@ namespace FeroPRMData.Models
         public string Fanpage { get; set; }
 
         public virtual ICollection<Casting> Casting { get; set; }
+        public virtual ICollection<FavoriteModel> FavoriteModel { get; set; }
         public virtual ICollection<Offer> Offer { get; set; }
     }
 }

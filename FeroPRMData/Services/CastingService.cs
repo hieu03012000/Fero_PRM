@@ -34,8 +34,7 @@ namespace FeroPRMData.Services
         Task<Casting> CreateCasting(Casting casting);
         Task<Casting> CreateCasting(string customerId, Casting casting);
         Task<Casting> DeleteCasting(int castingId);
-        Task<List<ListModelCasting>> GetModelsByCastingId(int castingId);
-        Task<Casting> UpdateCasting(int id, ShowCasting updateCasting);
+        //Task<Casting> UpdateCasting(int id, ShowCasting updateCasting);
     }
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
@@ -286,35 +285,24 @@ namespace FeroPRMData.Services
             return casting;
         }
 
-        public async Task<List<ListModelCasting>> GetModelsByCastingId(int castingId)
-        {
-            var listApplyCasting = await _applyCastingRepository.Get(x => x.CastingId == castingId).ToListAsync();
-            List<ListModelCasting> lm = new List<ListModelCasting>();
-            foreach (var item in listApplyCasting)
-            {
-                var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == item.ModelId);
-                var des = _mapper.Map<ListModelCasting>(model);
-                lm.Add(des);
-            }
-            return lm;
-        }
+      
 
-        public async Task<Casting> UpdateCasting(int castingId, ShowCasting updateCasting)
-        {
-            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
-            if (casting == null)
-            {
-                return null;
-            }
-            else
-            {
-                updateCasting.Id = castingId;
-                updateCasting.CustomerId = casting.CustomerId;
-                casting = _mapper.Map(updateCasting, casting);
-                await UpdateAsync(casting);
-                return casting;
-            }
-        }
+        //public async Task<Casting> UpdateCasting(int castingId, ShowCasting updateCasting)
+        //{
+        //    var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
+        //    if (casting == null)
+        //    {
+        //        return null;
+        //    }
+        //    else
+        //    {
+        //        updateCasting.Id = castingId;
+        //        updateCasting.CustomerId = casting.CustomerId;
+        //        casting = _mapper.Map(updateCasting, casting);
+        //        await UpdateAsync(casting);
+        //        return casting;
+        //    }
+        //}
 
         //ta dao
         /*public async Task<Casting> UpdateCasting(int castingId, Casting updateCasting)

@@ -22,9 +22,9 @@ namespace FeroPRMData.ViewModels
         public string Phone { get; set; }
         public string Avatar { get; set; }
         public string Gmail { get; set; }
-        public int? Status { get; set; }
         public string SocialNetworkLink { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public bool? IsFavorite { get; set; }
         public virtual ICollection<GetModelStyleViewModel> Styles { get; set; }
         public virtual ICollection<GetModelImageViewModel> Images { get; set; }
     }
