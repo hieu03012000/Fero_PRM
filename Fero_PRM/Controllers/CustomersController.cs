@@ -44,13 +44,19 @@ namespace Fero_PRM.Controllers
         [HttpGet("{id}/castings")]
         public async Task<IActionResult> GetCastings(string id)
         {
-            return Ok(await _castingService.GetListCasting(id));
+            return Ok(await _castingService.GetList(id));
+        }
+
+        [HttpGet("{id}/import-castings")]
+        public async Task<IActionResult> GetImportCastings(string id)
+        {
+            return Ok(await _castingService.GetImportList(id));
         }
 
         [HttpGet("{id}/offers")]
         public async Task<IActionResult> GetOffers(string id)
         {
-            return Ok(await _offerService.GetOfferById(id));
+            return Ok(await _offerService.GetList(id));
         }
 
         [HttpGet("{id}/favorite-models")]

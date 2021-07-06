@@ -2,7 +2,7 @@
 
 namespace FeroPRMData.ViewModels
 {
-    public class NewCastingViewModel
+    public class GetAllCastingViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

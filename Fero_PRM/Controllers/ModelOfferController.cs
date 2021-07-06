@@ -1,9 +1,6 @@
-﻿using FeroPRMData.Models;
-using FeroPRMData.Services;
+﻿using FeroPRMData.Services;
+using FeroPRMData.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fero_PRM.Controllers
@@ -12,16 +9,17 @@ namespace Fero_PRM.Controllers
     [Route("api/model-offers")]
     public partial class ModelOfferController : ControllerBase
     {
-        private readonly IOfferService _offerService;
+        private readonly IModelOfferService _modelOfferService;
 
-        public ModelOfferController(IOfferService offerService)
+        public ModelOfferController(IModelOfferService modelOfferService)
         {
-            _offerService = offerService;
+            _modelOfferService = modelOfferService;
         }
+
         [HttpPut]
-        public async Task<IActionResult> UpdateModelOffer(ShowModelOffer modelOffer)
+        public async Task<IActionResult> Update(ModelOfferViewModel viewModel)
         {
-            var result = await _offerService.UpdateModelOffer(modelOffer);
+            var result = await _modelOfferService.Update(viewModel);
             if (result == null)
             {
                 return BadRequest();

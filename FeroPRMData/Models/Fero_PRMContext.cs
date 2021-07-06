@@ -264,7 +264,7 @@ namespace FeroPRMData.Models
                     .HasMaxLength(2000)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Time).HasColumnType("datetime");
+                entity.Property(e => e.CreateTime).HasColumnType("datetime");
 
                 entity.Property(e => e.Title)
                     .HasMaxLength(100)

@@ -1,7 +1,6 @@
 using FeroPRMData.Models;
 using FeroPRMData.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fero_PRM.Controllers
@@ -36,7 +35,7 @@ namespace Fero_PRM.Controllers
         [HttpGet("{id}/offers")]
         public async Task<IActionResult> GetModelOffers(string id)
         {
-            return Ok(await _modelOfferService.GetByModelId(id));
+            return Ok(await _modelOfferService.GetListByModel(id));
         }
 
         [HttpGet("gmail/{gmail}")]
@@ -72,12 +71,6 @@ namespace Fero_PRM.Controllers
         {
             return _modelService.CheckModelGmail(gmail);
         }
-
-        //[HttpGet("{id}/general")]
-        //public async Task<IActionResult> GetModelGeneral(string id)
-        //{
-        //    return Ok(await _modelService.GetModelGeneralById(id));
-        //}
 
         [HttpPost]
         public async Task<IActionResult> CreateModel(Model model)

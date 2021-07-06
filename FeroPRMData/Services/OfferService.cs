@@ -8,143 +8,82 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 
 namespace FeroPRMData.Services
 {
     public partial interface IOfferService:IBaseService<Offer>
     {
-        Task<List<Offer>> GetOffer();
-        Task<List<Offer>> GetOfferById(string customerId);
-        Task<OfferWithListModel> GetOfferWithListModel(int offerId);
-        Task<ShowOffer> CreateOffers(CreateOffer createOffer);
-        Task<ModelOffer> UpdateModelOffer(ShowModelOffer updateModelOffer);
+        Task<OfferViewModel> Add(OfferViewModel offer);
+        Task<List<OfferViewModel>> GetList(string customerId);
+        Task<OfferCustomerGetViewModel> GetByCustomer(int id, string customerId);
     }
     public partial class OfferService:BaseService<Offer>, IOfferService
     {
         private readonly IMapper _mapper;
-        private readonly ICastingRepository _castingRepository;
         private readonly IOfferRepository _offerRepository;
         private readonly IModelOfferRepository _modelOfferRepository;
-        private readonly IModelRepository _modelRepository;
+        private readonly IFavoriteModelRepository _favoriteModelRepository;
 
-        public OfferService(IMapper mapper, IOfferRepository offerRepository, IModelRepository modelRepository, IModelOfferRepository modelOfferRepository, ICastingRepository castingRepository) :base(offerRepository)
+        public OfferService(IMapper mapper, IOfferRepository offerRepository, IModelOfferRepository modelOfferRepository, IFavoriteModelRepository favoriteModelRepository)
         {
             _mapper = mapper;
             _offerRepository = offerRepository;
-            _castingRepository = castingRepository;
             _modelOfferRepository = modelOfferRepository;
-            _modelRepository = modelRepository;
+            _favoriteModelRepository = favoriteModelRepository;
         }
 
-        public async void CreateOffer(string customerId, Offer offer)
-        {
-            offer.CustomerId = customerId;
-            await _offerRepository.CreateAsyn(offer);
-        }
-
-        public async void CreateOffer(Offer offer)
-        {
-            await _offerRepository.CreateAsyn(offer);
-        }
-
-        public int GetNewOfferId()
+        private int GetNewOfferId()
         {
             var offerId = _offerRepository.Get().OrderByDescending(x => x.Id).FirstOrDefault();
-            Console.WriteLine(offerId.Id);
-  
             return offerId.Id;
         }
 
-        public async Task<ShowOffer> CreateOffers(CreateOffer createOffer)
+        public async Task<OfferViewModel> Add(OfferViewModel viewModel)
         {
-            var showOffer = _mapper.Map<ShowOffer>(createOffer.Offer);
-            showOffer.Time = DateTime.Now;
-            await _offerRepository.CreateAsyn(createOffer.Offer);
+            var entity = _mapper.Map<Offer>(viewModel);
+            entity.CreateTime = DateTime.UtcNow;
+            await _offerRepository.CreateAsyn(entity);
             var offerId = GetNewOfferId();
-            foreach (var item in createOffer.ListModelId)
+            var favoriteModels = await _favoriteModelRepository
+                .Get(x => x.CustomerId.Equals(viewModel.CustomerId))
+                .ToListAsync();
+            foreach (var favoriteModel in favoriteModels)
             {
-                ModelOffer mo = new ModelOffer
-                {
-                    ModelId = item,
-                    Time = DateTime.Now,
+                await _modelOfferRepository.CreateAsyn(new ModelOffer { 
+                    ModelId = favoriteModel.ModelId, 
                     OfferId = offerId
-                };
-                await _modelOfferRepository.CreateAsyn(mo);
+                });
+                await _favoriteModelRepository.DeleteAsync(favoriteModel);
             }
-            return showOffer;
+            return viewModel;
         }
 
-        public void Offer(string cusId, string des, double salary, bool monopolistic, DateTime monoTime)
+        public async Task<List<OfferViewModel>> GetList(string customerId)
         {
-            if (monopolistic == false)
+            var offers = await _offerRepository.Get(x => x.CustomerId.Equals(customerId))
+                .ToListAsync();
+            var result = new List<OfferViewModel>();
+            foreach (var offer in offers)
             {
-                Offer offer = new Offer
-                {
-                    CustomerId = cusId,
-                    Description = des,
-                    Salary = salary
-                };
-                CreateOffer(offer);
+                var dto = _mapper.Map<OfferViewModel>(offer);
+                result.Add(dto);
             }
-            else
-            {
-                Offer offer = new Offer
-                {
-                    CustomerId = cusId,
-                    Description = des,
-                    Salary = salary,
-                    Time = monoTime
-                };
-                CreateOffer(offer);
-            }
+            result.Reverse();
+            return result;
         }
 
-        public async Task<List<Offer>> GetOfferById(string customerId)
+        public async Task<OfferCustomerGetViewModel> GetByCustomer(int id, string customerId)
         {
-            var listOffer = await _offerRepository.Get(x => x.CustomerId == customerId).ToListAsync();
-            return listOffer;
+            var offer = await _offerRepository
+                .FirstOrDefaultAsyn(x => x.Id == id && x.CustomerId.Equals(customerId));
+            var modelOffers = await _modelOfferRepository.Get(x => x.OfferId == id)
+                .ProjectTo<ModelOfferCustomerGetViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            OfferCustomerGetViewModel dto = _mapper.Map<OfferCustomerGetViewModel>(offer);
+            dto.ModelOffers = modelOffers;
+            return dto;
         }
 
-        public async Task<List<Offer>> GetOffer()
-        {
-            var listOffer = await _offerRepository.Get().ToListAsync();
-            listOffer.Sort((x, y) => DateTime.Compare((DateTime)x.Time, (DateTime)y.Time));
-            var newList = listOffer.Skip(Math.Max(0, listOffer.Count() - 10)).ToList();
-            return newList;
-        }
-
-        public async Task<OfferWithListModel> GetOfferWithListModel(int offerId)
-        {
-            var offer = await _offerRepository.FirstOrDefaultAsyn(x => x.Id == offerId);
-            var listModelId = await _modelOfferRepository.Get(x => x.OfferId == offerId).ToListAsync();
-            List<ModelForOffer> lm = new List<ModelForOffer>();
-            foreach (var item in listModelId)
-            {
-                var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id == item.ModelId);
-                var modelForOffer = _mapper.Map<ModelForOffer>(model);
-                modelForOffer.OfferStatus = item.Status;
-                lm.Add(modelForOffer);
-            }
-            OfferWithListModel ow = _mapper.Map<OfferWithListModel>(offer);
-            ow.Model = lm;
-            return ow;
-        }
-
-        public async Task<ModelOffer> UpdateModelOffer(ShowModelOffer updateModelOffer)
-        {
-
-            var modelOffer = await _modelOfferRepository.FirstOrDefaultAsyn(x => x.ModelId == updateModelOffer.ModelId && x.OfferId == updateModelOffer.OfferId);
-            if (modelOffer == null)
-            {
-                return null;
-            }
-            else
-            {
-                updateModelOffer.Time = DateTime.Now;
-                modelOffer = _mapper.Map(updateModelOffer, modelOffer);
-                await _modelOfferRepository.UpdateAsync(modelOffer);
-                return modelOffer;
-            }
-        }
     }
 }

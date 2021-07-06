@@ -8,7 +8,6 @@ namespace FeroPRMData.Models
         public int Id { get; set; }
         public string Link { get; set; }
         public string ModelId { get; set; }
-
         public virtual Model Model { get; set; }
     }
 }

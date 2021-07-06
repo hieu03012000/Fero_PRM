@@ -9,7 +9,7 @@ namespace FeroPRMData.ViewModels
         public string Description { get; set; }
         public int? MonopolisticTime { get; set; }
         public double? Salary { get; set; }
-        public DateTime? Time { get; set; }
+        public DateTime? CreateTime { get; set; }
         public string CustomerName { get; set; }
         public int? ModelOfferStatus { get; set; }
     }

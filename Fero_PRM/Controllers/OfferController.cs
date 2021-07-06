@@ -1,5 +1,5 @@
-﻿using FeroPRMData.Models;
-using FeroPRMData.Services;
+﻿using FeroPRMData.Services;
+using FeroPRMData.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -17,28 +17,22 @@ namespace Fero_PRM.Controllers
             _modelOfferService = modelOfferService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Gets(int id)
+        [HttpGet("{id}/customer/{customerId}")]
+        public async Task<IActionResult> GetByCustomer(int id, string customerId)
         {
-            return Ok(await _offerService.GetOfferWithListModel(id));
+            return Ok(await _offerService.GetByCustomer(id, customerId));
         }
 
-        [HttpGet("general")]
-        public async Task<IActionResult> GetGeneral(string modelId, int offerId)
+        [HttpGet("{id}/model/{modelId}")]
+        public async Task<IActionResult> GetByModel(int id, string modelId)
         {
-            return Ok(await _modelOfferService.GetById(modelId, offerId));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Gets()
-        {
-            return Ok(await _offerService.GetOffer());
+            return Ok(await _modelOfferService.GetByModel(id, modelId));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOffers(CreateOffer createOffer)
+        public async Task<IActionResult> CreateOffer(OfferViewModel viewModel)
         {
-            return Ok(await _offerService.CreateOffers(createOffer));
+            return Ok(await _offerService.Add(viewModel));
         }
     }
 }

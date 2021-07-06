@@ -12,335 +12,246 @@ using System.Threading.Tasks;
 
 namespace FeroPRMData.Services
 {
-    //aall
     public partial interface ICastingService : IBaseService<Casting>
     {
-        #region hdev
-        Task<IQueryable<NewCastingViewModel>> NewCasting();
-        //Task<IQueryable<GetAllCastingViewModel>> FilterCasting(string name, decimal? min, decimal? max);
-        //Task<DetailCastingViewModel> GetCastingById(int castingId);
-        //Task<CreateCastingCallViewModel> CreateCasting(CreateCastingCallViewModel model);
-        //Task<UpdateCastingViewModel> UpdateCasting(UpdateCastingViewModel model);
-        //Task<int> PublicCasting(int castId, PublicCastingViewModel model);
-        //Task<int> StopCasting(int castId);
-        //Task<int> DeleteCasting(int castId);
-        //Task<int> MakeOffer(MakeOfferViewModel offer);
-        #endregion
-        Task<List<Casting>> GetListCasting(string cusId);
-        Task<Casting> GetCastingByCusId(string customerId);
-        Task<DetailCastingViewModel> GetCastingById(int castingId);
-        Task<List<SearchCastingViewModel>> GetListCasting();
-        Task<List<SearchCastingViewModel>> SearchListCasting(string search, double? min, double? max);
-        Task<Casting> CreateCasting(Casting casting);
-        Task<Casting> CreateCasting(string customerId, Casting casting);
-        Task<Casting> DeleteCasting(int castingId);
-        //Task<Casting> UpdateCasting(int id, ShowCasting updateCasting);
+        Task<IQueryable<CastingModelSearchViewModel>> GetNew();
+        Task<IQueryable<CastingModelSearchViewModel>> Search(string name, double? min, double? max);
+        Task<CastingModelGetViewModel> GetByModel(int id, string modelId);
+        Task<List<CastingViewModel>> GetList(string customerId);
+        Task<CastingViewModel> GetByCustomer(int id, string customerId);
+        Task<List<CastingImportViewModel>> GetImportList(string customerId);
+        Task<CastingViewModel> Add(CastingViewModel viewModel);
+        Task<CastingViewModel> Update(CastingViewModel viewModel);
+        Task<CastingViewModel> Delete(int id, string customerId);
+        Task<CastingViewModel> Stop(int id, string customerId);
     }
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
         private readonly IMapper _mapper;
         private readonly ICastingRepository _castingRepository;
-        private readonly ICustomerRepository _customerRepository;
         private readonly IApplyCastingRepository _applyCastingRepository;
-        private readonly IModelRepository _modelRepository;
+        private readonly ISubscribeCastingRepository _subscribeCastingRepository;
 
-        public CastingService(ICastingRepository castingRepository, ICustomerRepository customerRepository, IModelRepository modelRepository, IApplyCastingRepository applyCastingRepository, IMapper mapper) : base(castingRepository)
+        public CastingService(IMapper mapper, ICastingRepository castingRepository,
+            IApplyCastingRepository applyCastingRepository, 
+            ISubscribeCastingRepository subscribeCastingRepository):base(castingRepository)
         {
             _mapper = mapper;
             _castingRepository = castingRepository;
-            _customerRepository = customerRepository;
             _applyCastingRepository = applyCastingRepository;
-            _modelRepository = modelRepository;
+            _subscribeCastingRepository = subscribeCastingRepository;
         }
 
-        public async Task<IQueryable<NewCastingViewModel>> NewCasting()
+        public async Task<IQueryable<CastingModelSearchViewModel>> GetNew()
         {
-            if (await Get().FirstOrDefaultAsync() == null) return null;
-            var castingList = Get().OrderByDescending(c => c.CreateTime).Take(10)
-                .ProjectTo<NewCastingViewModel>(_mapper.ConfigurationProvider);
+            if (await Get().FirstOrDefaultAsync() == null)
+            {
+                return null;
+            }
+            var castingList = Get(c => c.Status == 1)
+                .OrderByDescending(c => c.CreateTime)
+                .Take(10)
+                .ProjectTo<CastingModelSearchViewModel>(_mapper.ConfigurationProvider);
             return castingList;
         }
 
-
-        //#region hdev
-        //private async Task<decimal?> GetMaxSalary()
-        //{
-        //    var maxSalary = await Get().OrderByDescending(c => c.Salary).FirstOrDefaultAsync();
-        //    return maxSalary.Salary;
-        //}
-
-        //public async Task<IQueryable<GetAllCastingViewModel>> FilterCasting(string name, decimal? min, decimal? max)
-        //{
-        //    if (min == null) min = 0;
-        //    if (max == null) max = await GetMaxSalary();
-        //    if (name == null) name = "";
-        //    var castingList = Get(c => c.Salary >= min && c.Salary <= max && c.Name.Contains(name) && c.Status != 0 && c.Status != 4)
-        //        .ProjectTo<GetAllCastingViewModel>(_mapper.ConfigurationProvider);
-        //    return castingList;
-        //}
-
-        public async Task<DetailCastingViewModel> GetCastingById(int castingId)
+        private async Task<double?> GetMaxSalary()
         {
-            var casting = await Get(c => c.Id == castingId && c.Status != 2)
-                .ProjectTo<DetailCastingViewModel>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
-            return casting;
+            var maxSalary = await Get().OrderByDescending(c => c.Salary).FirstOrDefaultAsync();
+            return maxSalary.Salary;
         }
 
-        //public async Task<CreateCastingCallViewModel> CreateCasting(CreateCastingCallViewModel model)
-        //{
-        //    if (model.Status != 1 && model.Status != 0) return null;
-        //    var entity = _mapper.Map<Casting>(model);
-        //    await CreateAsyn(entity);
-        //    return model;
-        //}
-
-        //public async Task<UpdateCastingViewModel> UpdateCasting(UpdateCastingViewModel model)
-        //{
-        //    if (model.Status != 0) return null;
-        //    if (await Get(c => c.Id == model.Id)
-        //        .ProjectTo<UpdateCastingViewModel>(_mapper.ConfigurationProvider)
-        //        .FirstOrDefaultAsync() == null)
-        //        return null;
-        //    var entity = _mapper.Map<Casting>(model);
-        //    await UpdateAsync(entity);
-        //    return model;
-        //}
-
-        //public async Task<int> PublicCasting(int castId, PublicCastingViewModel model)
-        //{
-        //    if (await Get(c => c.Id == castId)
-        //        .ProjectTo<UpdateCastingViewModel>(_mapper.ConfigurationProvider)
-        //        .FirstOrDefaultAsync() == null)
-        //        return -1;
-        //    if (Get(c => c.Id == castId)
-        //        .ProjectTo<UpdateCastingViewModel>(_mapper.ConfigurationProvider)
-        //        .FirstOrDefault().Status != 0)
-        //        return -1;
-        //    var entity = await Get(c => c.Id == castId).FirstOrDefaultAsync();
-        //    entity.Status = 1;
-        //    entity.OpenTime = model.OpenTime;
-        //    entity.CloseTime = model.CloseTime;
-        //    await UpdateAsync(entity);
-        //    return 0;
-        //}
-
-        //public async Task<int> StopCasting(int castId)
-        //{
-        //    if (await Get(c => c.Id == castId)
-        //        .ProjectTo<UpdateCastingViewModel>(_mapper.ConfigurationProvider)
-        //        .FirstOrDefaultAsync() == null)
-        //        return -2;
-        //    if (Get(c => c.Id == castId)
-        //        .ProjectTo<UpdateCastingViewModel>(_mapper.ConfigurationProvider)
-        //        .FirstOrDefault().Status != 2)
-        //        return -1;
-        //    var entity = await Get(c => c.Id == castId).FirstOrDefaultAsync();
-        //    entity.Status = 3;
-        //    await UpdateAsync(entity);
-        //    return 0;
-        //}
-
-        //public async Task<int> DeleteCasting(int castId)
-        //{
-        //    if (await Get(c => c.Id == castId)
-        //        .ProjectTo<UpdateCastingViewModel>(_mapper.ConfigurationProvider)
-        //        .FirstOrDefaultAsync() == null)
-        //        return -1;
-        //    if (Get(c => c.Id == castId)
-        //        .ProjectTo<UpdateCastingViewModel>(_mapper.ConfigurationProvider)
-        //        .FirstOrDefault().Status == 2)
-        //        return -1;
-        //    var entity = await Get(c => c.Id == castId).FirstOrDefaultAsync();
-        //    entity.Status = 4;
-        //    await UpdateAsync(entity);
-        //    return 0;
-        //}
-
-        //public async Task<int> MakeOffer(MakeOfferViewModel offer)
-        //{
-        //    var entity = _mapper.Map<Casting>(offer);
-        //    entity.Status = 6;
-        //    await CreateAsyn(entity);
-        //    return 0;
-        //}
-        //#endregion
-
-        //Tao casting vs form casting
-        public async Task<Casting> CreateCasting(Casting casting)
+        public async Task<IQueryable<CastingModelSearchViewModel>> Search(string name, double? min, double? max)
         {
-            var cus = await _customerRepository.FirstOrDefaultAsyn(x => x.Id == casting.CustomerId);
-            if(cus == null)
+            if (min == null)
+            { 
+                min = 0;
+            }
+            if (max == null)
+            {
+                max = await GetMaxSalary();
+            }
+            if (name == null)
+            {
+                name = "";
+            }
+            var castingList = Get(c => c.Salary >= min && c.Salary <= max && c.Name.Contains(name) && c.Status == 1)
+                .OrderByDescending(c => c.CreateTime)
+                .ProjectTo<CastingModelSearchViewModel>(_mapper.ConfigurationProvider);
+            return castingList;
+        }
+
+        public async Task<CastingModelGetViewModel> GetByModel(int id, string modelId)
+        {
+            var casting = await _castingRepository.Get(c => c.Id == id && c.Status == 1)
+                .ProjectTo<CastingModelGetViewModel>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+            if (casting == null)
             {
                 return null;
             }
-            casting.CreateTime = DateTime.Now;
-            await _castingRepository.CreateAsyn(casting);
+            var subscribe = await _subscribeCastingRepository
+                .FirstOrDefaultAsyn(x => x.CastingId == id && x.ModelId.Equals(modelId));
+            var apply = await _applyCastingRepository
+                .FirstOrDefaultAsyn(x => x.CastingId == id && x.ModelId.Equals(modelId));
+            casting.IsSubscribe = subscribe != null;
+            casting.IsApply = apply != null;
             return casting;
         }
 
-        //them create at 
-        public async Task<Casting> CreateCasting(string customerId, Casting casting)
+        public async Task<List<CastingViewModel>> GetList(string customerId)
         {
-            var cus = await _customerRepository.FirstOrDefaultAsyn(x => x.Id == customerId);
-            if (cus == null)
-            {
-                return null;
-            }
-            casting.CustomerId = customerId;
-            casting.CreateTime = DateTime.Now;
-            await _castingRepository.CreateAsyn(casting);
-            return casting;
-        }
-
-        public async Task<Casting> GetCastingByCusId(string customerId)
-        {
-            return await _castingRepository.FirstOrDefaultAsyn(x => x.CustomerId == customerId);
-        }
-
-        public async Task<List<Casting>> GetListCasting(string cusId)
-        {
-            var listCasting = await _castingRepository.Get(x => x.CustomerId == cusId && (x.Status == 0 || x.Status == 1)).ToListAsync();
-            listCasting.Sort((x, y) => DateTime.Compare((DateTime)y.CreateTime, (DateTime)x.CreateTime));
-            //var newList = listCasting.Skip(Math.Max(0, listCasting.Count() - 10)).ToList();
+            var listCasting = await _castingRepository
+                .Get(x => x.CustomerId == customerId && x.Status != 2)
+                .ProjectTo<CastingViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            listCasting.Reverse();
             return listCasting;
         }
 
-        public async Task<List<SearchCastingViewModel>> GetListCasting()
+        public async Task<CastingViewModel> GetByCustomer(int id, string customerId)
         {
-            var listCasting = await _castingRepository.Get().ToListAsync();
-            listCasting.Sort((x, y) => DateTime.Compare((DateTime)y.CreateTime, (DateTime)x.CreateTime));
-            var result = new List<SearchCastingViewModel>();
-            for (int i = 0; i < Math.Min(listCasting.Count, 10); i++)
-            {
-                var casting = listCasting[i];
-                if (casting.Status != 1)
-                {
-                    listCasting.RemoveAt(i);
-                    i--;
-                } else
-                {
-                    var customer = _customerRepository.FirstOrDefault(c => c.Id.Equals(listCasting[i].CustomerId));
-                    result.Add(new SearchCastingViewModel
-                    {
-                        Id = casting.Id,
-                        Name = casting.Name,
-                        Description = casting.Description,
-                        Salary = casting.Salary,
-                        OpenTime = casting.OpenTime,
-                        CloseTime = casting.CloseTime,
-                        CustomerName = customer.Name
-                    });
-                }
-            }
-            return result;
-
-        }
-
-        private double GetMaxSalary()
-        {
-            var casting =  _castingRepository.Get().OrderByDescending(x => x.Salary).FirstOrDefault();
-            return (double)casting.Salary;
-            
-        }
-        
-        //nguoi mau search casting theo substr casting name, min salary, max salary ( casting - status  published, opened, and closed)
-        public async Task<List<SearchCastingViewModel>> SearchListCasting(string search, double? min, double? max)
-        {
-            if(min == null)
-            {
-                min = 0;
-            }
-            if(max == null)
-            {
-                max = GetMaxSalary();
-            }
-            if(search == null)
-            {
-                search = "";
-            }
-            var listCasting = await _castingRepository.Get(x => x.Name.Contains(search) && x.Salary >= min && x.Salary <= max  && x.Status == 1).ToListAsync();
-            listCasting.Sort((x, y) => DateTime.Compare((DateTime)y.CreateTime, (DateTime)x.CreateTime));
-            var result = new List<SearchCastingViewModel>();
-            foreach (var casting in listCasting)
-            {
-                var customer = _customerRepository.FirstOrDefault(c => c.Id.Equals(casting.CustomerId));
-                result.Add(new SearchCastingViewModel {
-                    Id = casting.Id,
-                    Name = casting.Name,
-                    Description = casting.Description,
-                    Salary = casting.Salary,
-                    OpenTime = casting.OpenTime,
-                    CloseTime = casting.CloseTime,
-                    CustomerName = customer.Name
-                });
-            }
-            return result;
-        }
-
-        public async Task<Casting> DeleteCasting(int castingId)
-        {
-            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
-            casting.Status = 2;
-            await UpdateAsync(casting);
+            var casting = await _castingRepository
+                .Get(c => c.Id == id && c.Status != 2 && c.CustomerId.Equals(customerId))
+                .ProjectTo<CastingViewModel>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
             return casting;
         }
 
-      
-
-        //public async Task<Casting> UpdateCasting(int castingId, ShowCasting updateCasting)
-        //{
-        //    var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
-        //    if (casting == null)
-        //    {
-        //        return null;
-        //    }
-        //    else
-        //    {
-        //        updateCasting.Id = castingId;
-        //        updateCasting.CustomerId = casting.CustomerId;
-        //        casting = _mapper.Map(updateCasting, casting);
-        //        await UpdateAsync(casting);
-        //        return casting;
-        //    }
-        //}
-
-        //ta dao
-        /*public async Task<Casting> UpdateCasting(int castingId, Casting updateCasting)
+        public async Task<List<CastingImportViewModel>> GetImportList(string customerId)
         {
-            var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == castingId);
-            if (updateCasting.Description == null)
-            {
-                Description = 
-            }
-            if (updateCasting.Name == null)
-            {
-                updateCasting.Name = casting.Name
-            }
-            if (updateCasting.Description == null)
-            {
-                Description =
-            }
-            if (updateCasting.Description == null)
-            {
-                Description =
-            }
-            if (updateCasting.Description == null)
-            {
-                Description =
-            }
-            if (updateCasting.Description == null)
-            {
-                Description =
-            }
-            if (updateCasting.Description == null)
-            {
-                Description =
-            }
-            Casting cast = new Casting
-            {
+            var listCasting = await _castingRepository
+                .Get(x => x.CustomerId == customerId && x.Status != 2)
+                .ProjectTo<CastingImportViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            return listCasting;
+        }
 
-                
+        public async Task<CastingViewModel> Add(CastingViewModel viewModel)
+        {
+            if (viewModel.Status != 1 && viewModel.Status != 0)
+            {
+                return null;
             }
-        }*/
+            if (viewModel.OpenTime != null
+                && viewModel.CloseTime != null)
+            {
+                var openTime = (DateTime)viewModel.OpenTime;
+                viewModel.OpenTime = openTime
+                    .AddSeconds(-openTime.Second)
+                    .AddMilliseconds(-openTime.Millisecond);
+                var closeTime = (DateTime)viewModel.CloseTime;
+                viewModel.CloseTime = closeTime
+                    .AddSeconds(-closeTime.Second)
+                    .AddMilliseconds(-closeTime.Millisecond);
+            }
+            var entity = _mapper.Map<Casting>(viewModel);
+            entity.CreateTime = DateTime.UtcNow;
+            await CreateAsyn(entity);
+            return viewModel;
+        }
+
+        public async Task<CastingViewModel> Update(CastingViewModel viewModel)
+        {
+            var entity = await Get(c => c.Id == viewModel.Id && c.CustomerId.Equals(viewModel.CustomerId))
+                .FirstOrDefaultAsync();
+            if (entity == null || entity.Status == 2)
+            {
+                return null;
+            }
+            // Update draft casting
+            if (viewModel.Name != null 
+                && viewModel.Description != null
+                && viewModel.Salary != null)
+            {
+                entity.Name = viewModel.Name;
+                entity.Description = viewModel.Description;
+                entity.MonopolisticTime = viewModel.MonopolisticTime;
+                entity.Salary = viewModel.Salary;
+            }
+            else if (viewModel.OpenTime != null
+                && viewModel.CloseTime != null
+                && viewModel.Status != null)
+            {
+                var openTime = (DateTime)viewModel.OpenTime;
+                openTime = openTime
+                    .AddSeconds(-openTime.Second)
+                    .AddMilliseconds(-openTime.Millisecond);
+                var closeTime = (DateTime)viewModel.CloseTime;
+                closeTime = closeTime
+                    .AddSeconds(-closeTime.Second)
+                    .AddMilliseconds(-closeTime.Millisecond);
+                // Publish casting
+                if (!entity.OpenTime.HasValue)
+                {
+                    entity.OpenTime = openTime;
+                    entity.CloseTime = closeTime;
+                    entity.Status = viewModel.Status;
+                }
+                else
+                {
+                    // Update publish casting
+                    var current = DateTime.UtcNow.AddMinutes(5);
+                    if (DateTime.Compare((DateTime)entity.OpenTime, current) > 0)
+                    {
+                        entity.OpenTime = openTime;
+                        entity.CloseTime = closeTime;
+                        entity.Status = viewModel.Status;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            } else
+            {
+                return null;
+            }
+            await UpdateAsync(entity);
+            return _mapper.Map<CastingViewModel>(entity);
+        }
+
+        public async Task<CastingViewModel> Stop(int id, string customerId)
+        {
+            var entity = await Get(c => c.Id == id && c.CustomerId.Equals(customerId))
+                .FirstOrDefaultAsync();
+            if (entity == null || entity.Status == 2)
+            {
+                return null;
+            }
+            if (entity.CloseTime.HasValue 
+                && DateTime.Compare((DateTime)entity.CloseTime, DateTime.UtcNow) > 0)
+            {
+                entity.CloseTime = DateTime.UtcNow;                
+            } else
+            {
+                return null;
+            }
+            await UpdateAsync(entity);
+            return _mapper.Map<CastingViewModel>(entity);
+        }
+
+        public async Task<CastingViewModel> Delete(int id, string customerId)
+        {
+            var entity = await Get(c => c.Id == id && c.CustomerId.Equals(customerId))
+                .FirstOrDefaultAsync();
+            if (entity == null || entity.Status == 2)
+            {
+                return null;
+            }
+            if (entity.OpenTime.HasValue && entity.CloseTime.HasValue)
+            {
+                var current = DateTime.UtcNow;
+                if (DateTime.Compare((DateTime)entity.OpenTime, current) <= 0
+                    && DateTime.Compare((DateTime)entity.CloseTime, current) >= 0)
+                {
+                    return null;
+                }
+            }
+            entity.Status = 2;
+            await UpdateAsync(entity);
+            return _mapper.Map<CastingViewModel>(entity);
+        }
+
     }
 }

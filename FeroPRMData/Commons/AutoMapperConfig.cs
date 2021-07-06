@@ -19,6 +19,8 @@ namespace FeroPRMData.Commons
                 mc.ConfigSubscribeCastingModule();
                 mc.ConfigCustomerModule();
                 mc.ConfigFavoriteModelModule();
+                mc.ConfigModelOfferModule();
+                mc.ConfigOfferModule();
             });
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);

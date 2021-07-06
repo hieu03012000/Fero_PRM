@@ -12,8 +12,9 @@ namespace FeroPRMData.Services
 {
     public partial interface IModelOfferService:IBaseService<ModelOffer>
     {
-        Task<GetGeneralOfferViewModel> GetById(string modelId, int offerId);
-        Task<List<GetGeneralOfferViewModel>> GetByModelId(string modelId);
+        Task<GetGeneralOfferViewModel> GetByModel(int offerId, string modelId);
+        Task<List<GetGeneralOfferViewModel>> GetListByModel(string modelId);
+        Task<ModelOfferViewModel> Update(ModelOfferViewModel viewModel);
     }
     public partial class ModelOfferService:BaseService<ModelOffer>,IModelOfferService
     {
@@ -30,7 +31,7 @@ namespace FeroPRMData.Services
             _offerRepository = offerRepository;
         }
 
-        public async Task<GetGeneralOfferViewModel> GetById(string modelId, int offerId)
+        public async Task<GetGeneralOfferViewModel> GetByModel(int offerId, string modelId)
         {
             var modelOffers = _modelOfferRepository.FirstOrDefault(x => x.ModelId.Equals(modelId) && x.OfferId == offerId);
             if (modelOffers == null)
@@ -45,7 +46,7 @@ namespace FeroPRMData.Services
             return target;
         }
 
-        public async Task<List<GetGeneralOfferViewModel>> GetByModelId(string modelId)
+        public async Task<List<GetGeneralOfferViewModel>> GetListByModel(string modelId)
         {
             var modelOffers = await _modelOfferRepository.Get(x => x.ModelId == modelId).ToListAsync();
             List<GetGeneralOfferViewModel> list = new List<GetGeneralOfferViewModel>();
@@ -58,9 +59,22 @@ namespace FeroPRMData.Services
                 target.CustomerName = customer.Name;
                 list.Add(target);
             }
-            list.Sort((x, y) => DateTime.Compare((DateTime)y.Time, (DateTime)x.Time));
+            list.Sort((x, y) => DateTime.Compare((DateTime)y.CreateTime, (DateTime)x.CreateTime));
             return list;
         }
 
+        public async Task<ModelOfferViewModel> Update(ModelOfferViewModel viewModel)
+        {
+            var entity = await _modelOfferRepository
+                .FirstOrDefaultAsyn(x => x.ModelId.Equals(viewModel.ModelId) && x.OfferId == viewModel.OfferId);
+            if (entity == null)
+            {
+                return null;
+            }
+            entity.Status = viewModel.Status;
+            entity.Time = DateTime.Now;
+            await _modelOfferRepository.UpdateAsync(entity);
+            return viewModel;
+        }
     }
 }
