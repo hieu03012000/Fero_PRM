@@ -18,12 +18,14 @@ namespace FeroPRMData.Services
         Task<IQueryable<CastingModelSearchViewModel>> Search(string name, double? min, double? max);
         Task<CastingModelGetViewModel> GetByModel(int id, string modelId);
         Task<List<CastingViewModel>> GetList(string customerId);
+        Task<List<int>> GetIdList(string customerId);
         Task<CastingViewModel> GetByCustomer(int id, string customerId);
         Task<List<CastingImportViewModel>> GetImportList(string customerId);
         Task<CastingViewModel> Add(CastingViewModel viewModel);
         Task<CastingViewModel> Update(CastingViewModel viewModel);
         Task<CastingViewModel> Delete(int id, string customerId);
         Task<CastingViewModel> Stop(int id, string customerId);
+        DateTime GetRecentSchedule();
     }
     public partial class CastingService : BaseService<Casting>, ICastingService
     {
@@ -33,8 +35,8 @@ namespace FeroPRMData.Services
         private readonly ISubscribeCastingRepository _subscribeCastingRepository;
 
         public CastingService(IMapper mapper, ICastingRepository castingRepository,
-            IApplyCastingRepository applyCastingRepository, 
-            ISubscribeCastingRepository subscribeCastingRepository):base(castingRepository)
+            IApplyCastingRepository applyCastingRepository,
+            ISubscribeCastingRepository subscribeCastingRepository) : base(castingRepository)
         {
             _mapper = mapper;
             _castingRepository = castingRepository;
@@ -64,7 +66,7 @@ namespace FeroPRMData.Services
         public async Task<IQueryable<CastingModelSearchViewModel>> Search(string name, double? min, double? max)
         {
             if (min == null)
-            { 
+            {
                 min = 0;
             }
             if (max == null)
@@ -160,7 +162,7 @@ namespace FeroPRMData.Services
                 return null;
             }
             // Update draft casting
-            if (viewModel.Name != null 
+            if (viewModel.Name != null
                 && viewModel.Description != null
                 && viewModel.Salary != null)
             {
@@ -203,7 +205,8 @@ namespace FeroPRMData.Services
                         return null;
                     }
                 }
-            } else
+            }
+            else
             {
                 return null;
             }
@@ -219,11 +222,12 @@ namespace FeroPRMData.Services
             {
                 return null;
             }
-            if (entity.CloseTime.HasValue 
+            if (entity.CloseTime.HasValue
                 && DateTime.Compare((DateTime)entity.CloseTime, DateTime.UtcNow) > 0)
             {
-                entity.CloseTime = DateTime.UtcNow;                
-            } else
+                entity.CloseTime = DateTime.UtcNow;
+            }
+            else
             {
                 return null;
             }
@@ -253,5 +257,41 @@ namespace FeroPRMData.Services
             return _mapper.Map<CastingViewModel>(entity);
         }
 
+        public DateTime GetRecentSchedule()
+        {
+            var current = DateTime.UtcNow;
+            current = current.AddSeconds(-current.Second).AddMilliseconds(-current.Millisecond);
+            var castings = _castingRepository
+                .Get(x => x.OpenTime != null
+                    && x.CloseTime != null
+                    && ((DateTime.Compare((DateTime)x.OpenTime, current) > 0)
+                        || (DateTime.Compare((DateTime)x.CloseTime, current) > 0)
+                    )
+                ).OrderBy(x => x.OpenTime)
+                .ToList();
+            if (castings == null || castings.Count == 0)
+            {
+                return DateTime.UtcNow;
+            }
+            var recentOpenTime = (DateTime)castings[0].OpenTime;
+            castings.Sort((x, y) => DateTime.Compare((DateTime)x.CloseTime, (DateTime)y.CloseTime));
+            var recentCloseTime = (DateTime)castings[0].CloseTime;
+            return DateTime.Compare(recentOpenTime, recentCloseTime) <= 0
+                ? recentOpenTime
+                : recentCloseTime;
+        }
+
+        public async Task<List<int>> GetIdList(string customerId)
+        {
+            var listCasting = await _castingRepository
+                .Get(x => x.CustomerId == customerId && x.Status == 1)
+                .ToListAsync();
+            var ids = new List<int>();
+            foreach (var casting in listCasting)
+            {
+                ids.Add(casting.Id);
+            }
+            return ids;
+        }
     }
 }

@@ -1,8 +1,13 @@
 using FeroPRMData.Models;
 using FeroPRMData.Services;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fero_PRM.Controllers
 {
@@ -15,11 +20,7 @@ namespace Fero_PRM.Controllers
         {
             _imageService = imageService;
         }
-        //        [HttpGet]
-        //        public IActionResult Gets()
-        //        {
-        //            return Ok(_imageService.Get().ToList());
-        //        }
+
         //        [HttpGet("{id}")]
         //        [ProducesResponseType(StatusCodes.Status200OK)]
         //        [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -16,6 +16,7 @@ namespace FeroPRMData.Services
     {
         Task<OfferViewModel> Add(OfferViewModel offer);
         Task<List<OfferViewModel>> GetList(string customerId);
+
         Task<OfferCustomerGetViewModel> GetByCustomer(int id, string customerId);
     }
     public partial class OfferService:BaseService<Offer>, IOfferService
@@ -24,13 +25,17 @@ namespace FeroPRMData.Services
         private readonly IOfferRepository _offerRepository;
         private readonly IModelOfferRepository _modelOfferRepository;
         private readonly IFavoriteModelRepository _favoriteModelRepository;
+        private readonly INotificationService _notificationService;
 
-        public OfferService(IMapper mapper, IOfferRepository offerRepository, IModelOfferRepository modelOfferRepository, IFavoriteModelRepository favoriteModelRepository)
+        public OfferService(IMapper mapper, IOfferRepository offerRepository,
+            IModelOfferRepository modelOfferRepository, IFavoriteModelRepository favoriteModelRepository,
+            INotificationService notificationService):base(offerRepository)
         {
             _mapper = mapper;
             _offerRepository = offerRepository;
             _modelOfferRepository = modelOfferRepository;
             _favoriteModelRepository = favoriteModelRepository;
+            _notificationService = notificationService;
         }
 
         private int GetNewOfferId()
@@ -55,6 +60,7 @@ namespace FeroPRMData.Services
                     OfferId = offerId
                 });
                 await _favoriteModelRepository.DeleteAsync(favoriteModel);
+                await _notificationService.ComposeReceiveOfferNotification(offerId, favoriteModel.ModelId, viewModel.CustomerId);
             }
             return viewModel;
         }

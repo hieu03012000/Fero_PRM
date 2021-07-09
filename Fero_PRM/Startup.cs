@@ -1,4 +1,6 @@
 using FeroPRMData.Commons;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +15,7 @@ namespace Fero_PRM
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -23,6 +26,10 @@ namespace Fero_PRM
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile("model-booking-firebase-adminsdk-3srp8-eef4cd6360.json")
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

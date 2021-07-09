@@ -1,5 +1,4 @@
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using FeroPRMData.Models;
 using FeroPRMData.Repositories;
 using FeroPRMData.Services.Base;
@@ -16,6 +15,7 @@ namespace FeroPRMData.Services
         Task<SubscribeCastingViewModel> CancelSubscribeCastingCall(SubscribeCastingViewModel subCasting);
         Task<List<ShowCasting>> GetSubscribeCastings(string modelId);
         Task<bool> CheckSubscribeCasting(int id, string modelId);
+        Task<List<int>> GetSubscribeCastingIds(string modelId);
 
     }
     public partial class SubscribeCastingService : BaseService<SubscribeCasting>, ISubscribeCastingService
@@ -26,7 +26,9 @@ namespace FeroPRMData.Services
         private readonly IModelRepository _modelRepository;
         private readonly ICustomerRepository _customerRepository;
 
-        public SubscribeCastingService(IMapper mapper, ISubscribeCastingRepository subscribeCastingRepository, ICastingRepository castingRepository, IModelRepository modelRepository, ICustomerRepository customerRepository)
+        public SubscribeCastingService(IMapper mapper, ISubscribeCastingRepository subscribeCastingRepository,
+            ICastingRepository castingRepository, IModelRepository modelRepository,
+            ICustomerRepository customerRepository):base(subscribeCastingRepository)
         {
             _mapper = mapper;
             _subscribeCastingRepository = subscribeCastingRepository;
@@ -80,6 +82,24 @@ namespace FeroPRMData.Services
             {
                 return true;
             }
+        }
+
+        public async Task<List<int>> GetSubscribeCastingIds(string modelId)
+        {
+            var subscribeCastings = await _subscribeCastingRepository
+                .Get(x => x.ModelId == modelId)
+                .ToListAsync();
+            List<int> castingIds = new List<int>();
+            foreach (var subscribeCasting in subscribeCastings)
+            {
+                var casting = await _castingRepository
+                    .FirstOrDefaultAsyn(x => x.Id == subscribeCasting.CastingId && x.Status == 1);
+                if (casting != null)
+                {
+                    castingIds.Add(subscribeCasting.CastingId);
+                }
+            }
+            return castingIds;
         }
     }
 }

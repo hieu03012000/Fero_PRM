@@ -47,6 +47,12 @@ namespace Fero_PRM.Controllers
             return Ok(await _castingService.GetList(id));
         }
 
+        [HttpGet("{id}/casting-ids")]
+        public async Task<IActionResult> GetCastingIds(string id)
+        {
+            return Ok(await _castingService.GetIdList(id));
+        }
+
         [HttpGet("{id}/import-castings")]
         public async Task<IActionResult> GetImportCastings(string id)
         {
@@ -76,6 +82,20 @@ namespace Fero_PRM.Controllers
             else
             {
                 return StatusCode(201);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDeviceToken(string id, string deviceToken)
+        {
+            var result = await _customerService.UpdateDeviceToken(id, deviceToken);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
             }
         }
     }

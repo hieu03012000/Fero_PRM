@@ -102,6 +102,10 @@ namespace FeroPRMData.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.DeviceToken)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Gmail)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -193,6 +197,10 @@ namespace FeroPRMData.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.SocialNetworkLink)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DeviceToken)
                     .HasMaxLength(200)
                     .IsUnicode(false);
             });

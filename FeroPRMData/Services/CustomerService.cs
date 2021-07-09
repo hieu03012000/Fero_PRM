@@ -18,6 +18,7 @@ namespace FeroPRMData.Services
         Task<bool> CheckCustomerGmail(string mail);
         Task<Customer> GetCustomerProfile(string gmail);
         Task<Customer> CreateCustomer(Customer newCustomer);
+        Task<bool?> UpdateDeviceToken(string id, string deviceToken);
     }
     public partial class CustomerService : BaseService<Customer>, ICustomerService
     {
@@ -86,6 +87,18 @@ namespace FeroPRMData.Services
                 await CreateAsyn(newCustomer);
                 return newCustomer;
             }
+        }
+
+        public async Task<bool?> UpdateDeviceToken(string id, string deviceToken)
+        {
+            var customer = await _customerRepository.FirstOrDefaultAsyn(x => x.Id.Equals(id));
+            if (customer == null)
+            {
+                return null;
+            }
+            customer.DeviceToken = deviceToken;
+            await _customerRepository.UpdateAsync(customer);
+            return true;
         }
 
     }

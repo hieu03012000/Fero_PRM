@@ -22,13 +22,17 @@ namespace FeroPRMData.Services
         private readonly IModelOfferRepository _modelOfferRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IOfferRepository _offerRepository;
+        private readonly INotificationService _notificationService;
 
-        public ModelOfferService(IMapper mapper, IModelOfferRepository modelOfferRepository, ICustomerRepository customerRepository, IOfferRepository offerRepository)
+        public ModelOfferService(IMapper mapper, IModelOfferRepository modelOfferRepository,
+            ICustomerRepository customerRepository, IOfferRepository offerRepository,
+            INotificationService notificationService):base(modelOfferRepository)
         {
             _mapper = mapper;
             _modelOfferRepository = modelOfferRepository;
             _customerRepository = customerRepository;
             _offerRepository = offerRepository;
+            _notificationService = notificationService;
         }
 
         public async Task<GetGeneralOfferViewModel> GetByModel(int offerId, string modelId)
@@ -74,6 +78,11 @@ namespace FeroPRMData.Services
             entity.Status = viewModel.Status;
             entity.Time = DateTime.Now;
             await _modelOfferRepository.UpdateAsync(entity);
+            if (viewModel.Status == 1)
+            {
+                var offer = await _offerRepository.FirstOrDefaultAsyn(x => x.Id == viewModel.OfferId);
+                await _notificationService.ComposeAcceptOfferNotification(viewModel.OfferId, viewModel.ModelId, offer.CustomerId);
+            }
             return viewModel;
         }
     }

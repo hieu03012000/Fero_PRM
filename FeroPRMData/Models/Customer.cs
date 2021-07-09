@@ -20,6 +20,7 @@ namespace FeroPRMData.Models
         public string Phone { get; set; }
         public string Gmail { get; set; }
         public string Fanpage { get; set; }
+        public string DeviceToken { get; set; }
 
         public virtual ICollection<Casting> Casting { get; set; }
         public virtual ICollection<FavoriteModel> FavoriteModel { get; set; }

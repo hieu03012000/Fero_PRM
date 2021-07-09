@@ -20,6 +20,7 @@ namespace FeroPRMData.Services
         GetModelViewModel GetCompleteModelById(string id, string customerId);
         Task<List<GetGeneralModelViewModel>> SearchListModel(string location, int? gender, double? minW, double? maxW, double? minH, double? maxH);
         List<GetGeneralModelViewModel> GetNew();
+        Task<bool?> UpdateDeviceToken(string id, string deviceToken);
     }
     public partial class ModelService : BaseService<Model>, IModelService
     {
@@ -215,5 +216,16 @@ namespace FeroPRMData.Services
             return models.TakeLast(10).Reverse().ToList();
         }
 
+        public async Task<bool?> UpdateDeviceToken(string id, string deviceToken)
+        {
+            var model = await _modelRepository.FirstOrDefaultAsyn(x => x.Id.Equals(id));
+            if (model == null)
+            {
+                return null;
+            }
+            model.DeviceToken = deviceToken;
+            await _modelRepository.UpdateAsync(model);
+            return true;
+        }
     }
 }

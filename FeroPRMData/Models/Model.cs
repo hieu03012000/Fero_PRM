@@ -30,6 +30,7 @@ namespace FeroPRMData.Models
         public int? Status { get; set; }
         public string SocialNetworkLink { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public string DeviceToken { get; set; }
 
         public virtual ICollection<ApplyCasting> ApplyCasting { get; set; }
         public virtual ICollection<FavoriteModel> FavoriteModel { get; set; }
