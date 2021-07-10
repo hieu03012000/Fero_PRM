@@ -62,7 +62,7 @@ namespace Fero_PRM.Controllers
         {
             var result = await _castingService.Add(viewModel);
             if (result != null) {
-                return StatusCode(201);
+                return Ok(result);
             }
             else
             {

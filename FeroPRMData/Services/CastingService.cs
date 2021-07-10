@@ -63,6 +63,12 @@ namespace FeroPRMData.Services
             return maxSalary.Salary;
         }
 
+        private async Task<int> GetLastCastingId()
+        {
+            var lastCasting = await Get().OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+            return lastCasting.Id;
+        }
+
         public async Task<IQueryable<CastingModelSearchViewModel>> Search(string name, double? min, double? max)
         {
             if (min == null)
@@ -150,6 +156,7 @@ namespace FeroPRMData.Services
             var entity = _mapper.Map<Casting>(viewModel);
             entity.CreateTime = DateTime.UtcNow;
             await CreateAsyn(entity);
+            viewModel.Id = await GetLastCastingId();
             return viewModel;
         }
 
