@@ -35,7 +35,7 @@ namespace FeroPRMData.Services
         public async Task<ApplyCastingViewModel> ApplyCastingCall(ApplyCastingViewModel applyCasting)
         {
             var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == applyCasting.CastingId);
-            var time = DateTime.Now;
+            var time = DateTime.UtcNow;
             if (time < casting.OpenTime || time > casting.CloseTime)
             {
                 return null;
@@ -49,7 +49,7 @@ namespace FeroPRMData.Services
         public async Task<ApplyCastingViewModel> CancelApplyCastingCall(ApplyCastingViewModel applyCasting)
         {
             var casting = await _castingRepository.FirstOrDefaultAsyn(x => x.Id == applyCasting.CastingId);
-            var time = DateTime.Now;
+            var time = DateTime.UtcNow;
             if (time < casting.OpenTime || time > casting.CloseTime)
             {
                 return null;
