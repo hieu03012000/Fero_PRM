@@ -28,7 +28,7 @@ namespace Fero_PRM
         {
             FirebaseApp.Create(new AppOptions()
             {
-                Credential = GoogleCredential.FromFile("model-booking-firebase-adminsdk-3srp8-eef4cd6360.json")
+                Credential = GoogleCredential.FromFile("YOUR-FIREBASE-ADMINSDK.json")
             });
             services.AddControllers();
             services.AddSwaggerGen(c =>

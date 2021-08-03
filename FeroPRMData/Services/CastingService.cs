@@ -232,7 +232,9 @@ namespace FeroPRMData.Services
             if (entity.CloseTime.HasValue
                 && DateTime.Compare((DateTime)entity.CloseTime, DateTime.UtcNow) > 0)
             {
-                entity.CloseTime = DateTime.UtcNow;
+                var current = DateTime.UtcNow;
+                current = current.AddSeconds(-current.Second).AddMilliseconds(-current.Millisecond);
+                entity.CloseTime = current;
             }
             else
             {
